@@ -45,9 +45,9 @@ Button("Show Prompt") {
 ## Backports
 
 **iOS 13+**
-- ScaledMetric
-- AppStorage
-- Refreshable
+- `ScaledMetric`
+- `AppStorage`
+- `Refreshable`
 
 **iOS 15+**
 
