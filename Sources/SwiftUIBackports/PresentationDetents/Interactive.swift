@@ -1,0 +1,91 @@
+import SwiftUI
+
+public extension View {
+
+    /// Sets whether this presentation should act as a `modal`, preventing interactive dismissals
+    /// - Parameter isModal: If `true` the user will not be able to interactively dismiss
+    func presentation(isModal: Bool) -> some View {
+        background(Backport.Representable(isModal: isModal, onAttempt: nil))
+    }
+
+    /// Provides fine-grained control over the dismissal.
+    /// - Parameters:
+    ///   - isModal: If `true`, the user will not be able to interactively dismiss
+    ///   - onAttempt: A closure that will be called when an interactive dismiss attempt occurs.
+    ///   You can use this as an opportunity to present an ActionSheet to prompt the user.
+    func presentation(isModal: Bool = true, _ onAttempt: @escaping () -> Void) -> some View {
+        background(Backport.Representable(isModal: isModal, onAttempt: onAttempt))
+    }
+
+}
+
+private extension Backport where Content == Any {
+    struct Representable: UIViewControllerRepresentable {
+        let isModal: Bool
+        let onAttempt: (() -> Void)?
+
+        func makeUIViewController(context: Context) -> Backport.Representable.Controller {
+            Controller(isModal: isModal, onAttempt: onAttempt)
+        }
+
+        func updateUIViewController(_ controller: Backport.Representable.Controller, context: Context) {
+            controller.update(isModal: isModal, onAttempt: onAttempt)
+        }
+    }
+}
+
+private extension Backport.Representable {
+    final class Controller: UIViewController, UIAdaptivePresentationControllerDelegate {
+        var isModal: Bool
+        var onAttempt: (() -> Void)?
+        weak var _delegate: UIAdaptivePresentationControllerDelegate?
+
+        init(isModal: Bool, onAttempt: (() -> Void)?) {
+            self.isModal = isModal
+            self.onAttempt = onAttempt
+            super.init(nibName: nil, bundle: nil)
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        override func willMove(toParent parent: UIViewController?) {
+            super.willMove(toParent: parent)
+            update(isModal: isModal, onAttempt: onAttempt)
+        }
+
+        func update(isModal: Bool, onAttempt: (() -> Void)?) {
+            self.isModal = isModal
+            self.onAttempt = onAttempt
+
+            parent?.isModalInPresentation = isModal
+
+            if parent?.presentationController?.delegate !== self {
+                _delegate = parent?.presentationController?.delegate
+            }
+
+            parent?.presentationController?.delegate = self
+        }
+
+        func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
+            onAttempt?()
+            _delegate?.presentationControllerDidAttemptToDismiss?(presentationController)
+        }
+
+        func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+            !isModal
+        }
+
+        override func responds(to aSelector: Selector!) -> Bool {
+            if super.responds(to: aSelector) { return true }
+            if _delegate?.responds(to: aSelector) ?? false { return true }
+            return false
+        }
+
+        override func forwardingTarget(for aSelector: Selector!) -> Any? {
+            if super.responds(to: aSelector) { return self }
+            return _delegate
+        }
+    }
+}
