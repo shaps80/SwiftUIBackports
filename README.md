@@ -56,9 +56,13 @@ Button("Show Prompt") {
 
 ## Extras
 
-*Modal in presentation*
+**Modal Presentations**
 
 Adding this to your presented view, you can use the provided closure to present an `ActionSheet` to a user when they attempt to dismiss interactively. You can also use this to disable interactive dismissals entirely.
+
+```swift
+presentation(isModal: true) { /* attempt */ }
+```
 
 **FittingGeometryReader**
 
@@ -71,10 +75,6 @@ A custom `ScrollView` that respects `Spacer`'s when the content is not scrollabl
 **PageView**
 
 A pure SwiftUI implementation of a page-based view, using the native `TabView` and my custom `FittingGeometryReader` to size itself correctly. Since this uses a `TabView` under-the-hood, this allows you to use the same APIs and features from that view.
-
-```swift
-presentation(isModal: true) { /* attempt */ }
-```
 
 ## Installation
 
