@@ -48,6 +48,8 @@ Button("Show Prompt") {
 - `ScaledMetric`
 - `AppStorage`
 - `Refreshable`
+- `onChange`
+- `Section` - header as `String` or `LocalizedStringKey`
 
 **iOS 15+**
 
