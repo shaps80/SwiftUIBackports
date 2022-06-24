@@ -42,7 +42,39 @@ Button("Show Prompt") {
 }
 ```
 
-## 
+## Backports
+
+**iOS 13+**
+- ScaledMetric
+- AppStorage
+- Refreshable
+
+**iOS 15+**
+
+- `presentationDragIndicator`
+- `presentationDetents`
+
+## Extras
+
+*Modal in presentation*
+
+Adding this to your presented view, you can use the provided closure to present an `ActionSheet` to a user when they attempt to dismiss interactively. You can also use this to disable interactive dismissals entirely.
+
+**FittingGeometryReader**
+
+A custom `GeometryReader` implementation that correctly auto-sizes itself to its content. This is useful in many cases where you need a `GeometryReader` but don't want it to implicitly take up its parent View's bounds.
+
+**FittingScrollView**
+
+A custom `ScrollView` that respects `Spacer`'s when the content is not scrollable. This is useful when you need to place a view at the edges of your scrollview while its content is small enough to not require scrolling. Another great use case is vertically centered content that becomes `top` aligned once the content requires scrolling.
+
+**PageView**
+
+A pure SwiftUI implementation of a page-based view, using the native `TabView` and my custom `FittingGeometryReader` to size itself correctly. Since this uses a `TabView` under-the-hood, this allows you to use the same APIs and features from that view.
+
+```swift
+presentation(isModal: true) { /* attempt */ }
+```
 
 ## Installation
 
