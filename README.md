@@ -53,16 +53,16 @@ Environment:
 ## Backports
 
 **iOS 13+**
-- `ScaledMetric`
 - `AppStorage`
-- `Refreshable`
 - `onChange`
+- `Refreshable`
+- `ScaledMetric`
 - `Section` - header as `String` or `LocalizedStringKey`
 
 **iOS 15+**
 
-- `presentationDragIndicator`
 - `presentationDetents`
+- `presentationDragIndicator`
 
 ## Extras
 
