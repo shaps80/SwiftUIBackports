@@ -1,4 +1,4 @@
-@_exported import SwiftUI
+import SwiftUI
 
 public struct Backport<Content> {
     let content: Content

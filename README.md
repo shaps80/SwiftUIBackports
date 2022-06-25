@@ -23,14 +23,16 @@ The library adopts a backport design by [Dave DeLong](https://davedelong.com/blo
 
 Backports of pure types, can easily be discovered under the `Backport` namespace. Similarly, modifiers are discoverable under the `.backport` namespace.
 
-Type example:
+> Unfortuantely `Environment` backports cannot be access this way, in those cases the Apple API values will be prefixed with `backport` to simplify discovery.
+
+Types:
 
 ```swift
 @Backport.AppStorage("filter-enabled")
 private var filterEnabled: Bool = false
 ```
 
-Modifier example:
+Modifier:
 
 ```swift
 Button("Show Prompt") {
@@ -40,6 +42,12 @@ Button("Show Prompt") {
     Prompt()
         .backport.presentationDetents([.medium, .large])
 }
+```
+
+Environment:
+
+```swift
+@Environment(\.backportRefresh) private var refreshAction
 ```
 
 ## Backports
