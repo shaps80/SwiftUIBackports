@@ -54,6 +54,8 @@ Environment:
 
 **iOS 13+**
 - `AppStorage`
+- `background` – ViewBuilder API
+- `overlay` – ViewBuilder API
 - `onChange`
 - `Refreshable`
 - `ScaledMetric`
