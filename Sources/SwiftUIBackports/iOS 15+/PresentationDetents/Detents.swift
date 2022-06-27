@@ -1,6 +1,6 @@
 import SwiftUI
 
-@available(iOS, deprecated: 15)
+@available(iOS, deprecated: 16)
 public extension Backport where Content: View {
 
     /// Sets the available detents for the enclosing sheet.
@@ -75,27 +75,42 @@ public extension Backport where Content: View {
 
 }
 
-@available(iOS, deprecated: 15)
+@available(iOS, deprecated: 16)
 public extension Backport where Content == Any {
 
     /// A type that represents a height where a sheet naturally rests.
     struct PresentationDetent: Hashable {
 
-        fileprivate let id: String
+        public struct Identifier: RawRepresentable, Hashable {
+            public var rawValue: String
+            public init(rawValue: String) {
+                self.rawValue = rawValue
+            }
+
+            public static var medium: Identifier {
+                .init(rawValue: "com.apple.UIKit.medium")
+            }
+
+            public static var large: Identifier {
+                .init(rawValue: "com.apple.UIKit.large")
+            }
+        }
+
+        public let id: Identifier
 
         /// The system detent for a sheet that's approximately half the height of
         /// the screen, and is inactive in compact height.
         public static var medium: PresentationDetent {
-            .init(id: "com.apple.UIKit.medium")
+            .init(id: .medium)
         }
 
         /// The system detent for a sheet at full height.
         public static var large: PresentationDetent {
-            .init(id: "com.apple.UIKit.large")
+            .init(id: .large)
         }
 
         fileprivate static var none: PresentationDetent {
-            return .init(id: "")
+            return .init(id: .init(rawValue: ""))
         }
 
     }
@@ -164,14 +179,14 @@ private extension Backport.Representable {
                         }
                     }
                     
-                    controller.selectedDetentIdentifier = .init(selection.wrappedValue.id)
+                    controller.selectedDetentIdentifier = .init(selection.wrappedValue.id.rawValue)
                 }
             }
         }
 
         func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
             if let id = sheetPresentationController.selectedDetentIdentifier?.rawValue {
-                selection.wrappedValue = .init(id: id)
+                selection.wrappedValue = .init(id: .init(rawValue: id))
             }
         }
 
