@@ -11,3 +11,7 @@ public struct Backport<Content> {
 public extension View {
     var backport: Backport<Self> { .init(self) }
 }
+
+public extension NSObjectProtocol {
+    var backport: Backport<Self> { Backport(self) }
+}

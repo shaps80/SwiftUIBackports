@@ -53,6 +53,7 @@ Environment:
 ## Backports
 
 **iOS 13+**
+- `AsyncImage`
 - `AppStorage`
 - `background` – ViewBuilder API
 - `overlay` – ViewBuilder API
