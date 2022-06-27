@@ -60,6 +60,7 @@ Environment:
 - `Refreshable`
 - `ScaledMetric`
 - `Section` - header as `String` or `LocalizedStringKey`
+- `task` – async/await modifier
 
 **iOS 15+**
 
