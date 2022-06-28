@@ -16,11 +16,15 @@ extension Backport where Content == Any {
         private let metrics: UIFontMetrics
 
         public var wrappedValue: Value {
+            #if os(iOS) || os(tvOS)
             let traits = UITraitCollection(traitsFrom: [
                 UITraitCollection(preferredContentSizeCategory: UIContentSizeCategory(sizeCategory: sizeCategory))
             ])
 
             return Value(metrics.scaledValue(for: CGFloat(baseValue), compatibleWith: traits))
+            #else
+            return baseValue
+            #endif
         }
 
         /// Creates the scaled metric with an unscaled value using the default scaling.
@@ -43,6 +47,7 @@ extension Backport where Content == Any {
 
 }
 
+#if os(iOS) || os(tvOS)
 private extension UIContentSizeCategory {
     init(sizeCategory: ContentSizeCategory?) {
         switch sizeCategory {
@@ -62,3 +67,4 @@ private extension UIContentSizeCategory {
         }
     }
 }
+#endif

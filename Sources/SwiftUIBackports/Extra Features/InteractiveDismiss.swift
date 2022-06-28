@@ -1,5 +1,6 @@
 import SwiftUI
 
+#if os(iOS) || os(tvOS)
 public extension View {
 
     /// Sets whether this presentation should act as a `modal`, preventing interactive dismissals
@@ -89,3 +90,4 @@ private extension Backport.Representable {
         }
     }
 }
+#endif
