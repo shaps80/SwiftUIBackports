@@ -98,4 +98,4 @@ You can install manually (by copying the files in the `Sources` directory) or us
 
 To install using Swift Package Manager, add this to the `dependencies` section of your `Package.swift` file:
 
-`.package(url: "https://github.com/shaps80/AppManifest.git", .upToNextMinor(from: "1.0.0"))`
+`.package(url: "https://github.com/shaps80/SwiftUIBackports.git", .upToNextMinor(from: "1.0.0"))`
