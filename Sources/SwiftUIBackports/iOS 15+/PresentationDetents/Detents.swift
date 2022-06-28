@@ -153,16 +153,13 @@ private extension Backport.Representable {
 
         override func willMove(toParent parent: UIViewController?) {
             super.willMove(toParent: parent)
-
             if let controller = parent?.sheetPresentationController {
                 if controller.delegate !== self {
                     _delegate = controller.delegate
+                    controller.delegate = self
                 }
-
-                controller.delegate = self
-                controller.prefersScrollingExpandsWhenScrolledToEdge = true
-                update(detents: detents, selection: selection)
             }
+            update(detents: detents, selection: selection)
         }
 
         func update(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>) {
@@ -181,14 +178,27 @@ private extension Backport.Representable {
                     }
                     
                     controller.selectedDetentIdentifier = .init(selection.wrappedValue.id.rawValue)
+                    controller.prefersScrollingExpandsWhenScrolledToEdge = true
                 }
             }
         }
 
         func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
-            if let id = sheetPresentationController.selectedDetentIdentifier?.rawValue {
-                selection.wrappedValue = .init(id: .init(rawValue: id))
-            }
+            guard let id = sheetPresentationController.selectedDetentIdentifier?.rawValue,
+                  selection.wrappedValue.id.rawValue != id
+            else { return }
+            selection.wrappedValue = .init(id: .init(rawValue: id))
+        }
+
+        override func responds(to aSelector: Selector!) -> Bool {
+            if super.responds(to: aSelector) { return true }
+            if _delegate?.responds(to: aSelector) ?? false { return true }
+            return false
+        }
+
+        override func forwardingTarget(for aSelector: Selector!) -> Any? {
+            if super.responds(to: aSelector) { return self }
+            return _delegate
         }
 
     }

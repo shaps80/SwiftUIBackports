@@ -53,6 +53,12 @@ private extension Backport.Representable {
 
         override func willMove(toParent parent: UIViewController?) {
             super.willMove(toParent: parent)
+            if let controller = parent?.presentationController {
+                if controller.delegate !== self {
+                    _delegate = controller.delegate
+                    controller.delegate = self
+                }
+            }
             update(isModal: isModal, onAttempt: onAttempt)
         }
 
@@ -61,21 +67,14 @@ private extension Backport.Representable {
             self.onAttempt = onAttempt
 
             parent?.isModalInPresentation = isModal
-
-            if parent?.presentationController?.delegate !== self {
-                _delegate = parent?.presentationController?.delegate
-            }
-
-            parent?.presentationController?.delegate = self
         }
 
         func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
             onAttempt?()
-            _delegate?.presentationControllerDidAttemptToDismiss?(presentationController)
         }
 
         func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-            !isModal
+            parent?.isModalInPresentation == false
         }
 
         override func responds(to aSelector: Selector!) -> Bool {
