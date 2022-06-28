@@ -56,6 +56,8 @@ Environment:
 - `AsyncImage`
 - `AppStorage`
 - `background` – ViewBuilder API
+- `NavigationDestination` – uses a standard NavigationView
+- `navigationTitle` – newer API
 - `overlay` – ViewBuilder API
 - `onChange`
 - `Refreshable`
