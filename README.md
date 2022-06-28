@@ -52,7 +52,6 @@ Environment:
 
 ## Backports
 
-**iOS 13+**
 - `AsyncImage`
 - `AppStorage`
 - `background` – ViewBuilder API
@@ -60,15 +59,12 @@ Environment:
 - `navigationTitle` – newer API
 - `overlay` – ViewBuilder API
 - `onChange`
+- `presentationDetents`
+- `presentationDragIndicator`
 - `Refreshable`
 - `ScaledMetric`
 - `Section` - header as `String` or `LocalizedStringKey`
 - `task` – async/await modifier
-
-**iOS 15+**
-
-- `presentationDetents`
-- `presentationDragIndicator`
 
 ## Extras
 
