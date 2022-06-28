@@ -13,7 +13,10 @@ extension Backport where Content == Any {
         @Environment(\.sizeCategory) var sizeCategory
 
         private let baseValue: Value
+
+        #if os(iOS) || os(tvOS)
         private let metrics: UIFontMetrics
+        #endif
 
         public var wrappedValue: Value {
             #if os(iOS) || os(tvOS)
@@ -27,6 +30,7 @@ extension Backport where Content == Any {
             #endif
         }
 
+        #if os(iOS) || os(tvOS)
         /// Creates the scaled metric with an unscaled value using the default scaling.
         public init(baseValue: Value, metrics: UIFontMetrics) {
             self.baseValue = baseValue
@@ -42,6 +46,12 @@ extension Backport where Content == Any {
         public init(wrappedValue: Value, relativeTo textStyle: UIFont.TextStyle) {
             self.init(baseValue: wrappedValue, metrics: UIFontMetrics(forTextStyle: textStyle))
         }
+        #else
+        /// Creates the scaled metric with an unscaled value using the default scaling.
+        public init(wrappedValue: Value) {
+            self.baseValue = wrappedValue
+        }
+        #endif
 
     }
 

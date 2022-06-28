@@ -161,11 +161,20 @@ public extension Backport where Content == Any {
                     guard !Task.isCancelled, let url = url else { return }
                     let (data, _) = try await URLSession.shared.backport.data(from: url)
                     guard !Task.isCancelled else { return }
+
+                    #if os(macOS)
+                    if let image = NSImage(data: data) {
+                        withTransaction(transaction) {
+                            phase = .success(Image(nsImage: image))
+                        }
+                    }
+                    #else
                     if let image = UIImage(data: data, scale: scale) {
                         withTransaction(transaction) {
                             phase = .success(Image(uiImage: image))
                         }
                     }
+                    #endif
                 } catch {
                     phase = .failure(error)
                 }

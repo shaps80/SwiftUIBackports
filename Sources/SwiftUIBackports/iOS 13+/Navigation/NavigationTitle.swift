@@ -1,5 +1,6 @@
 import SwiftUI
 
+#if !os(macOS)
 @available(iOS, introduced: 13, deprecated: 14)
 @available(watchOS, introduced: 6, deprecated: 7)
 @available(tvOS, introduced: 13, deprecated: 14)
@@ -16,3 +17,4 @@ public extension Backport where Content: View {
     }
 
 }
+#endif
