@@ -1,5 +1,6 @@
 import SwiftUI
 
+#if os(iOS)
 @available(iOS, deprecated: 16)
 public extension Backport where Content: View {
 
@@ -192,3 +193,4 @@ private extension Backport.Representable {
 
     }
 }
+#endif

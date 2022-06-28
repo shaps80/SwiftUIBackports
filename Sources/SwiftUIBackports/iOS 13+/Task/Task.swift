@@ -50,17 +50,13 @@ public extension Backport where Content: View {
     ///   the view appears.
     @ViewBuilder
     func task(priority: TaskPriority = .userInitiated, _ action: @MainActor @escaping @Sendable () async -> Void) -> some View {
-        if #available(iOS 15, *) {
-            content.task(priority: priority, action)
-        } else {
-            content.modifier(
-                TaskModifier(
-                    id: 0,
-                    priority: priority,
-                    action: action
-                )
+        content.modifier(
+            TaskModifier(
+                id: 0,
+                priority: priority,
+                action: action
             )
-        }
+        )
     }
 
     /// Adds a task to perform when this view appears or when a specified
@@ -124,17 +120,13 @@ public extension Backport where Content: View {
     ///   the view appears, or restarts the task with the `id` value changes.
     @ViewBuilder
     func task<T: Equatable>(id: T, priority: TaskPriority = .userInitiated, _ action: @MainActor @escaping @Sendable () async -> Void) -> some View {
-        if #available(iOS 15, *) {
-            content.task(id: id, priority: priority, action)
-        } else {
-            content.modifier(
-                TaskModifier(
-                    id: id,
-                    priority: priority,
-                    action: action
-                )
+        content.modifier(
+            TaskModifier(
+                id: id,
+                priority: priority,
+                action: action
             )
-        }
+        )
     }
 
 }

@@ -1,5 +1,7 @@
 import SwiftUI
 
+#if os(iOS)
+@available(iOS, deprecated: 16.0)
 public extension Backport where Content: View {
 
     /// The identifier of the largest detent that is not dimmed.
@@ -80,3 +82,4 @@ private extension Backport.Representable {
 
     }
 }
+#endif

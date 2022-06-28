@@ -1,9 +1,6 @@
 import SwiftUI
 
 @available(iOS, deprecated: 15.0)
-@available(macOS, deprecated: 12.0)
-@available(tvOS, deprecated: 15.0)
-@available(watchOS, deprecated: 8.0)
 public extension Backport where Content == Any {
 
     /// Loads and displays an image from the specified URL.
@@ -29,11 +26,7 @@ public extension Backport where Content == Any {
     ///     would name with the `@2x` suffix if stored in a file on disk.
     @ViewBuilder
     static func AsyncImage(url: URL?, scale: CGFloat = 1) -> some View {
-        if #available(iOS 15, *) {
-            SwiftUI.AsyncImage(url: url, scale: scale)
-        } else {
-            _AsyncImage(url: url, scale: scale)
-        }
+        _AsyncImage(url: url, scale: scale)
     }
 
     /// Loads and displays a modifiable image from the specified URL using
@@ -68,11 +61,7 @@ public extension Backport where Content == Any {
     ///     load operation completes successfully.
     @ViewBuilder
     static func AsyncImage<I: View, P: View>(url: URL?, scale: CGFloat = 1, @ViewBuilder content: @escaping (Image) -> I, @ViewBuilder placeholder: @escaping () -> P) -> some View {
-        if #available(iOS 15, *) {
-            SwiftUI.AsyncImage(url: url, scale: scale, content: content, placeholder: placeholder)
-        } else {
-            _AsyncImage(url: url, scale: scale, content: content, placeholder: placeholder)
-        }
+        _AsyncImage(url: url, scale: scale, content: content, placeholder: placeholder)
     }
 
     /// Loads and displays a modifiable image from the specified URL in phases.
@@ -111,17 +100,7 @@ public extension Backport where Content == Any {
     ///     returns the view to display for the specified phase.
     @ViewBuilder
     static func AsyncImage<Content: View>(url: URL?, scale: CGFloat = 1, transaction: Transaction = Transaction(), @ViewBuilder content: @escaping (AsyncImagePhase) -> Content) -> some View {
-        if #available(iOS 15, *) {
-            SwiftUI.AsyncImage(url: url, scale: scale, transaction: transaction) { phase in
-                switch phase {
-                case let .success(image): content(.success(image))
-                case let .failure(error): content(.failure(error))
-                default: content(.empty)
-                }
-            }
-        } else {
-            _AsyncImage(url: url, scale: scale, transaction: transaction, content: content)
-        }
+        _AsyncImage(url: url, scale: scale, transaction: transaction, content: content)
     }
 
     /// The current phase of the asynchronous image loading operation.

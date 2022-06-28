@@ -1,5 +1,7 @@
 import SwiftUI
 
+#if os(iOS)
+@available(iOS, deprecated: 16)
 public extension Backport where Content: View {
 
     /// Sets the visibility of the drag indicator on top of a sheet.
@@ -82,3 +84,4 @@ private extension Backport.Representable {
 
     }
 }
+#endif
