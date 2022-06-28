@@ -55,10 +55,12 @@ Environment:
 - `AsyncImage`
 - `AppStorage`
 - `background` – ViewBuilder API
+- `controlSize`
 - `NavigationDestination` – uses a standard NavigationView
 - `navigationTitle` – newer API
 - `overlay` – ViewBuilder API
 - `onChange`
+- `ProgressView`
 - `presentationDetents`
 - `presentationDragIndicator`
 - `Refreshable`
