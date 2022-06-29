@@ -10,7 +10,7 @@ public extension Backport where Content: ObservableObject {
     /// A property wrapper type that instantiates an observable object.
     ///
     /// Create a state object in a ``SwiftUI/View``, ``SwiftUI/App``, or
-    /// ``SwiftUI/Scene`` by applying the `@StateObject` attribute to a property
+    /// ``SwiftUI/Scene`` by applying the `@Backport.StateObject` attribute to a property
     /// declaration and providing an initial value that conforms to the
     /// <doc://com.apple.documentation/documentation/Combine/ObservableObject>
     /// protocol:
@@ -74,7 +74,7 @@ public extension Backport where Content: ObservableObject {
         ///
         /// The wrapped value property provides primary access to the value's data.
         /// However, you don't access `wrappedValue` directly. Instead, use the
-        /// property variable created with the `@StateObject` attribute:
+        /// property variable created with the `@Backport.StateObject` attribute:
         ///
         ///     @Backport.StateObject var contact = Contact()
         ///
@@ -118,7 +118,7 @@ public extension Backport where Content: ObservableObject {
         /// Creates a new state object with an initial wrapped value.
         ///
         /// You don’t call this initializer directly. Instead, declare a property
-        /// with the `@StateObject` attribute in a ``SwiftUI/View``,
+        /// with the `@Backport.StateObject` attribute in a ``SwiftUI/View``,
         /// ``SwiftUI/App``, or ``SwiftUI/Scene``, and provide an initial value:
         ///
         ///     struct MyView: View {
