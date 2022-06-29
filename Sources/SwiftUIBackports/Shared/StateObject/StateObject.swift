@@ -1,10 +1,14 @@
 import Combine
 import SwiftUI
 
-extension Backport where Content == Any {
+@available(iOS, deprecated: 14.0)
+@available(macOS, deprecated: 11.0)
+@available(tvOS, deprecated: 14.0)
+@available(watchOS, deprecated: 7.0)
+public extension Backport where Content == Any {
 
     /// A property wrapper type that instantiates an observable object.
-    @propertyWrapper public struct StateObject<ObjectType: ObservableObject>: DynamicProperty {
+    @propertyWrapper struct StateObject<ObjectType: ObservableObject>: DynamicProperty {
         private final class Wrapper: ObservableObject {
             private var subject = PassthroughSubject<Void, Never>()
 
