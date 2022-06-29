@@ -8,6 +8,43 @@ import SwiftUI
 public extension Backport where Content: ObservableObject {
 
     /// A property wrapper type that instantiates an observable object.
+    ///
+    /// Create a state object in a ``SwiftUI/View``, ``SwiftUI/App``, or
+    /// ``SwiftUI/Scene`` by applying the `@StateObject` attribute to a property
+    /// declaration and providing an initial value that conforms to the
+    /// <doc://com.apple.documentation/documentation/Combine/ObservableObject>
+    /// protocol:
+    ///
+    ///     @Backport.StateObject var model = DataModel()
+    ///
+    /// SwiftUI creates a new instance of the object only once for each instance of
+    /// the structure that declares the object. When published properties of the
+    /// observable object change, SwiftUI updates the parts of any view that depend
+    /// on those properties:
+    ///
+    ///     Text(model.title) // Updates the view any time `title` changes.
+    ///
+    /// You can pass the state object into a property that has the
+    /// ``SwiftUI/ObservedObject`` attribute. You can alternatively add the object
+    /// to the environment of a view hierarchy by applying the
+    /// ``SwiftUI/View/environmentObject(_:)`` modifier:
+    ///
+    ///     ContentView()
+    ///         .environmentObject(model)
+    ///
+    /// If you create an environment object as shown in the code above, you can
+    /// read the object inside `ContentView` or any of its descendants
+    /// using the ``SwiftUI/EnvironmentObject`` attribute:
+    ///
+    ///     @EnvironmentObject var model: DataModel
+    ///
+    /// Get a ``SwiftUI/Binding`` to one of the state object's properties using the
+    /// `$` operator. Use a binding when you want to create a two-way connection to
+    /// one of the object's properties. For example, you can let a
+    /// ``SwiftUI/Toggle`` control a Boolean value called `isEnabled` stored in the
+    /// model:
+    ///
+    ///     Toggle("Enabled", isOn: $model.isEnabled)
     @propertyWrapper struct StateObject: DynamicProperty {
         private final class Wrapper: ObservableObject {
             private var subject = PassthroughSubject<Void, Never>()
