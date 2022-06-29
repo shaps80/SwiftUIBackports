@@ -3,7 +3,7 @@ import SwiftUI
 @available(iOS, deprecated: 16)
 @available(tvOS, deprecated: 16)
 @available(watchOS, deprecated: 9)
-@available(macOS, deprecated: 14)
+@available(macOS, deprecated: 13)
 public extension Backport where Content: View {
 
     /// Associates a destination view with a presented data type for use within
@@ -48,7 +48,7 @@ public extension Backport where Content: View {
 @available(iOS, deprecated: 16)
 @available(tvOS, deprecated: 16)
 @available(watchOS, deprecated: 9)
-@available(macOS, deprecated: 14)
+@available(macOS, deprecated: 13)
 public extension Backport where Content == Any {
     struct NavigationLink<Label, Destination>: View where Label: View, Destination: View {
         @Environment(\.navigationDestinations) private var destinations
