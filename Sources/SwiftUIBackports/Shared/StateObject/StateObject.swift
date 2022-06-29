@@ -5,14 +5,14 @@ import SwiftUI
 @available(macOS, deprecated: 11.0)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, deprecated: 7.0)
-public extension Backport where Content == Any {
+public extension Backport where Content: ObservableObject {
 
     /// A property wrapper type that instantiates an observable object.
-    @propertyWrapper struct StateObject<ObjectType: ObservableObject>: DynamicProperty {
+    @propertyWrapper struct StateObject: DynamicProperty {
         private final class Wrapper: ObservableObject {
             private var subject = PassthroughSubject<Void, Never>()
 
-            var value: ObjectType? {
+            var value: Content? {
                 didSet {
                     cancellable = nil
                     cancellable = value?.objectWillChange
@@ -31,7 +31,7 @@ public extension Backport where Content == Any {
 
         @ObservedObject private var observedObject = Wrapper()
 
-        private var thunk: () -> ObjectType
+        private var thunk: () -> Content
 
         /// The underlying value referenced by the state object.
         ///
@@ -48,7 +48,7 @@ public extension Backport where Content == Any {
         /// When you change a property of the wrapped value, you can access the new
         /// value immediately. However, SwiftUI updates views displaying the value
         /// asynchronously, so the user interface might not update immediately.
-        public var wrappedValue: ObjectType {
+        public var wrappedValue: Content {
             if let object = state.value {
                 return object
             } else {
@@ -74,7 +74,7 @@ public extension Backport where Content == Any {
         ///             Toggle("Enabled", isOn: $model.isEnabled)
         ///         }
         ///     }
-        public var projectedValue: ObservedObject<ObjectType>.Wrapper {
+        public var projectedValue: ObservedObject<Content>.Wrapper {
             ObservedObject(wrappedValue: wrappedValue).projectedValue
         }
 
@@ -97,7 +97,7 @@ public extension Backport where Content == Any {
         /// receives a distinct copy of the data model.
         ///
         /// - Parameter thunk: An initial value for the state object.
-        public init(wrappedValue thunk: @autoclosure @escaping () -> ObjectType) {
+        public init(wrappedValue thunk: @autoclosure @escaping () -> Content) {
             self.thunk = thunk
         }
 
