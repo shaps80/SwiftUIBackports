@@ -11,6 +11,8 @@ extension Backport where Content == Any {
     /// You can also use ``LabelStyle/automatic`` to construct this style.
     public struct DefaultLabelStyle: BackportLabelStyle {
 
+        @Backport.ScaledMetric private var padding: CGFloat = 5
+
         /// Creates an automatic label style.
         public init() { }
 
@@ -21,7 +23,12 @@ extension Backport where Content == Any {
         ///
         /// - Parameter configuration: The properties of the label.
         public func makeBody(configuration: DefaultLabelStyle.Configuration) -> some View {
-            EmptyView()
+            HStack(spacing: padding * 4) {
+                configuration.icon
+                    .foregroundColor(.accentColor)
+                configuration.title
+            }
+            .padding(.horizontal, padding)
         }
 
     }

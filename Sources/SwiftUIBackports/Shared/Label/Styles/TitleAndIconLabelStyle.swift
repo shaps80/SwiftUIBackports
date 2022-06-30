@@ -23,8 +23,10 @@ extension Backport where Content == Any {
         ///
         /// - Parameter configuration: The properties of the label.
         public func makeBody(configuration: Configuration) -> some View {
-            configuration.icon
-            configuration.title
+            HStack {
+                configuration.icon
+                configuration.title
+            }
         }
 
     }

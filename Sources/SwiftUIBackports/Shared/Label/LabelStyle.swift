@@ -10,6 +10,9 @@ import SwiftUI
 /// ``View/labelStyle(_:)`` modifier.
 public protocol BackportLabelStyle {
 
+    /// The properties of a label.
+    typealias Configuration = Backport<Any>.LabelStyleConfiguration
+
     /// A view that represents the body of a label.
     associatedtype Body: View
 
@@ -20,9 +23,6 @@ public protocol BackportLabelStyle {
     ///
     /// - Parameter configuration: The properties of the label.
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
-
-    /// The properties of a label.
-    typealias Configuration = Backport<Any>.LabelStyleConfiguration
 
 }
 
