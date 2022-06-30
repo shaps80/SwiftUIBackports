@@ -1,0 +1,32 @@
+import SwiftUI
+
+@available(iOS, deprecated: 14)
+@available(macOS, deprecated: 11)
+@available(tvOS, deprecated: 14)
+@available(watchOS, deprecated: 7)
+extension Backport where Content == Any {
+
+    /// The properties of a label.
+    public struct LabelStyleConfiguration {
+
+        /// A type-erased title view of a label.
+        public struct Title: View {
+            let content: AnyView
+            public var body: Never { fatalError() }
+        }
+
+        /// A type-erased icon view of a label.
+        public struct Icon: View {
+            let content: AnyView
+            public var body: Never { fatalError() }
+        }
+
+        /// A description of the labeled item.
+        public internal(set) var title: LabelStyleConfiguration.Title
+
+        /// A symbolic representation of the labeled item.
+        public internal(set) var icon: LabelStyleConfiguration.Icon
+
+    }
+
+}
