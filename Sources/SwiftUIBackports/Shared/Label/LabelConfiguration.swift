@@ -33,6 +33,14 @@ extension Backport where Content == Any {
         /// A symbolic representation of the labeled item.
         public internal(set) var icon: LabelStyleConfiguration.Icon
 
+        internal var environment: EnvironmentValues = .init()
+
+        func environment(_ values: EnvironmentValues) -> Self {
+            var config = self
+            config.environment = values
+            return config
+        }
+
     }
 
 }

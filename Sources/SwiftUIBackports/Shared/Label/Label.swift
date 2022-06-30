@@ -85,10 +85,11 @@ extension Backport where Content == Any {
     ///             .overlay(Text(person.initials))
     ///     }
     ///
-    public struct Label<Title, Icon> : View where Title : View, Icon : View {
+    public struct Label<Title, Icon>: View where Title: View, Icon: View {
 
+        @Environment(\.self) private var environment
         @Environment(\.backportLabelStyle) private var style
-        let config: Backport<Any>.LabelStyleConfiguration
+        private var config: Backport<Any>.LabelStyleConfiguration
 
         /// Creates a label with a custom title and icon.
         public init(@ViewBuilder title: () -> Title, @ViewBuilder icon: () -> Icon) {
@@ -97,9 +98,10 @@ extension Backport where Content == Any {
 
         @MainActor public var body: some View {
             if let style = style {
-                style.makeBody(configuration: config)
+                style.makeBody(configuration: config.environment(environment))
             } else {
-                DefaultLabelStyle().makeBody(configuration: config)
+                DefaultLabelStyle()
+                    .makeBody(configuration: config.environment(environment))
             }
         }
     }
@@ -118,6 +120,20 @@ extension Backport.Label where Content == Any, Title == Text, Icon == Image {
         self.init(title: { Text(titleKey) }, icon: { Image(name) })
     }
 
+    /// Creates a label with an icon image and a title generated from a string.
+    ///
+    /// - Parameters:
+    ///    - title: A string used as the label's title.
+    ///    - image: The name of the image resource to lookup.
+    public init<S>(_ title: S, image name: String) where S: StringProtocol {
+        self.init(title: { Text(title) }, icon: { Image(name) })
+    }
+
+}
+
+@available(macOS, introduced: 11)
+extension Backport.Label where Content == Any, Title == Text, Icon == Image {
+
     /// Creates a label with a system icon image and a title generated from a
     /// localized string.
     ///
@@ -126,15 +142,6 @@ extension Backport.Label where Content == Any, Title == Text, Icon == Image {
     ///    - systemImage: The name of the image resource to lookup.
     public init(_ titleKey: LocalizedStringKey, systemImage name: String) {
         self.init(title: { Text(titleKey) }, icon: { Image(systemName: name) })
-    }
-
-    /// Creates a label with an icon image and a title generated from a string.
-    ///
-    /// - Parameters:
-    ///    - title: A string used as the label's title.
-    ///    - image: The name of the image resource to lookup.
-    public init<S>(_ title: S, image name: String) where S: StringProtocol {
-        self.init(title: { Text(title) }, icon: { Image(name) })
     }
 
     /// Creates a label with a system icon image and a title generated from a

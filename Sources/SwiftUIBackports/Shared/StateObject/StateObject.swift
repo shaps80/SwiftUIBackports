@@ -89,7 +89,6 @@ public extension Backport where Content: ObservableObject {
             if let object = state.value {
                 return object
             } else {
-                print("Dynamic property should be told to update before accessing its wrapped value")
                 let object = thunk()
                 state.value = object
                 return object

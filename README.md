@@ -18,6 +18,8 @@ All backports are fully documented, in most cases using Apple's own documentatio
 
 There is also a [Demo project](https://github.com/shaps80/SwiftUIBackportsDemo) available where you can see full demonstrations of all backports and additional features, including reference code to help you get started.
 
+> Lastly, I hope this repo also serves as a great resource for _how_ you can backport effectively with minimal hacks 👍
+
 ## Usage
 
 The library adopts a backport design by [Dave DeLong](https://davedelong.com/blog/2021/10/09/simplifying-backwards-compatibility-in-swift/) that makes use of a single type to improve discoverability and maintainability when the time comes to remove your backport implementations, in favour of official APIs.
@@ -66,7 +68,7 @@ Environment:
 - `Refreshable`
 - `ScaledMetric`
 - `StateObject`
-- `Section` - header as `String` or `LocalizedStringKey`
+- `Section(_ header:)`
 - `task` – async/await modifier
 
 ## Extras

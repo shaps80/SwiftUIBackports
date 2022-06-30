@@ -1,5 +1,9 @@
 import SwiftUI
 
+@available(iOS, deprecated: 14)
+@available(macOS, deprecated: 11)
+@available(tvOS, deprecated: 14)
+@available(watchOS, deprecated: 7)
 extension Backport where Content == Any {
 
     /// A property wrapper type that reflects a value from `Store` and
