@@ -26,7 +26,7 @@ Building useful libraries like these, takes time away from my family. I build th
 
 You can also give me a follow and a 'thanks' anytime.
 
-[![Twitter](https://img.shields.io/badge/Twitter-@shaps80-green.svg)](http://twitter.com/shaps80)
+[![Twitter](https://img.shields.io/badge/@shaps-51DE1D)](http://twitter.com/shaps)
 
 ## Usage
 
