@@ -22,10 +22,7 @@ extension Backport where Content == Any {
         public func makeBody(configuration: DefaultLabelStyle.Configuration) -> some View {
             HStack {
                 configuration.icon
-
-                if !configuration.environment.hasToolbarPlacement {
-                    configuration.title
-                }
+                configuration.title
             }
         }
 

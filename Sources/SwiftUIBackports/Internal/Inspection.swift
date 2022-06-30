@@ -54,7 +54,6 @@ private extension Inspector {
     final class _View: UIView {
         override func didMoveToSuperview() {
             super.didMoveToSuperview()
-            print(owningViewController)
         }
     }
 }

@@ -1,16 +1,8 @@
 import SwiftUI
 
 /*
- The following code is designed to try and best-guess what SwifUI may be inteferring
- in order to support some features. Use these carefully and wherever possible,
- with reasonable fallbacks. See examples below for ideas.
+ The following code is for debugging purposes only!
  */
-
-internal extension EnvironmentValues {
-    var hasToolbarPlacement: Bool {
-        "\(self)".contains("ToolbarItemPlacementKey")
-    }
-}
 
 #if DEBUG
 extension EnvironmentValues: CustomDebugStringConvertible {
