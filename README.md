@@ -65,6 +65,7 @@ Environment:
 - `presentationDragIndicator`
 - `Refreshable`
 - `ScaledMetric`
+- `StateObject`
 - `Section` - header as `String` or `LocalizedStringKey`
 - `task` – async/await modifier
 
