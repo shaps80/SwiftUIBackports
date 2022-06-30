@@ -22,9 +22,7 @@ There is also a [Demo project](https://github.com/shaps80/SwiftUIBackportsDemo) 
 
 ## Sponsor
 
-Building useful libraries like these, takes time away from my family. I build these tools in my spare time because I feel its important to give back to the community. Please consider sponsoring me as it helps keep me working on useful libraries like these 😬
-
-<iframe src="https://github.com/sponsors/shaps80/button" title="Sponsor shaps80" height="35" width="116" style="border: 0;"></iframe>
+Building useful libraries like these, takes time away from my family. I build these tools in my spare time because I feel its important to give back to the community. Please consider [Sponsoring](https://github.com/sponsors/shaps80) me as it helps keep me working on useful libraries like these 😬
 
 You can also give me a follow and a 'thanks' anytime.
 
