@@ -24,7 +24,9 @@ There is also a [Demo project](https://github.com/shaps80/SwiftUIBackportsDemo) 
 
 Building useful libraries like these, takes time away from my family. I build these tools in my spare time because I feel its important to give back to the community. Please consider sponsoring me as it helps keep me working on useful libraries like these 😬
 
-Also feel free to reach out [![Twitter](https://img.shields.io/badge/Twitter-@shaps80-green.svg)](http://twitter.com/shaps80)
+You can also give me a follow and a 'thanks' anytime.
+
+[![Twitter](https://img.shields.io/badge/Twitter-@shaps80-green.svg)](http://twitter.com/shaps80)
 
 ## Usage
 
