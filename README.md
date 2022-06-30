@@ -20,6 +20,10 @@ There is also a [Demo project](https://github.com/shaps80/SwiftUIBackportsDemo) 
 
 > Lastly, I hope this repo also serves as a great resource for _how_ you can backport effectively with minimal hacks 👍
 
+## Sponsor
+
+Please consider sponsoring me as it helps keep me working on useful libraries like these 😬
+
 ## Usage
 
 The library adopts a backport design by [Dave DeLong](https://davedelong.com/blog/2021/10/09/simplifying-backwards-compatibility-in-swift/) that makes use of a single type to improve discoverability and maintainability when the time comes to remove your backport implementations, in favour of official APIs.
