@@ -63,6 +63,8 @@ Environment:
 
 ## Backports
 
+**SwiftUI**
+
 - `AsyncImage`
 - `AppStorage`
 - `background` – ViewBuilder API
@@ -78,6 +80,10 @@ Environment:
 - `StateObject`
 - `Section(_ header:)`
 - `task` – async/await modifier
+
+**UIKit**
+
+- `UIHostingConfiguration` – simplifies embedding SwiftUI in `UICollectionViewCell`'s
 
 ## Extras
 

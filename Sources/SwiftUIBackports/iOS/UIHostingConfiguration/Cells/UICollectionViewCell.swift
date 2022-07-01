@@ -30,7 +30,7 @@ extension Backport where Content: UICollectionViewCell {
 
             content.clipsToBounds = false
             contentView.clipsToBounds = false
-            content.preservesSuperviewLayoutMargins = false
+            contentView.preservesSuperviewLayoutMargins = false
             contentView.addSubview(configuredView)
 
             let insets = Mirror(reflecting: configuration)
