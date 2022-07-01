@@ -17,9 +17,8 @@ extension Backport where Content: UICollectionViewCell {
     /// Setting a content configuration replaces the existing contentView of the
     /// cell with a new content view instance from the configuration.
     public var contentConfiguration: BackportUIContentConfiguration? {
-        get { objc_getAssociatedObject(self, #function) as? BackportUIContentConfiguration }
+        get { nil } // we can't really support anything here, so for now we'll return nil
         set {
-            objc_setAssociatedObject(self, #function, newValue, .OBJC_ASSOCIATION_RETAIN)
             configuredView?.removeFromSuperview()
 
             guard let configuration = newValue else { return }

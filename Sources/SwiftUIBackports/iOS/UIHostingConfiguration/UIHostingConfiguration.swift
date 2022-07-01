@@ -6,6 +6,31 @@ import SwiftUI
 @available(watchOS, unavailable)
 extension Backport where Content == Any {
 
+    /**
+     A content configuration suitable for hosting a hierarchy of SwiftUI views.
+     Use a value of this type, which conforms to the UIContentConfiguration protocol, with a UICollectionViewCell or UITableViewCell to host a hierarchy of SwiftUI views in a collection or table view, respectively. For example, the following shows a stack with an image and text inside the cell:
+
+         myCell.contentConfiguration = UIHostingConfiguration {
+            HStack {
+                Image(systemName: "star").foregroundStyle(.purple)
+                Text("Favorites")
+                Spacer()
+            }
+         }
+
+     You can also customize the background of the containing cell. The following example draws a blue background:
+
+         myCell.contentConfiguration = UIHostingConfiguration {
+            HStack {
+                Image(systemName: "star").foregroundStyle(.purple)
+                Text("Favorites")
+                Spacer()
+            }
+         }
+         .background {
+            Color.blue
+         }
+     */
     public struct UIHostingConfiguration<Label, Background>: BackportUIContentConfiguration where Label: View, Background: View {
 
         var content: Label
