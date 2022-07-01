@@ -1,5 +1,6 @@
 import SwiftUI
 
+#if os(iOS) || os(tvOS)
 /// The requirements for an object that provides the configuration for a content view.
 ///
 /// This protocol provides a blueprint for a content configuration object, which encompasses
@@ -14,3 +15,4 @@ public protocol BackportUIContentConfiguration {
     /// Initializes and returns a new instance of the content view using this configuration.
     func makeContentView() -> UIView
 }
+#endif

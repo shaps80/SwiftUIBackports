@@ -1,6 +1,7 @@
 import SwiftUI
 import ObjectiveC
 
+#if os(iOS) || os(tvOS)
 @available(iOS, deprecated: 14)
 @available(tvOS, deprecated: 14)
 @available(macOS, unavailable)
@@ -68,3 +69,4 @@ extension Backport where Content: UICollectionViewCell {
     }
 
 }
+#endif

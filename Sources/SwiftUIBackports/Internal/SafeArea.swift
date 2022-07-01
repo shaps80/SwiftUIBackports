@@ -1,12 +1,13 @@
 import SwiftUI
 
+#if os(iOS) || os(tvOS)
 /*
  Since UICollectionView is not designed to support SwiftUI out of the box,
  we need to use a little trick to get the SwiftUI View's to ignore safeArea
  insets, otherwise our cell's will not always layout correctly.
  */
 internal extension UIHostingController {
-    convenience public init(rootView: Content, ignoreSafeArea: Bool) {
+    convenience init(rootView: Content, ignoreSafeArea: Bool) {
         self.init(rootView: rootView)
 
         if ignoreSafeArea {
@@ -37,3 +38,4 @@ internal extension UIHostingController {
         }
     }
 }
+#endif

@@ -1,5 +1,6 @@
 import SwiftUI
 
+#if os(iOS) || os(tvOS)
 @available(iOS, deprecated: 16)
 @available(tvOS, deprecated: 16)
 @available(macOS, unavailable)
@@ -183,3 +184,4 @@ extension Backport.UIHostingConfiguration where Content == Any, Background == Em
     }
 
 }
+#endif
