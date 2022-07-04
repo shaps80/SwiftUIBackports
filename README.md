@@ -75,6 +75,7 @@ Environment:
 - `navigationTitle` – newer API
 - `overlay` – ViewBuilder API
 - `onChange`
+- `openURL`
 - `ProgressView`
 - `presentationDetents`
 - `presentationDragIndicator`
