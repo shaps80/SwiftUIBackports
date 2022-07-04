@@ -78,6 +78,7 @@ Environment:
 - `ProgressView`
 - `presentationDetents`
 - `presentationDragIndicator`
+- `requestReview`
 - `Refreshable`
 - `ScaledMetric`
 - `StateObject`
