@@ -68,14 +68,18 @@ Environment:
 - `AsyncImage`
 - `AppStorage`
 - `background` – ViewBuilder API
+- `DismissAction`
+- `DynamicTypeSize`
 – `Label`
 - `NavigationDestination` – uses a standard NavigationView
 - `navigationTitle` – newer API
 - `overlay` – ViewBuilder API
 - `onChange`
+- `openURL`
 - `ProgressView`
 - `presentationDetents`
 - `presentationDragIndicator`
+- `requestReview`
 - `Refreshable`
 - `ScaledMetric`
 - `StateObject`
