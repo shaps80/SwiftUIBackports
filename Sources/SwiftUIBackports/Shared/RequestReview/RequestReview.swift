@@ -1,6 +1,7 @@
 import SwiftUI
 import StoreKit
 
+#if os(iOS) || os(macOS)
 public extension EnvironmentValues {
 
     /// An instance that tells StoreKit to request an App Store rating or review from the user, if appropriate.
@@ -22,8 +23,6 @@ public extension EnvironmentValues {
 ///
 @available(iOS, deprecated: 16)
 @available(macOS, deprecated: 13)
-@available(tvOS, unavailable)
-@available(watchOS, unavailable)
 extension Backport where Content == Any {
     @MainActor public struct RequestReviewAction {
         public func callAsFunction() {
@@ -41,6 +40,7 @@ extension Backport where Content == Any {
     }
 }
 
+#if os(iOS)
 private extension UIApplication {
     static var activeScene: UIWindowScene? {
         shared.connectedScenes
@@ -48,3 +48,6 @@ private extension UIApplication {
         as? UIWindowScene
     }
 }
+#endif
+
+#endif
