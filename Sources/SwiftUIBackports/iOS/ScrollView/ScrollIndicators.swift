@@ -41,8 +41,13 @@ extension Backport where Content: View {
             .environment(\.backportHorizontalScrollIndicatorVisibility, axes.contains(.horizontal) ? visibility : .automatic)
             .environment(\.backportVerticalScrollIndicatorVisibility, axes.contains(.vertical) ? visibility : .automatic)
             .inspect { inspector in
+                #if os(iOS)
                 inspector.sibling(ofType: UIScrollView.self)
+                #else
+                inspector.sourceView
+                #endif
             } customize: { scrollView in
+                #if os(iOS)
                 if axes.contains(.horizontal) {
                     scrollView.showsHorizontalScrollIndicator = visibility.scrollViewVisible
                 }
@@ -50,6 +55,7 @@ extension Backport where Content: View {
                 if axes.contains(.vertical) {
                     scrollView.showsVerticalScrollIndicator = visibility.scrollViewVisible
                 }
+                #endif
             }
         #else
         content

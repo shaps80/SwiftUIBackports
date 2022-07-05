@@ -46,9 +46,18 @@ extension Backport where Content: View {
         content
             .environment(\.backportIsScrollEnabled, !disabled)
             .inspect { inspector in
+                #if os(iOS)
                 inspector.sibling(ofType: UIScrollView.self)
+                #elseif os(macOS)
+                inspector.sibling(ofType: NSScrollView.self)
+                #endif
             } customize: { scrollView in
+                #if os(iOS)
                 scrollView.isScrollEnabled = !disabled
+                #elseif os(macOS)
+                scrollView.hasHorizontalScroller = false
+                scrollView.hasVerticalScroller = false
+                #endif
             }
         #else
         content

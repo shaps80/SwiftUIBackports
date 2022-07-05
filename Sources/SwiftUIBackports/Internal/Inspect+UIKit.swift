@@ -1,8 +1,16 @@
-#if os(iOS)
 import SwiftUI
 
-internal extension UIView {
-    func ancestor<ViewType: UIView>(ofType type: ViewType.Type) -> ViewType? {
+#if os(iOS)
+internal typealias PlatformView = UIView
+internal typealias PlatformViewController = UIViewController
+#elseif os(macOS)
+internal typealias PlatformView = NSView
+internal typealias PlatformViewController = NSViewController
+#endif
+
+#if os(iOS) || os(macOS)
+internal extension PlatformView {
+    func ancestor<ViewType: PlatformView>(ofType type: ViewType.Type) -> ViewType? {
         var view = superview
 
         while let s = view {
@@ -15,7 +23,7 @@ internal extension UIView {
         return nil
     }
 
-    var host: UIView? {
+    var host: PlatformView? {
         var view = superview
 
         while let s = view {
@@ -28,7 +36,7 @@ internal extension UIView {
         return nil
     }
 
-    func sibling<ViewType: UIView>(ofType type: ViewType.Type) -> ViewType? {
+    func sibling<ViewType: PlatformView>(ofType type: ViewType.Type) -> ViewType? {
         guard let superview = superview, let index = superview.subviews.firstIndex(of: self) else { return nil }
 
         var views = superview.subviews
@@ -43,7 +51,7 @@ internal extension UIView {
         return nil
     }
 
-    func child<ViewType: UIView>(ofType type: ViewType.Type) -> ViewType? {
+    func child<ViewType: PlatformView>(ofType type: ViewType.Type) -> ViewType? {
         for subview in subviews {
             if let typed = subview as? ViewType {
                 return typed
@@ -56,31 +64,31 @@ internal extension UIView {
     }
 }
 
-public struct Inspector {
-    public var hostView: UIView
-    public var sourceView: UIView
-    public var sourceController: UIViewController
+internal struct Inspector {
+    var hostView: PlatformView
+    var sourceView: PlatformView
+    var sourceController: PlatformViewController
 
-    func ancestor<ViewType: UIView>(ofType: ViewType.Type) -> ViewType? {
+    func ancestor<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
         hostView.ancestor(ofType: ViewType.self)
     }
 
-    func sibling<ViewType: UIView>(ofType: ViewType.Type) -> ViewType? {
+    func sibling<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
         hostView.sibling(ofType: ViewType.self)
     }
 }
 
-public extension View {
+extension View {
     private func inject<Content>(_ content: Content) -> some View where Content: View {
         overlay(content.frame(width: 0, height: 0))
     }
 
-    func inspect<ViewType: UIView>(selector: @escaping (_ inspector: Inspector) -> ViewType?, customize: @escaping (ViewType) -> Void) -> some View {
+    func inspect<ViewType: PlatformView>(selector: @escaping (_ inspector: Inspector) -> ViewType?, customize: @escaping (ViewType) -> Void) -> some View {
         inject(InspectionView(selector: selector, customize: customize))
     }
 }
 
-private struct InspectionView<ViewType: UIView>: View {
+private struct InspectionView<ViewType: PlatformView>: View {
     let selector: (Inspector) -> ViewType?
     let customize: (ViewType) -> Void
 
@@ -89,6 +97,23 @@ private struct InspectionView<ViewType: UIView>: View {
     }
 }
 
+private class SourceView: PlatformView {
+    required init() {
+        super.init(frame: .zero)
+        isHidden = true
+        #if os(iOS)
+        isUserInteractionEnabled = false
+        #endif
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+#endif
+
+#if os(iOS)
 private extension InspectionView {
     struct Representable: UIViewRepresentable {
         let parent: InspectionView
@@ -112,18 +137,29 @@ private extension InspectionView {
         }
     }
 }
+#elseif os(macOS)
+private extension InspectionView {
+    struct Representable: NSViewRepresentable {
+        let parent: InspectionView
 
-private class SourceView: UIView {
-    required init() {
-        super.init(frame: .zero)
-        isHidden = true
-        isUserInteractionEnabled = false
-    }
+        func makeNSView(context: Context) -> NSView {
+            .init(frame: .zero)
+        }
 
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        func updateNSView(_ view: NSView, context: Context) {
+            DispatchQueue.main.async {
+                guard let host = view.host else { return }
+
+                let inspector = Inspector(
+                    hostView: host,
+                    sourceView: view,
+                    sourceController: view.parentController ?? NSViewController(nibName: nil, bundle: nil)
+                )
+
+                guard let targetView = parent.selector(inspector) else { return }
+                parent.customize(targetView)
+            }
+        }
     }
 }
-
 #endif

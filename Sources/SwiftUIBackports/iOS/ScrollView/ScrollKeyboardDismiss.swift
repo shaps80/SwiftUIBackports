@@ -45,10 +45,16 @@ extension Backport where Content: View {
         content
             .environment(\.backportScrollDismissesKeyboardMode, mode)
             .inspect { inspector in
+                #if os(iOS)
                 inspector.sibling(ofType: UIScrollView.self)
+                #else
+                inspector.sourceView
+                #endif
             } customize: { scrollView in
+                #if os(iOS)
                 guard scrollView.keyboardDismissMode != mode.scrollViewDismissMode else { return }
                 scrollView.keyboardDismissMode = mode.scrollViewDismissMode
+                #endif
             }
         #else
         content
