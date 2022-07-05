@@ -79,6 +79,7 @@ Environment:
 - `ProgressView`
 - `presentationDetents`
 - `presentationDragIndicator`
+- `quicklookPreview`
 - `requestReview`
 - `Refreshable`
 - `ScaledMetric`
