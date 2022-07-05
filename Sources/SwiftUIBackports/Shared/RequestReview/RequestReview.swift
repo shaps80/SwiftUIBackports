@@ -40,14 +40,4 @@ extension Backport where Content == Any {
     }
 }
 
-#if os(iOS)
-private extension UIApplication {
-    static var activeScene: UIWindowScene? {
-        shared.connectedScenes
-            .first { $0.activationState == .foregroundActive }
-        as? UIWindowScene
-    }
-}
-#endif
-
 #endif

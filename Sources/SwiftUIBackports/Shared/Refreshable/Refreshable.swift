@@ -24,9 +24,42 @@ extension Backport where Content: View {
     ///   `await` in front of any asynchronous calls inside the handler.
     /// - Returns: A view with a new refresh action in its environment.
     public func refreshable(action: @escaping @Sendable () async -> Void) -> some View {
-        content.environment(\.backportRefresh, Backport<Any>.RefreshAction(action))
+        content
+            .environment(\.backportRefresh, Backport<Any>.RefreshAction(action))
+            .inspect { inspector in
+                inspector.sibling(ofType: UITableView.self)
+            } customize: { scrollView in
+                guard scrollView.refreshControl == nil else { return }
+                scrollView.refreshControl = RefreshControl {
+                    await action()
+                }
+            }
     }
 
+}
+
+private final class RefreshControl: UIRefreshControl {
+    var handler: (() -> Void)?
+
+    init(_ handler: @escaping () async -> Void) {
+        super.init()
+        self.handler = { [weak self] in
+            Task {
+                await handler()
+                self?.endRefreshing()
+            }
+        }
+
+        addTarget(self, action: #selector(update), for: .valueChanged)
+    }
+
+    @objc private func update() {
+        handler?()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 @available(iOS, deprecated: 15)
