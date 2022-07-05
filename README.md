@@ -84,6 +84,9 @@ Environment:
 - `Refreshable` – includes pull-to-refresh 
 - `ScaledMetric`
 - `StateObject`
+- `scrollDisabled`
+- `scrollDismissesKeyboard`
+- `scrollIndicators`
 - `Section(_ header:)`
 - `task` – async/await modifier
 
