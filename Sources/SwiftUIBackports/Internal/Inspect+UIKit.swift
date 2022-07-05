@@ -47,7 +47,7 @@ internal extension UIView {
         for subview in subviews {
             if let typed = subview as? ViewType {
                 return typed
-            } else if let typed = child(ofType: type) {
+            } else if let typed = subview.child(ofType: type) {
                 return typed
             }
         }
