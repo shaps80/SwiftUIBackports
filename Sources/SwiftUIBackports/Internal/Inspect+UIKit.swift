@@ -1,6 +1,4 @@
-#if canImport(UIKit)
-
-import UIKit
+#if os(iOS)
 import SwiftUI
 
 internal extension UIView {

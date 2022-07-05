@@ -1,4 +1,4 @@
-#if canImport(UIKit)
+#if os(iOS)
 import UIKit
 
 public extension UIView {
@@ -18,7 +18,7 @@ public extension UIView {
 }
 #endif
 
-#if canImport(AppKit)
+#if os(macOS)
 import AppKit
 
 public extension NSView {
@@ -27,7 +27,7 @@ public extension NSView {
         var responder: NSResponder? = self
 
         while !(responder is NSViewController) && superview != nil {
-            if let next = responder?.next {
+            if let next = responder?.nextResponder {
                 responder = next
             }
         }

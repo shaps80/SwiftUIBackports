@@ -1,4 +1,4 @@
-#if canImport(UIKit)
+#if os(iOS)
 import UIKit
 
 internal extension UIApplication {
