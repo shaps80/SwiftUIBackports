@@ -40,28 +40,27 @@ extension Backport where Content: View {
     ///
     /// - Returns: A view that presents the preview of the contents of the URL.
     public func quickLookPreview(_ item: Binding<URL?>) -> some View {
-        content.background(QuicklookSheet(selection: item, items: [item.wrappedValue].compactMap { $0 }))
+        content.background(QuicklookSheet(selection: item, items: []))
     }
 
 }
 
 #if os(macOS)
+import QuickLookUI
 
-private struct QuicklookSheet<Items>: NSViewRepresentable where Items: RandomAccessCollection, Items.Element == URL {
+private struct QuicklookSheet<Items>: NSViewControllerRepresentable where Items: RandomAccessCollection, Items.Element == URL {
     let selection: Binding<Items.Element?>
     let items: Items
 
-    func makeNSView(context: Context) -> QLPreviewView {
-        let preview = QLPreviewView(frame: .zero, style: .normal)
-        preview?.autostarts = true
-        return preview ?? .init()
+    func makeNSViewController(context: Context) -> PreviewController<Items> {
+        .init(selection: selection, in: items)
     }
 
-    func updateNSView(_ view: QLPreviewView, context: Context) {
-        view.previewItem = PreviewUrl(url: selection.wrappedValue)
+    func updateNSViewController(_ controller: PreviewController<Items>, context: Context) {
+        controller.selection = selection
+        controller.items = items
     }
 }
-
 
 #elseif os(iOS)
 
