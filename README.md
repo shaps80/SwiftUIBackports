@@ -81,7 +81,7 @@ Environment:
 - `presentationDragIndicator`
 - `quicklookPreview`
 - `requestReview`
-- `Refreshable` – includes pull-to-refresh
+- `Refreshable` – includes pull-to-refresh 
 - `ScaledMetric`
 - `StateObject`
 - `Section(_ header:)`
