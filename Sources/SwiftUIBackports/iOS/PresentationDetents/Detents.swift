@@ -1,7 +1,9 @@
 import SwiftUI
 
-#if os(iOS)
 @available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(watchOS, deprecated: 9)
 public extension Backport where Content: View {
 
     /// Sets the available detents for the enclosing sheet.
@@ -27,11 +29,15 @@ public extension Backport where Content: View {
     ///   to resize it.
     @ViewBuilder
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>) -> some View {
+        #if os(iOS)
         if #available(iOS 15, *) {
             content.background(Backport<Any>.Representable(detents: detents, selection: .constant(.large)))
         } else {
             content
         }
+        #else
+        content
+        #endif
     }
 
 
@@ -67,16 +73,23 @@ public extension Backport where Content: View {
     ///     provide for the `detents` parameter.
     @ViewBuilder
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>) -> some View {
+        #if os(iOS)
         if #available(iOS 15, *) {
             content.background(Backport<Any>.Representable(detents: detents, selection: selection))
         } else {
             content
         }
+        #else
+        content
+        #endif
     }
 
 }
 
 @available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(watchOS, deprecated: 9)
 public extension Backport where Content == Any {
 
     /// A type that represents a height where a sheet naturally rests.
@@ -117,6 +130,7 @@ public extension Backport where Content == Any {
     }
 }
 
+#if os(iOS)
 @available(iOS 15, *)
 private extension Backport where Content == Any {
     struct Representable: UIViewControllerRepresentable {

@@ -1,7 +1,7 @@
 import SwiftUI
-import QuickLookUI
 
 #if os(macOS)
+import QuickLookUI
 
 final class PreviewController<Items>: NSViewController, QLPreviewPanelDataSource, QLPreviewPanelDelegate where Items: RandomAccessCollection, Items.Element == URL {
     private let panel = QLPreviewPanel.shared()!
