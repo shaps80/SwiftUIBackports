@@ -1,11 +1,20 @@
 import SwiftUI
 
+@available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(watchOS, deprecated: 9)
 extension Backport where Wrapped: View {
+    /// Sets a style for labeled content.
     public func labeledContentStyle<S>(_ style: S) -> some View where S: BackportLabeledContentStyle {
         content.environment(\.backportLabeledContentStyle, .init(style))
     }
 }
 
+@available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(watchOS, deprecated: 9)
 public protocol BackportLabeledContentStyle {
     typealias Configuration = Backport<Any>.LabeledContentStyleConfiguration
     associatedtype Body: View
@@ -31,6 +40,10 @@ private struct BackportLabeledContentStyleEnvironmentKey: EnvironmentKey {
     static var defaultValue: AnyLabeledContentStyle = .init(.automatic)
 }
 
+@available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(watchOS, deprecated: 9)
 internal extension EnvironmentValues {
     var backportLabeledContentStyle: AnyLabeledContentStyle {
         get { self[BackportLabeledContentStyleEnvironmentKey.self] }

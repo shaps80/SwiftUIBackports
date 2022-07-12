@@ -1,5 +1,9 @@
 import SwiftUI
 
+@available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(watchOS, deprecated: 9)
 extension Backport where Wrapped == Any {
 
     /// The properties of a labeled content instance.
@@ -7,10 +11,15 @@ extension Backport where Wrapped == Any {
 
         /// A type-erased label of a labeled content instance.
         public struct Label: View {
+            @Environment(\.backportLabelStyle) private var labelHidden
             let view: AnyView
             public var body: some View { view }
             init<V: View>(_ view: V) {
-                self.view = .init(view)
+                self.view = .init(Backport.Label(title: {
+                    view
+                }, icon: {
+                    EmptyView()
+                }))
             }
         }
 
