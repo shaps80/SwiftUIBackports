@@ -44,7 +44,7 @@ private extension EnvironmentValues {
             let rest = typeName.dropFirst(expectedPrefix.count)
             let expectedSuffix = ">>"
             guard rest.hasSuffix(expectedSuffix) else {
-                print("Wrong prefix")
+                print("Wrong suffix")
                 return nil
             }
             let middle = rest.dropLast(expectedSuffix.count)
