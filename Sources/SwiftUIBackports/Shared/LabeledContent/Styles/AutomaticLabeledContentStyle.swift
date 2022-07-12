@@ -3,12 +3,10 @@ import SwiftUI
 extension Backport where Wrapped == Any {
 
     public struct AutomaticLabeledContentStyle: BackportLabeledContentStyle {
-        @Namespace private var namespace
-
         public func makeBody(configuration: Configuration) -> some View {
-            VStack(alignment: .leading, spacing: 2) {
+            HStack(alignment: .firstTextBaseline) {
                 configuration.label
-                    .foregroundColor(.secondary)
+                Spacer(minLength: 0)
                 configuration.content
             }
         }

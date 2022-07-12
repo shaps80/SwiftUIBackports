@@ -11,22 +11,29 @@ extension Backport where Wrapped == Any {
 
         /// A type-erased label of a labeled content instance.
         public struct Label: View {
-            @Environment(\.backportLabelStyle) private var labelHidden
+            @EnvironmentContains(key: "LabelsHiddenKey") private var isHidden
             let view: AnyView
-            public var body: some View { view }
-            init<V: View>(_ view: V) {
-                self.view = .init(Backport.Label(title: {
-                    view
-                }, icon: {
+            public var body: some View {
+                if isHidden {
                     EmptyView()
-                }))
+                } else {
+                    view
+                }
+            }
+            init<V: View>(_ view: V) {
+                self.view = .init(view)
             }
         }
 
         /// A type-erased content of a labeled content instance.
         public struct Content: View {
+            @EnvironmentContains(key: "LabelsHiddenKey") private var isHidden
             let view: AnyView
-            public var body: some View { view }
+            public var body: some View {
+                view
+                    .foregroundColor(isHidden ? .primary : .secondary)
+                    .frame(maxWidth: .infinity, alignment: isHidden ? .leading : .trailing)
+            }
             init<V: View>(_ view: V) {
                 self.view = .init(view)
             }
