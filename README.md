@@ -93,7 +93,7 @@ Environment:
 
 **UIKit**
 
-- `UIHostingConfiguration` – simplifies embedding SwiftUI in `UICollectionViewCell`'s
+- `UIHostingConfiguration` – simplifies embedding SwiftUI in `UICollectionViewCell` and `UITableViewCell`
 
 ## Extras
 
