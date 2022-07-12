@@ -4,8 +4,13 @@ import SwiftUI
 @available(iOS, deprecated: 16.0)
 public extension Backport where Wrapped: View {
 
-    /// The identifier of the largest detent that is not dimmed.
+    /// Removes dimming from detents higher than the provided identifier.
     ///
+    /// This has two affects on dentents higher than the identifier provided:
+    /// 1. Touches will passthrough to the views below the sheet.
+    /// 2. Touches will no longer dismiss the sheet automatically when tapping outside of the sheet.
+    ///
+    /// ```
     ///     struct ContentView: View {
     ///         @State private var showSettings = false
     ///
@@ -20,8 +25,9 @@ public extension Backport where Wrapped: View {
     ///             }
     ///         }
     ///     }
+    /// ```
     ///
-    /// - Parameter visibility: The preferred visibility of the drag indicator.
+    /// - Parameter identifier: The identifier of the largest detent that is not dimmed.
     @ViewBuilder
     func presentationUndimmed(from identifier: Backport<Any>.PresentationDetent.Identifier?) -> some View {
         if #available(iOS 15, *) {
