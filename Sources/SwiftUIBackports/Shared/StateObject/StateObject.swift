@@ -5,7 +5,7 @@ import SwiftUI
 @available(macOS, deprecated: 11.0)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, deprecated: 7.0)
-public extension Backport where Content: ObservableObject {
+public extension Backport where Wrapped: ObservableObject {
 
     /// A property wrapper type that instantiates an observable object.
     ///
@@ -49,7 +49,7 @@ public extension Backport where Content: ObservableObject {
         private final class Wrapper: ObservableObject {
             private var subject = PassthroughSubject<Void, Never>()
 
-            var value: Content? {
+            var value: Wrapped? {
                 didSet {
                     cancellable = nil
                     cancellable = value?.objectWillChange
@@ -68,7 +68,7 @@ public extension Backport where Content: ObservableObject {
 
         @ObservedObject private var observedObject = Wrapper()
 
-        private var thunk: () -> Content
+        private var thunk: () -> Wrapped
 
         /// The underlying value referenced by the state object.
         ///
@@ -85,7 +85,7 @@ public extension Backport where Content: ObservableObject {
         /// When you change a property of the wrapped value, you can access the new
         /// value immediately. However, SwiftUI updates views displaying the value
         /// asynchronously, so the user interface might not update immediately.
-        public var wrappedValue: Content {
+        public var wrappedValue: Wrapped {
             if let object = state.value {
                 return object
             } else {
@@ -110,7 +110,7 @@ public extension Backport where Content: ObservableObject {
         ///             Toggle("Enabled", isOn: $model.isEnabled)
         ///         }
         ///     }
-        public var projectedValue: ObservedObject<Content>.Wrapper {
+        public var projectedValue: ObservedObject<Wrapped>.Wrapper {
             ObservedObject(wrappedValue: wrappedValue).projectedValue
         }
 
@@ -133,7 +133,7 @@ public extension Backport where Content: ObservableObject {
         /// receives a distinct copy of the data model.
         ///
         /// - Parameter thunk: An initial value for the state object.
-        public init(wrappedValue thunk: @autoclosure @escaping () -> Content) {
+        public init(wrappedValue thunk: @autoclosure @escaping () -> Wrapped) {
             self.thunk = thunk
         }
 

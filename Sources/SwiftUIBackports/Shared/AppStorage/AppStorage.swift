@@ -4,7 +4,7 @@ import SwiftUI
 @available(macOS, deprecated: 11)
 @available(tvOS, deprecated: 14)
 @available(watchOS, deprecated: 7)
-extension Backport where Content == Any {
+extension Backport where Wrapped == Any {
 
     /// A property wrapper type that reflects a value from `Store` and
     /// invalidates a view on a change in value in that store.
@@ -142,7 +142,7 @@ public extension Backport.AppStorage {
 
 }
 
-public extension Backport.AppStorage where Content == Any, Value: ExpressibleByNilLiteral {
+public extension Backport.AppStorage where Wrapped == Any, Value: ExpressibleByNilLiteral {
 
     /// Creates a property that can read and write an Optional boolean user
     /// default.
@@ -248,7 +248,7 @@ public extension Backport.AppStorage where Content == Any, Value: ExpressibleByN
 
 }
 
-public extension Backport.AppStorage where Content == Any, Value: RawRepresentable {
+public extension Backport.AppStorage where Wrapped == Any, Value: RawRepresentable {
 
     /// Creates a property that can read and write to a string user default,
     /// transforming that to `RawRepresentable` data type.

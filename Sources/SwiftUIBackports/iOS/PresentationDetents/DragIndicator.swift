@@ -2,7 +2,7 @@ import SwiftUI
 
 #if os(iOS)
 @available(iOS, deprecated: 16)
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
 
     /// Sets the visibility of the drag indicator on top of a sheet.
     ///
@@ -37,7 +37,7 @@ public extension Backport where Content: View {
 }
 
 @available(iOS 15, *)
-private extension Backport where Content == Any {
+private extension Backport where Wrapped == Any {
     struct Representable: UIViewControllerRepresentable {
         let visibility: Backport<Any>.Visibility
 

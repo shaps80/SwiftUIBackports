@@ -28,14 +28,14 @@ import ObjectiveC
 ///         }
 ///     }
 ///
-public struct Backport<Content> {
+public struct Backport<Wrapped> {
 
     /// The underlying content this backport represents.
-    public let content: Content
+    public let content: Wrapped
 
     /// Initializes a new Backport for the specified content.
     /// - Parameter content: The content (type) that's being backported
-    public init(_ content: Content) {
+    public init(_ content: Wrapped) {
         self.content = content
     }
 

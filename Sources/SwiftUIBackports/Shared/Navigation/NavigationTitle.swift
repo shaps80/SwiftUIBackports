@@ -3,7 +3,7 @@ import SwiftUI
 @available(iOS, deprecated: 14)
 @available(watchOS, deprecated: 7)
 @available(tvOS, deprecated: 14)
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
 
     @ViewBuilder
     func navigationTitle<S: StringProtocol>(_ title: S) -> some View {

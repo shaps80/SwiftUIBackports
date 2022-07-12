@@ -4,7 +4,7 @@ import Foundation
 @available(macOS, deprecated: 12.0)
 @available(tvOS, deprecated: 15.0)
 @available(watchOS, deprecated: 8.0)
-public extension Backport where Content: URLSession {
+public extension Backport where Wrapped: URLSession {
 
     /// Start a data task with a URL using async/await.
     /// - parameter url: The URL to send a request to.

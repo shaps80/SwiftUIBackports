@@ -20,7 +20,7 @@ public extension View {
 
 }
 
-private extension Backport where Content == Any {
+private extension Backport where Wrapped == Any {
     struct Representable: UIViewControllerRepresentable {
         let isModal: Bool
         let onAttempt: (() -> Void)?

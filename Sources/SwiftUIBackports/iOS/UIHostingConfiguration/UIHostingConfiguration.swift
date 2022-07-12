@@ -5,7 +5,7 @@ import SwiftUI
 @available(tvOS, deprecated: 16)
 @available(macOS, unavailable)
 @available(watchOS, unavailable)
-extension Backport where Content == Any {
+extension Backport where Wrapped == Any {
 
     /**
      A content configuration suitable for hosting a hierarchy of SwiftUI views.
@@ -173,7 +173,7 @@ extension Backport.UIHostingConfiguration {
 @available(tvOS, deprecated: 16)
 @available(macOS, unavailable)
 @available(watchOS, unavailable)
-extension Backport.UIHostingConfiguration where Content == Any, Background == EmptyView {
+extension Backport.UIHostingConfiguration where Wrapped == Any, Background == EmptyView {
 
     /// Creates a hosting configuration with the given contents.
     ///

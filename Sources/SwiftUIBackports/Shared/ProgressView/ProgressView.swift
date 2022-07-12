@@ -4,7 +4,7 @@ import SwiftUI
 @available(macOS, deprecated: 11)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, deprecated: 7.0)
-public extension Backport where Content == Any {
+public extension Backport where Wrapped == Any {
     struct ProgressView<Label: View, CurrentValueLabel: View>: View {
         @Environment(\.backportProgressViewStyle) private var style
         let config: Backport<Any>.ProgressViewStyleConfiguration
@@ -25,7 +25,7 @@ public extension Backport where Content == Any {
 @available(macOS, deprecated: 11)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, unavailable)
-public extension Backport.ProgressView where Content == Any, CurrentValueLabel == EmptyView {
+public extension Backport.ProgressView where Wrapped == Any, CurrentValueLabel == EmptyView {
     /// Creates a progress view for showing indeterminate progress, without a
     /// label.
     init() where Label == EmptyView {
@@ -78,7 +78,7 @@ public extension Backport.ProgressView where Content == Any, CurrentValueLabel =
 @available(macOS, deprecated: 11)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, deprecated: 7.0)
-extension Backport.ProgressView where Content == Any {
+extension Backport.ProgressView where Wrapped == Any {
 
     /// Creates a progress view for showing determinate progress.
     ///

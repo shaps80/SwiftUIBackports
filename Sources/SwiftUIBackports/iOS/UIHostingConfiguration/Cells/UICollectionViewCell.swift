@@ -6,7 +6,7 @@ import ObjectiveC
 @available(tvOS, deprecated: 14)
 @available(macOS, unavailable)
 @available(watchOS, unavailable)
-extension Backport where Content: UICollectionViewCell {
+extension Backport where Wrapped: UICollectionViewCell {
 
     private var configuredView: UIView? {
         get { objc_getAssociatedObject(self, #function) as? UIView }

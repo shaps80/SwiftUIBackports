@@ -79,7 +79,7 @@ internal struct Inspector {
 }
 
 extension View {
-    private func inject<Content>(_ content: Content) -> some View where Content: View {
+    private func inject<Wrapped>(_ content: Wrapped) -> some View where Wrapped: View {
         overlay(content.frame(width: 0, height: 0))
     }
 

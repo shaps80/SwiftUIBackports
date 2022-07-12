@@ -5,7 +5,7 @@ import Combine
 @available(macOS, deprecated: 11.0)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, deprecated: 7.0)
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
 
     /// Adds a modifier for this view that fires an action when a specific
     /// value changes.

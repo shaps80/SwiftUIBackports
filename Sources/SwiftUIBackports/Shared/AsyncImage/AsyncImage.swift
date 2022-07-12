@@ -1,7 +1,7 @@
 import SwiftUI
 
 @available(iOS, deprecated: 15.0)
-public extension Backport where Content == Any {
+public extension Backport where Wrapped == Any {
 
     /// Loads and displays an image from the specified URL.
     ///

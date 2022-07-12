@@ -2,7 +2,7 @@ import SwiftUI
 
 #if os(iOS)
 @available(iOS, deprecated: 16.0)
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
 
     /// The identifier of the largest detent that is not dimmed.
     ///
@@ -34,7 +34,7 @@ public extension Backport where Content: View {
 }
 
 @available(iOS 15, *)
-private extension Backport where Content == Any {
+private extension Backport where Wrapped == Any {
     struct Representable: UIViewControllerRepresentable {
         let identifier: Backport<Any>.PresentationDetent.Identifier?
 

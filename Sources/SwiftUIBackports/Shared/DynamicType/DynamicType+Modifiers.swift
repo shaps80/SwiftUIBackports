@@ -1,6 +1,6 @@
 import SwiftUI
 
-extension Backport where Content: View {
+extension Backport where Wrapped: View {
 
     /// Sets the Dynamic Type size within the view to the given value.
     ///

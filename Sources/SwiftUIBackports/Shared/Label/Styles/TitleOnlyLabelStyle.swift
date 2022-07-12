@@ -4,7 +4,7 @@ import SwiftUI
 @available(macOS, deprecated: 11)
 @available(tvOS, deprecated: 14)
 @available(watchOS, deprecated: 7)
-extension Backport where Content == Any {
+extension Backport where Wrapped == Any {
 
     // A label style that only displays the title of the label.
     ///

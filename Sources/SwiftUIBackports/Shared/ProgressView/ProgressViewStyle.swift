@@ -33,7 +33,7 @@ public protocol BackportProgressViewStyle {
 @available(macOS, deprecated: 11)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, deprecated: 7.0)
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
     func progressViewStyle<S: BackportProgressViewStyle>(_ style: S) -> some View {
         content.environment(\.backportProgressViewStyle, .init(style))
     }

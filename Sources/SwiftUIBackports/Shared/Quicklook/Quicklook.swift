@@ -7,7 +7,7 @@ import QuickLook
 @available(macOS, deprecated: 11)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
-extension Backport where Content: View {
+extension Backport where Wrapped: View {
 
     /// Presents a Quick Look preview of the URLs you provide.
     ///

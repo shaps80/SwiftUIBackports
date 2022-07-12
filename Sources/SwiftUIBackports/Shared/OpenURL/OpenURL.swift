@@ -8,7 +8,7 @@ import WatchKit
 @available(tvOS, deprecated: 14)
 @available(macOS, deprecated: 11)
 @available(watchOS, deprecated: 7)
-extension Backport where Content == Any {
+extension Backport where Wrapped == Any {
 
     /// An action that opens a URL.
     ///

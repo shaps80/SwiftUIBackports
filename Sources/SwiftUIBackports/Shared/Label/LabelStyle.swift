@@ -31,7 +31,7 @@ public protocol BackportLabelStyle {
 @available(macOS, deprecated: 11)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, deprecated: 7.0)
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
     func labelStyle<S: BackportLabelStyle>(_ style: S) -> some View {
         content.environment(\.backportLabelStyle, .init(style))
     }

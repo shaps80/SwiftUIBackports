@@ -23,7 +23,7 @@ public extension EnvironmentValues {
 ///
 @available(iOS, deprecated: 16)
 @available(macOS, deprecated: 13)
-extension Backport where Content == Any {
+extension Backport where Wrapped == Any {
     @MainActor public struct RequestReviewAction {
         public func callAsFunction() {
             #if os(macOS)

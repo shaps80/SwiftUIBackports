@@ -4,7 +4,7 @@ import SwiftUI
 @available(tvOS, deprecated: 16)
 @available(watchOS, deprecated: 9)
 @available(macOS, deprecated: 13)
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
 
     /// Associates a destination view with a presented data type for use within
     /// a navigation stack.
@@ -49,7 +49,7 @@ public extension Backport where Content: View {
 @available(tvOS, deprecated: 16)
 @available(watchOS, deprecated: 9)
 @available(macOS, deprecated: 13)
-public extension Backport where Content == Any {
+public extension Backport where Wrapped == Any {
     struct NavigationLink<Label, Destination>: View where Label: View, Destination: View {
         @Environment(\.navigationDestinations) private var destinations
 

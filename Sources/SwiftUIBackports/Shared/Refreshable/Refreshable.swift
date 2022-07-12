@@ -4,7 +4,7 @@ import SwiftUI
 @available(macOS, deprecated: 12)
 @available(tvOS, deprecated: 15)
 @available(watchOS, deprecated: 8)
-extension Backport where Content: View {
+extension Backport where Wrapped: View {
 
     /// Marks this view as refreshable.
     ///
@@ -73,7 +73,7 @@ private final class RefreshControl: UIRefreshControl {
 @available(macOS, deprecated: 12)
 @available(tvOS, deprecated: 15)
 @available(watchOS, deprecated: 8)
-extension Backport where Content == Any {
+extension Backport where Wrapped == Any {
 
     /// An action that initiates a refresh operation.
     ///

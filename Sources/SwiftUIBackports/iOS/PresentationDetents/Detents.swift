@@ -4,7 +4,7 @@ import SwiftUI
 @available(tvOS, deprecated: 16)
 @available(macOS, deprecated: 13)
 @available(watchOS, deprecated: 9)
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
 
     /// Sets the available detents for the enclosing sheet.
     ///
@@ -90,7 +90,7 @@ public extension Backport where Content: View {
 @available(tvOS, deprecated: 16)
 @available(macOS, deprecated: 13)
 @available(watchOS, deprecated: 9)
-public extension Backport where Content == Any {
+public extension Backport where Wrapped == Any {
 
     /// A type that represents a height where a sheet naturally rests.
     struct PresentationDetent: Hashable {
@@ -132,7 +132,7 @@ public extension Backport where Content == Any {
 
 #if os(iOS)
 @available(iOS 15, *)
-private extension Backport where Content == Any {
+private extension Backport where Wrapped == Any {
     struct Representable: UIViewControllerRepresentable {
         let detents: Set<Backport<Any>.PresentationDetent>
         let selection: Binding<Backport<Any>.PresentationDetent>

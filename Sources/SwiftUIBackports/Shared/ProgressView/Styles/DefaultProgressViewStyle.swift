@@ -4,7 +4,7 @@ import SwiftUI
 @available(macOS, deprecated: 11)
 @available(tvOS, deprecated: 14.0)
 @available(watchOS, deprecated: 7.0)
-extension Backport where Content == Any {
+extension Backport where Wrapped == Any {
 
     /// The default progress view style in the current context of the view being
     /// styled.

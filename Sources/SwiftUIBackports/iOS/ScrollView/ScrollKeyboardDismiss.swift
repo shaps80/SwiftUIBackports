@@ -4,7 +4,7 @@ import SwiftUI
 @available(tvOS, deprecated: 16)
 @available(macOS, deprecated: 13)
 @available(watchOS, deprecated: 9)
-extension Backport where Content: View {
+extension Backport where Wrapped: View {
 
     /// Configures the behavior in which scrollable content interacts with
     /// the software keyboard.

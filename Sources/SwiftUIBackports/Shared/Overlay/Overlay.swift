@@ -1,6 +1,6 @@
 import SwiftUI
 
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
 
     /// Layers the views that you specify in front of this view.
     ///

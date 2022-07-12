@@ -4,7 +4,7 @@ import SwiftUI
 @available(macOS, deprecated: 12.0)
 @available(tvOS, deprecated: 15.0)
 @available(watchOS, deprecated: 8.0)
-public extension Backport where Content: View {
+public extension Backport where Wrapped: View {
 
     /// Adds an asynchronous task to perform when this view appears.
     ///
