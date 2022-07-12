@@ -25,7 +25,7 @@ public extension Backport where Wrapped: View {
     ///     }
     ///
     /// - Parameter detents: A set of supported detents for the sheet.
-    ///   If you provide more that one detent, people can drag the sheet
+    ///   If you provide more than one detent, people can drag the sheet
     ///   to resize it.
     @ViewBuilder
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>) -> some View {
