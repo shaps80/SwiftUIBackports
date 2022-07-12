@@ -71,6 +71,7 @@ Environment:
 - `DismissAction`
 - `DynamicTypeSize`
 – `Label`
+– `LabeledContent`
 - `NavigationDestination` – uses a standard NavigationView
 - `navigationTitle` – newer API
 - `overlay` – ViewBuilder API
