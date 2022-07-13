@@ -131,7 +131,7 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
 
 }
 
-@available(macOS, introduced: 11)
+@available(macOS, introduced: 11, message: "SFSymbols support was only introduced in macOS 11")
 extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
 
     /// Creates a label with a system icon image and a title generated from a
