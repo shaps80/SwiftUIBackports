@@ -4,7 +4,7 @@ import SwiftUI
 @available(iOS, deprecated: 16.0)
 public extension Backport where Wrapped: View {
 
-    /// Removes dimming from detents higher than the provided identifier.
+    /// Removes dimming from detents higher (and including) the provided identifier
     ///
     /// This has two affects on dentents higher than the identifier provided:
     /// 1. Touches will passthrough to the views below the sheet.
