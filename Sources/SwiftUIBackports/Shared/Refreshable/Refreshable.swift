@@ -45,12 +45,12 @@ extension Backport where Wrapped: View {
 
 #if os(iOS)
 private final class RefreshControl: UIRefreshControl {
-    var handler: (() -> Void)?
+    var handler: (() async -> Void)?
 
     init(_ handler: @escaping () async -> Void) {
         super.init()
         self.handler = { [weak self] in
-            Task {
+            Task { [weak self] in
                 await handler()
                 self?.endRefreshing()
             }
@@ -59,8 +59,13 @@ private final class RefreshControl: UIRefreshControl {
         addTarget(self, action: #selector(update), for: .valueChanged)
     }
 
+    @MainActor
+    override func endRefreshing() {
+        super.endRefreshing()
+    }
+
     @objc private func update() {
-        handler?()
+        Task { await handler?() }
     }
 
     required init?(coder: NSCoder) {
