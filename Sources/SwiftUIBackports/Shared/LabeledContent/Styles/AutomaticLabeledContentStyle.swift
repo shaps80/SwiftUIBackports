@@ -6,8 +6,9 @@ extension Backport where Wrapped == Any {
         public func makeBody(configuration: Configuration) -> some View {
             HStack(alignment: .firstTextBaseline) {
                 configuration.label
-                Spacer(minLength: 0)
+                Spacer()
                 configuration.content
+                    .multilineTextAlignment(.trailing)
             }
         }
     }
