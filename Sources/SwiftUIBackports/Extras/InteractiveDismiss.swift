@@ -3,18 +3,12 @@ import SwiftUI
 #if os(iOS) || os(tvOS)
 public extension View {
 
-    /// Sets whether this presentation should act as a `modal`, preventing interactive dismissals
-    /// - Parameter isModal: If `true` the user will not be able to interactively dismiss
-    func presentation(isModal: Bool) -> some View {
-        background(Backport.Representable(isModal: isModal, onAttempt: nil))
-    }
-
     /// Provides fine-grained control over the dismissal.
     /// - Parameters:
     ///   - isModal: If `true`, the user will not be able to interactively dismiss
     ///   - onAttempt: A closure that will be called when an interactive dismiss attempt occurs.
     ///   You can use this as an opportunity to present an ActionSheet to prompt the user.
-    func presentation(isModal: Bool = true, _ onAttempt: @escaping () -> Void) -> some View {
+    func presentation(isModal: Bool = true, _ onAttempt: (() -> Void)? = nil) -> some View {
         background(Backport.Representable(isModal: isModal, onAttempt: onAttempt))
     }
 
