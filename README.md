@@ -70,6 +70,7 @@ Environment:
 - `background` – ViewBuilder API
 - `DismissAction`
 - `DynamicTypeSize`
+- `interactiveDismissDisabled`
 – `Label`
 – `LabeledContent`
 - `NavigationDestination` – uses a standard NavigationView
