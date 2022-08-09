@@ -48,14 +48,5 @@ public extension View {
 
 public extension NSObjectProtocol {
     /// Wraps an `NSObject` that can be extended to provide backport functionality.
-    ///
-    /// Since these types generally have reference semantics, this implementation provides
-    /// a mutable `Backport` to allow for usage in more broader contexts.
-    ///
-    ///     cell.backport.contentConfiguration = Backport.UIHostingConfiguration { }
-    ///
-    var backport: Backport<Self> {
-        get { objc_getAssociatedObject(self, #function) as? Backport<Self> ?? Backport(self) }
-        set { objc_setAssociatedObject(self, #function, newValue, .OBJC_ASSOCIATION_RETAIN) }
-    }
+    var backport: Backport<Self> { .init(self) }
 }
