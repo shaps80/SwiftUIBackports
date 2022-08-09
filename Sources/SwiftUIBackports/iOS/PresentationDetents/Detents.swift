@@ -31,7 +31,7 @@ public extension Backport where Wrapped: View {
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>) -> some View {
         #if os(iOS)
         if #available(iOS 15, *) {
-            content.background(Backport<Any>.Representable(detents: detents, selection: .constant(.large)))
+            content.background(Backport<Any>.Representable(detents: detents, selection: nil))
         } else {
             content
         }
@@ -135,7 +135,7 @@ public extension Backport where Wrapped == Any {
 private extension Backport where Wrapped == Any {
     struct Representable: UIViewControllerRepresentable {
         let detents: Set<Backport<Any>.PresentationDetent>
-        let selection: Binding<Backport<Any>.PresentationDetent>
+        let selection: Binding<Backport<Any>.PresentationDetent>?
 
         func makeUIViewController(context: Context) -> Backport.Representable.Controller {
             Controller(detents: detents, selection: selection)
@@ -152,10 +152,10 @@ private extension Backport.Representable {
     final class Controller: UIViewController, UISheetPresentationControllerDelegate {
 
         var detents: Set<Backport<Any>.PresentationDetent>
-        var selection: Binding<Backport<Any>.PresentationDetent>
+        var selection: Binding<Backport<Any>.PresentationDetent>?
         weak var _delegate: UISheetPresentationControllerDelegate?
 
-        init(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>) {
+        init(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>?) {
             self.detents = detents
             self.selection = selection
             super.init(nibName: nil, bundle: nil)
@@ -176,7 +176,7 @@ private extension Backport.Representable {
             update(detents: detents, selection: selection)
         }
 
-        func update(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>) {
+        func update(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>?) {
             self.detents = detents
             self.selection = selection
 
@@ -190,17 +190,22 @@ private extension Backport.Representable {
                             return .large()
                         }
                     }
-                    
-                    controller.selectedDetentIdentifier = .init(selection.wrappedValue.id.rawValue)
+
+                    if let selection = selection {
+                        controller.selectedDetentIdentifier = .init(selection.wrappedValue.id.rawValue)
+                    }
                     controller.prefersScrollingExpandsWhenScrolledToEdge = true
                 }
             }
         }
 
         func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
-            guard let id = sheetPresentationController.selectedDetentIdentifier?.rawValue,
-                  selection.wrappedValue.id.rawValue != id
+            guard
+                let selection = selection,
+                let id = sheetPresentationController.selectedDetentIdentifier?.rawValue,
+                selection.wrappedValue.id.rawValue != id
             else { return }
+
             selection.wrappedValue = .init(id: .init(rawValue: id))
         }
 
@@ -214,7 +219,6 @@ private extension Backport.Representable {
             if super.responds(to: aSelector) { return self }
             return _delegate
         }
-
     }
 }
 #endif
