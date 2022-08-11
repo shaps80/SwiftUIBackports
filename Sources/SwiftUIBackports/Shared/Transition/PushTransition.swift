@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-extension AnyTransition {
+public extension AnyTransition {
     static var backport: Backport<AnyTransition>{
         Backport(.identity)
     }
 }
 
-extension Backport where Wrapped == AnyTransition {
+public extension Backport where Wrapped == AnyTransition {
     /// Creates a transition that when added to a view will animate the view’s insertion by moving it in from the specified edge while fading it in, and animate its removal by moving it out towards the opposite edge and fading it out.
     /// - Parameter edge: the edge from which the view will be animated in.
     /// - Returns: A transition that animates a view by moving and fading it.
@@ -35,7 +35,9 @@ extension Backport where Wrapped == AnyTransition {
         case .trailing:
             oppositeEdge = .leading
         }
-        
+            
         return .asymmetric(insertion: .move(edge: edge), removal: .move(edge: oppositeEdge)).combined(with: .opacity)
     }
 }
+
+
