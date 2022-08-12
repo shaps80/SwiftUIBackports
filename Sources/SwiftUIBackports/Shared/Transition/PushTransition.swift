@@ -1,17 +1,4 @@
-//
-//  PushTransition.swift
-//  
-//
-//  Created by Andrey Plotnikov on 10.08.2022.
-//
-
 import SwiftUI
-
-public extension AnyTransition {
-    static var backport: Backport<AnyTransition>{
-        Backport(.identity)
-    }
-}
 
 public extension Backport where Wrapped == AnyTransition {
     /// Creates a transition that when added to a view will animate the view’s insertion by moving it in from the specified edge while fading it in, and animate its removal by moving it out towards the opposite edge and fading it out.
@@ -21,9 +8,7 @@ public extension Backport where Wrapped == AnyTransition {
     @available(watchOS, deprecated: 9.0)
     @available(macOS, deprecated: 13.0)
     @available(tvOS, deprecated: 16.0)
-    @available(macCatalyst, deprecated: 16.0)
     func push(from edge: Edge) -> AnyTransition {
-        
         var oppositeEdge: Edge
         switch edge {
         case .top:
@@ -36,7 +21,10 @@ public extension Backport where Wrapped == AnyTransition {
             oppositeEdge = .leading
         }
             
-        return .asymmetric(insertion: .move(edge: edge), removal: .move(edge: oppositeEdge)).combined(with: .opacity)
+        return .asymmetric(
+            insertion: .move(edge: edge),
+            removal: .move(edge: oppositeEdge)
+        ).combined(with: .opacity)
     }
 }
 
