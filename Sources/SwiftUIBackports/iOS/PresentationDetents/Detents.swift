@@ -182,7 +182,15 @@ private extension Backport.Representable {
 
             if let controller = parent?.sheetPresentationController {
                 controller.animateChanges {
-                    controller.detents = detents.map {
+                    controller.detents = detents.sorted(by: {
+                        switch ($0, $1) {
+                        case (.large, .medium):
+                            return false
+                        default:
+                            return true
+                        }
+                    })
+                    .map {
                         switch $0 {
                         case .medium:
                             return .medium()
