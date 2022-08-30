@@ -90,6 +90,7 @@ Environment:
 - `scrollIndicators`
 - `Section(_ header:)`
 - `task` – async/await modifier
+- `ToolbarPlacement`
 
 **UIKit**
 

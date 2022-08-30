@@ -31,6 +31,7 @@ public extension Backport where Wrapped: View {
         _ visibility: Backport<Any>.Visibility,
         for bars: Backport.ToolbarPlacement...
     ) -> some View {
+        #if swift(>=5.7)    // hack for Xcode 13
         if #available(iOS 16.0, macOS 13.0, watchOS 9, tvOS 16, *) {
             if bars.contains(.automatic) {
                 self.content.toolbar(.init(rawValue: visibility), for: .automatic)
@@ -58,6 +59,9 @@ public extension Backport where Wrapped: View {
         } else {
             self.content
         }
+        #else
+        self.content
+        #endif
     }
 }
 
