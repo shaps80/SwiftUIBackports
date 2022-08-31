@@ -82,6 +82,7 @@ private extension Backport.Representable {
                     controller.largestUndimmedDetentIdentifier = identifier.flatMap {
                         .init(rawValue: $0.rawValue)
                     }
+                    controller.presentingViewController.view.tintAdjustmentMode = .normal
                 }
             }
         }
