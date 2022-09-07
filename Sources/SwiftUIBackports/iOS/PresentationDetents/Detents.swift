@@ -93,7 +93,7 @@ public extension Backport where Wrapped: View {
 public extension Backport where Wrapped == Any {
 
     /// A type that represents a height where a sheet naturally rests.
-    struct PresentationDetent: Hashable {
+    struct PresentationDetent: Hashable, Comparable {
 
         public struct Identifier: RawRepresentable, Hashable {
             public var rawValue: String
@@ -127,6 +127,14 @@ public extension Backport where Wrapped == Any {
             return .init(id: .init(rawValue: ""))
         }
 
+        public static func < (lhs: PresentationDetent, rhs: PresentationDetent) -> Bool {
+            switch (lhs, rhs) {
+            case (.large, .medium):
+                return false
+            default:
+                return true
+            }
+        }
     }
 }
 
@@ -182,15 +190,7 @@ private extension Backport.Representable {
 
             if let controller = parent?.sheetPresentationController {
                 controller.animateChanges {
-                    controller.detents = detents.sorted(by: {
-                        switch ($0, $1) {
-                        case (.large, .medium):
-                            return false
-                        default:
-                            return true
-                        }
-                    })
-                    .map {
+                    controller.detents = detents.sorted().map {
                         switch $0 {
                         case .medium:
                             return .medium()
