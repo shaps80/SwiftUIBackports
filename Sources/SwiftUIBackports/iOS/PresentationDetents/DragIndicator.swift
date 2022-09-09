@@ -1,7 +1,9 @@
 import SwiftUI
 
-#if os(iOS)
 @available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(watchOS, deprecated: 9)
 public extension Backport where Wrapped: View {
 
     /// Sets the visibility of the drag indicator on top of a sheet.
@@ -27,15 +29,20 @@ public extension Backport where Wrapped: View {
     /// - Parameter visibility: The preferred visibility of the drag indicator.
     @ViewBuilder
     func presentationDragIndicator(_ visibility: Backport<Any>.Visibility) -> some View {
+        #if os(iOS)
         if #available(iOS 15, *) {
             content.background(Backport<Any>.Representable(visibility: visibility))
         } else {
             content
         }
+        #else
+        content
+        #endif
     }
 
 }
 
+#if os(iOS)
 @available(iOS 15, *)
 private extension Backport where Wrapped == Any {
     struct Representable: UIViewControllerRepresentable {

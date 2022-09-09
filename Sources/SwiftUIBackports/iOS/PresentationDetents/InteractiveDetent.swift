@@ -1,7 +1,9 @@
 import SwiftUI
 
-#if os(iOS)
-@available(iOS, deprecated: 16.0)
+@available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(watchOS, deprecated: 9)
 public extension Backport where Wrapped: View {
 
     /// Removes dimming from detents higher (and including) the provided identifier
@@ -29,16 +31,22 @@ public extension Backport where Wrapped: View {
     ///
     /// - Parameter identifier: The identifier of the largest detent that is not dimmed.
     @ViewBuilder
+    @available(iOS, deprecated: 13, message: "Please use backport.presentationDetents(_:selection:largestUndimmedDetent:)")
     func presentationUndimmed(from identifier: Backport<Any>.PresentationDetent.Identifier?) -> some View {
+        #if os(iOS)
         if #available(iOS 15, *) {
             content.background(Backport<Any>.Representable(identifier: identifier))
         } else {
             content
         }
+        #else
+        content
+        #endif
     }
 
 }
 
+#if os(iOS)
 @available(iOS 15, *)
 private extension Backport where Wrapped == Any {
     struct Representable: UIViewControllerRepresentable {
@@ -79,10 +87,10 @@ private extension Backport.Representable {
 
             if let controller = parent?.sheetPresentationController {
                 controller.animateChanges {
+                    controller.presentingViewController.view.tintAdjustmentMode = .normal
                     controller.largestUndimmedDetentIdentifier = identifier.flatMap {
                         .init(rawValue: $0.rawValue)
                     }
-                    controller.presentingViewController.view.tintAdjustmentMode = .normal
                 }
             }
         }

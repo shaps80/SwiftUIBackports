@@ -31,7 +31,7 @@ public extension Backport where Wrapped: View {
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>) -> some View {
         #if os(iOS)
         if #available(iOS 15, *) {
-            content.background(Backport<Any>.Representable(detents: detents, selection: nil))
+            content.background(Backport<Any>.Representable(detents: detents, selection: nil, largestUndimmed: .large))
         } else {
             content
         }
@@ -75,7 +75,50 @@ public extension Backport where Wrapped: View {
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>) -> some View {
         #if os(iOS)
         if #available(iOS 15, *) {
-            content.background(Backport<Any>.Representable(detents: detents, selection: selection))
+            content.background(Backport<Any>.Representable(detents: detents, selection: selection, largestUndimmed: .large))
+        } else {
+            content
+        }
+        #else
+        content
+        #endif
+    }
+
+    /// Sets the available detents for the enclosing sheet, giving you
+    /// programmatic control of the currently selected detent.
+    ///
+    /// By default, sheets support the ``PresentationDetent/large`` detent.
+    ///
+    ///     struct ContentView: View {
+    ///         @State private var showSettings = false
+    ///         @State private var settingsDetent = PresentationDetent.medium
+    ///
+    ///         var body: some View {
+    ///             Button("View Settings") {
+    ///                 showSettings = true
+    ///             }
+    ///             .sheet(isPresented: $showSettings) {
+    ///                 SettingsView()
+    ///                     .presentationDetents:(
+    ///                         [.medium, .large],
+    ///                         selection: $settingsDetent
+    ///                      )
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// - Parameters:
+    ///   - detents: A set of supported detents for the sheet.
+    ///     If you provide more that one detent, people can drag the sheet
+    ///     to resize it.
+    ///   - selection: A ``Binding`` to the currently selected detent.
+    ///     Ensure that the value matches one of the detents that you
+    ///     provide for the `detents` parameter.
+    @ViewBuilder
+    func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>, largestUndimmedDetent: Backport<Any>.PresentationDetent? = nil) -> some View {
+        #if os(iOS)
+        if #available(iOS 15, *) {
+            content.background(Backport<Any>.Representable(detents: detents, selection: selection, largestUndimmed: largestUndimmedDetent))
         } else {
             content
         }
@@ -144,13 +187,14 @@ private extension Backport where Wrapped == Any {
     struct Representable: UIViewControllerRepresentable {
         let detents: Set<Backport<Any>.PresentationDetent>
         let selection: Binding<Backport<Any>.PresentationDetent>?
+        let largestUndimmed: Backport<Any>.PresentationDetent?
 
         func makeUIViewController(context: Context) -> Backport.Representable.Controller {
-            Controller(detents: detents, selection: selection)
+            Controller(detents: detents, selection: selection, largestUndimmed: largestUndimmed)
         }
 
         func updateUIViewController(_ controller: Backport.Representable.Controller, context: Context) {
-            controller.update(detents: detents, selection: selection)
+            controller.update(detents: detents, selection: selection, largestUndimmed: largestUndimmed)
         }
     }
 }
@@ -161,11 +205,13 @@ private extension Backport.Representable {
 
         var detents: Set<Backport<Any>.PresentationDetent>
         var selection: Binding<Backport<Any>.PresentationDetent>?
+        var largestUndimmed: Backport<Any>.PresentationDetent?
         weak var _delegate: UISheetPresentationControllerDelegate?
 
-        init(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>?) {
+        init(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>?, largestUndimmed: Backport<Any>.PresentationDetent?) {
             self.detents = detents
             self.selection = selection
+            self.largestUndimmed = largestUndimmed
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -181,12 +227,13 @@ private extension Backport.Representable {
                     controller.delegate = self
                 }
             }
-            update(detents: detents, selection: selection)
+            update(detents: detents, selection: selection, largestUndimmed: largestUndimmed)
         }
 
-        func update(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>?) {
+        func update(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>?, largestUndimmed: Backport<Any>.PresentationDetent?) {
             self.detents = detents
             self.selection = selection
+            self.largestUndimmed = largestUndimmed
 
             if let controller = parent?.sheetPresentationController {
                 controller.animateChanges {
@@ -199,10 +246,23 @@ private extension Backport.Representable {
                         }
                     }
 
+                    controller.largestUndimmedDetentIdentifier = largestUndimmed.flatMap {
+                        .init(rawValue: $0.id.rawValue)
+                    }
+
                     if let selection = selection {
                         controller.selectedDetentIdentifier = .init(selection.wrappedValue.id.rawValue)
                     }
+
                     controller.prefersScrollingExpandsWhenScrolledToEdge = true
+                }
+
+                UIView.animate(withDuration: 0.25) {
+                    if let undimmed = largestUndimmed {
+                        controller.presentingViewController.view.tintAdjustmentMode = (selection?.wrappedValue ?? .large) >= undimmed ? .automatic : .normal
+                    } else {
+                        controller.presentingViewController.view.tintAdjustmentMode = .automatic
+                    }
                 }
             }
         }
