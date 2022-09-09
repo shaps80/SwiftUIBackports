@@ -22,5 +22,6 @@ let package = Package(
     ],
     targets: [
         .target(name: "SwiftUIBackports")
-    ]
+    ],
+    swiftLanguageVersions: [.v5]
 )
