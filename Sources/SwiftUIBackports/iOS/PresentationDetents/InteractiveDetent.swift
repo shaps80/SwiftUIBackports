@@ -79,10 +79,10 @@ private extension Backport.Representable {
 
             if let controller = parent?.sheetPresentationController {
                 controller.animateChanges {
+                    controller.presentingViewController.view.tintAdjustmentMode = .normal
                     controller.largestUndimmedDetentIdentifier = identifier.flatMap {
                         .init(rawValue: $0.rawValue)
                     }
-                    controller.presentingViewController.view.tintAdjustmentMode = .normal
                 }
             }
         }
