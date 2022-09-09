@@ -1,5 +1,5 @@
 import SwiftUI
-#if canImport(Quicklook)
+#if canImport(QuickLook)
 import QuickLook
 #endif
 
