@@ -152,7 +152,15 @@ public extension Backport where Wrapped: View {
     /// - Parameter onAttempt: A closure that will be called when an interactive dismiss attempt occurs.
     ///   You can use this as an opportunity to present an confirmation or prompt to the user.
     func interactiveDismissDisabled(_ isDisabled: Bool = true, onAttempt: @escaping () -> Void) -> some View {
-        content.background(Backport<Any>.Representable(isModal: isDisabled, onAttempt: onAttempt))
+        #if os(iOS)
+        if #available(iOS 15, *) {
+            content.background(Backport<Any>.Representable(isModal: isDisabled, onAttempt: onAttempt))
+        } else {
+            content
+        }
+        #else
+        content
+        #endif
     }
 
 }
