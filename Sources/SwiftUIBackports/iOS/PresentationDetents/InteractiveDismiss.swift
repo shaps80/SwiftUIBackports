@@ -74,7 +74,11 @@ public extension Backport where Wrapped: View {
     @available(watchOS, deprecated: 9)
     func interactiveDismissDisabled(_ isDisabled: Bool = true) -> some View {
         #if os(iOS)
-        content.background(Backport<Any>.Representable(isModal: isDisabled, onAttempt: nil))
+        if #available(iOS 15, *) {
+            content.background(Backport<Any>.Representable(isModal: isDisabled, onAttempt: nil))
+        } else {
+            content
+        }
         #else
         content
         #endif
@@ -148,11 +152,7 @@ public extension Backport where Wrapped: View {
     /// - Parameter onAttempt: A closure that will be called when an interactive dismiss attempt occurs.
     ///   You can use this as an opportunity to present an confirmation or prompt to the user.
     func interactiveDismissDisabled(_ isDisabled: Bool = true, onAttempt: @escaping () -> Void) -> some View {
-        #if os(iOS)
         content.background(Backport<Any>.Representable(isModal: isDisabled, onAttempt: onAttempt))
-        #else
-        content
-        #endif
     }
 
 }

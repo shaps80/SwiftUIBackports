@@ -10,15 +10,11 @@ public extension View {
     @ViewBuilder
     @available(iOS, deprecated: 13, renamed: "backport.interactiveDismissDisabled(_:)")
     func presentation(isModal: Bool) -> some View {
-        #if os(iOS)
         if #available(iOS 15, *) {
             backport.interactiveDismissDisabled(isModal)
         } else {
             self
         }
-        #else
-        self
-        #endif
     }
 
     /// Provides fine-grained control over the dismissal.
@@ -29,15 +25,11 @@ public extension View {
     @ViewBuilder
     @available(iOS, deprecated: 13, renamed: "backport.interactiveDismissDisabled(_:onAttempt:)")
     func presentation(isModal: Bool = true, _ onAttempt: @escaping () -> Void) -> some View {
-        #if os(iOS)
         if #available(iOS 15, *) {
             backport.interactiveDismissDisabled(isModal, onAttempt: onAttempt)
         } else {
             self
         }
-        #else
-        self
-        #endif
     }
 
 }
