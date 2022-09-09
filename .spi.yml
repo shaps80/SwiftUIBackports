@@ -1,0 +1,5 @@
+version: 1.8.2
+builder:
+  configs:
+    - platform: ios
+      documentation_targets: [SwiftUIBackports]
