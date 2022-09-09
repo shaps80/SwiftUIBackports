@@ -151,6 +151,7 @@ public extension Backport where Wrapped: View {
     ///   when presented in a sheet or popover.
     /// - Parameter onAttempt: A closure that will be called when an interactive dismiss attempt occurs.
     ///   You can use this as an opportunity to present an confirmation or prompt to the user.
+    @ViewBuilder
     func interactiveDismissDisabled(_ isDisabled: Bool = true, onAttempt: @escaping () -> Void) -> some View {
         #if os(iOS)
         if #available(iOS 15, *) {
