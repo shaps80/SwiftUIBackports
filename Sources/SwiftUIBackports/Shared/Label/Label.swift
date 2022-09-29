@@ -97,7 +97,7 @@ extension Backport where Wrapped == Any {
         }
 
         @MainActor public var body: some View {
-            if #available(iOS 14, *) {
+            if #available(iOS 14, macOS 11, *) {
                 SwiftUI.Label {
                     config.title
                 } icon: {

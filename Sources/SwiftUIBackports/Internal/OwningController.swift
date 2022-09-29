@@ -22,9 +22,9 @@ import AppKit
 public extension NSView {
 
     var parentController: NSViewController? {
-        if let responder = self.next as? NSViewController {
+        if let responder = self.nextResponder as? NSViewController {
             return responder
-        } else if let responder = self.next as? NSView {
+        } else if let responder = self.nextResponder as? NSView {
             return responder.parentController
         } else {
             return nil

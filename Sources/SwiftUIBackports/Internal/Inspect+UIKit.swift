@@ -1,13 +1,5 @@
 import SwiftUI
 
-#if os(iOS)
-internal typealias PlatformView = UIView
-internal typealias PlatformViewController = UIViewController
-#elseif os(macOS)
-internal typealias PlatformView = NSView
-internal typealias PlatformViewController = NSViewController
-#endif
-
 #if os(iOS) || os(macOS)
 internal extension PlatformView {
     func ancestor<ViewType: PlatformView>(ofType type: ViewType.Type) -> ViewType? {

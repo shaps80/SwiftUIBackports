@@ -19,11 +19,13 @@ extension Backport where Wrapped == Any {
                     IconOnlyLabelStyle().makeBody(configuration: configuration)
                 } else {
                     TitleAndIconLabelStyle().makeBody(configuration: configuration)
+                        #if os(iOS)
                         .inspect { inspector in
                             inspector.ancestor(ofType: UINavigationBar.self)
                         } customize: { _ in
                             isToolbarElement = true
                         }
+                        #endif
                 }
             }
         }

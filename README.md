@@ -84,6 +84,7 @@ Environment:
 - `requestReview`
 - `Refreshable` – includes pull-to-refresh 
 - `ScaledMetric`
+- `ShareLink`
 - `StateObject`
 - `scrollDisabled`
 - `scrollDismissesKeyboard`
