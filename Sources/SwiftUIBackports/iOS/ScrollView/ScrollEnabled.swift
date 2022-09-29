@@ -48,15 +48,21 @@ extension Backport where Wrapped: View {
             .inspect { inspector in
                 #if os(iOS)
                 inspector.sibling(ofType: UIScrollView.self)
+                ?? inspector.ancestor(ofType: UIScrollView.self)
+                ?? inspector.child(ofType: UIScrollView.self)
                 #elseif os(macOS)
                 inspector.sibling(ofType: NSScrollView.self)
+                ?? inspector.ancestor(ofType: NSScrollView.self)
+                ?? inspector.child(ofType: NSScrollView.self)
                 #endif
             } customize: { scrollView in
                 #if os(iOS)
                 scrollView.isScrollEnabled = !disabled
+                scrollView.alwaysBounceVertical = !disabled
+                scrollView.alwaysBounceHorizontal = !disabled
                 #elseif os(macOS)
-                scrollView.hasHorizontalScroller = false
-                scrollView.hasVerticalScroller = false
+                scrollView.hasHorizontalScroller = !disabled
+                scrollView.hasVerticalScroller = !disabled
                 #endif
             }
         #else

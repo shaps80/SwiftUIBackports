@@ -10,6 +10,23 @@ extension Backport where Wrapped == Any {
     ///
     /// You can also use ``LabelStyle/automatic`` to construct this style.
     public struct DefaultLabelStyle: BackportLabelStyle {
+        private struct Label: View {
+            let configuration: Configuration
+            @State private var isToolbarElement: Bool = false
+
+            var body: some View {
+                if isToolbarElement {
+                    IconOnlyLabelStyle().makeBody(configuration: configuration)
+                } else {
+                    TitleAndIconLabelStyle().makeBody(configuration: configuration)
+                        .inspect { inspector in
+                            inspector.ancestor(ofType: UINavigationBar.self)
+                        } customize: { _ in
+                            isToolbarElement = true
+                        }
+                }
+            }
+        }
 
         public init() { }
 
@@ -19,11 +36,8 @@ extension Backport where Wrapped == Any {
         /// hierarchy where this style is the current label style.
         ///
         /// - Parameter configuration: The properties of the label.
-        public func makeBody(configuration: DefaultLabelStyle.Configuration) -> some View {
-            HStack {
-                configuration.icon
-                configuration.title
-            }
+        public func makeBody(configuration: Configuration) -> some View {
+            Label(configuration: configuration)
         }
 
     }

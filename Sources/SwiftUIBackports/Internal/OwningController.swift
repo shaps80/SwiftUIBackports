@@ -4,15 +4,13 @@ import UIKit
 public extension UIView {
 
     var parentController: UIViewController? {
-        var responder: UIResponder? = self
-
-        while !(responder is UIViewController) && superview != nil {
-            if let next = responder?.next {
-                responder = next
-            }
+        if let responder = self.next as? UIViewController {
+            return responder
+        } else if let responder = self.next as? UIView {
+            return responder.parentController
+        } else {
+            return nil
         }
-
-        return responder as? UIViewController
     }
 
 }
@@ -24,15 +22,13 @@ import AppKit
 public extension NSView {
 
     var parentController: NSViewController? {
-        var responder: NSResponder? = self
-
-        while !(responder is NSViewController) && superview != nil {
-            if let next = responder?.nextResponder {
-                responder = next
-            }
+        if let responder = self.next as? NSViewController {
+            return responder
+        } else if let responder = self.next as? NSView {
+            return responder.parentController
+        } else {
+            return nil
         }
-
-        return responder as? NSViewController
     }
 
 }

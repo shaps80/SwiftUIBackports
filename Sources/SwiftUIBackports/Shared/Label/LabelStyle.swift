@@ -52,11 +52,11 @@ internal struct AnyLabelStyle: BackportLabelStyle {
 }
 
 private struct BackportLabelStyleEnvironmentKey: EnvironmentKey {
-    static var defaultValue: AnyLabelStyle? = nil
+    static var defaultValue: AnyLabelStyle = .init(.automatic)
 }
 
 internal extension EnvironmentValues {
-    var backportLabelStyle: AnyLabelStyle? {
+    var backportLabelStyle: AnyLabelStyle {
         get { self[BackportLabelStyleEnvironmentKey.self] }
         set { self[BackportLabelStyleEnvironmentKey.self] = newValue }
     }

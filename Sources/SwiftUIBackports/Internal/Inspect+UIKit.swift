@@ -43,7 +43,9 @@ internal extension PlatformView {
         views.remove(at: index)
 
         for subview in views.reversed() {
-            if let typed = subview.child(ofType: type) {
+            if let typed = subview as? ViewType {
+                return typed
+            } else if let typed = subview.child(ofType: type) {
                 return typed
             }
         }
@@ -75,6 +77,10 @@ internal struct Inspector {
 
     func sibling<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
         hostView.sibling(ofType: ViewType.self)
+    }
+
+    func child<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
+        hostView.child(ofType: ViewType.self)
     }
 }
 

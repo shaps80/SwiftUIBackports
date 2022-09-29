@@ -93,15 +93,18 @@ extension Backport where Wrapped == Any {
 
         /// Creates a label with a custom title and icon.
         public init(@ViewBuilder title: () -> Title, @ViewBuilder icon: () -> Icon) {
-            config = .init(title: .init(content: title()), icon: .init(content: icon()))
+            config = .init(title: .init(title()), icon: .init(icon()))
         }
 
         @MainActor public var body: some View {
-            if let style = style {
-                style.makeBody(configuration: config.environment(environment))
+            if #available(iOS 14, *) {
+                SwiftUI.Label {
+                    config.title
+                } icon: {
+                    config.icon
+                }
             } else {
-                DefaultLabelStyle()
-                    .makeBody(configuration: config.environment(environment))
+                style.makeBody(configuration: config.environment(environment))
             }
         }
     }
@@ -156,7 +159,7 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
 
 }
 
-extension Backport.Label where Wrapped == Any, Title == Backport.LabelStyleConfiguration.Title, Icon == Backport.LabelStyleConfiguration.Icon {
+extension Backport.Label where Wrapped == Any {
 
     /// Creates a label representing the configuration of a style.
     ///

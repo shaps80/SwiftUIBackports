@@ -28,7 +28,7 @@ extension Backport where Wrapped: View {
         content
             .environment(\.backportRefresh, Backport<Any>.RefreshAction(action))
             .inspect { inspector in
-                inspector.sibling(ofType: UITableView.self)
+                inspector.sibling(ofType: UIScrollView.self)
             } customize: { scrollView in
                 guard scrollView.refreshControl == nil else { return }
                 scrollView.refreshControl = RefreshControl {

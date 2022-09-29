@@ -9,29 +9,11 @@ extension Backport where Wrapped == Any {
     /// The properties of a label.
     public struct LabelStyleConfiguration {
 
-        /// A type-erased title view of a label.
-        public struct Title: View {
-            let content: AnyView
-            public var body: some View { content }
-            init<Content: View>(content: Content) {
-                self.content = .init(content)
-            }
-        }
-
-        /// A type-erased icon view of a label.
-        public struct Icon: View {
-            let content: AnyView
-            public var body: some View { content }
-            init<Content: View>(content: Content) {
-                self.content = .init(content)
-            }
-        }
-
         /// A description of the labeled item.
-        public internal(set) var title: LabelStyleConfiguration.Title
+        public internal(set) var title: AnyView
 
         /// A symbolic representation of the labeled item.
-        public internal(set) var icon: LabelStyleConfiguration.Icon
+        public internal(set) var icon: AnyView
 
         internal var environment: EnvironmentValues = .init()
 
