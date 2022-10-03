@@ -3,16 +3,20 @@ import SwiftUI
 @available(iOS, deprecated: 16.0)
 @available(macOS, deprecated: 13.0)
 @available(watchOS, deprecated: 9.0)
-public protocol BackportTransferable {
+
+/// TEMPORARY, DO NOT RELY ON THIS!
+/// 
+/// - Note: This **will be removed** in an upcoming release, regardless of semantic versioning
+public protocol Shareable {
     var pathExtension: String { get }
     var itemProvider: NSItemProvider? { get }
 }
 
-internal struct ActivityItem<Data> where Data: RandomAccessCollection, Data.Element: BackportTransferable {
+internal struct ActivityItem<Data> where Data: RandomAccessCollection, Data.Element: Shareable {
     internal var data: Data
 }
 
-extension String: BackportTransferable {
+extension String: Shareable {
     public var pathExtension: String { "txt" }
     public var itemProvider: NSItemProvider? {
         do {
@@ -27,13 +31,13 @@ extension String: BackportTransferable {
     }
 }
 
-extension URL: BackportTransferable {
+extension URL: Shareable {
     public var itemProvider: NSItemProvider? {
         .init(contentsOf: self)
     }
 }
 
-extension Image: BackportTransferable {
+extension Image: Shareable {
     public var pathExtension: String { "jpg" }
     public var itemProvider: NSItemProvider? {
         do {
@@ -50,7 +54,7 @@ extension Image: BackportTransferable {
     }
 }
 
-extension PlatformImage: BackportTransferable {
+extension PlatformImage: Shareable {
     public var pathExtension: String { "jpg" }
     public var itemProvider: NSItemProvider? {
         do {

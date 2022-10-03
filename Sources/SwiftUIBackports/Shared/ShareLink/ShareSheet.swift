@@ -2,7 +2,7 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    func shareSheet<Data>(item activityItems: Binding<ActivityItem<Data>?>) -> some View where Data: RandomAccessCollection, Data.Element: BackportTransferable {
+    func shareSheet<Data>(item activityItems: Binding<ActivityItem<Data>?>) -> some View where Data: RandomAccessCollection, Data.Element: Shareable {
 #if os(macOS)
         background(ShareSheet(item: activityItems))
 #elseif os(iOS)
@@ -13,7 +13,7 @@ extension View {
 
 #if os(macOS)
 
-private struct ShareSheet: NSViewRepresentable where Data: RandomAccessCollection, Data.Element: BackportTransferable {
+private struct ShareSheet: NSViewRepresentable where Data: RandomAccessCollection, Data.Element: Shareable {
     @Binding var item: ActivityItem<Data>?
 
     public func makeNSView(context: Context) -> SourceView {
@@ -86,7 +86,7 @@ private struct ShareSheet: NSViewRepresentable where Data: RandomAccessCollectio
 
 #elseif os(iOS)
 
-private struct ShareSheet<Data>: UIViewControllerRepresentable where Data: RandomAccessCollection, Data.Element: BackportTransferable {
+private struct ShareSheet<Data>: UIViewControllerRepresentable where Data: RandomAccessCollection, Data.Element: Shareable {
     @Binding var item: ActivityItem<Data>?
 
     init(item: Binding<ActivityItem<Data>?>) {

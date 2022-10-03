@@ -6,7 +6,7 @@ import LinkPresentation
 @available(watchOS, deprecated: 9)
 @available(tvOS, unavailable)
 public extension Backport where Wrapped == Any {
-    struct ShareLink<Data, PreviewImage, PreviewIcon, Label>: View where Data: RandomAccessCollection, Data.Element: BackportTransferable, Label: View {
+    struct ShareLink<Data, PreviewImage, PreviewIcon, Label>: View where Data: RandomAccessCollection, Data.Element: Shareable, Label: View {
         @State private var activity: ActivityItem<Data>?
 
         let label: Label
@@ -17,7 +17,7 @@ public extension Backport where Wrapped == Any {
 
         public var body: some View {
             Button {
-
+                activity = ActivityItem(data: data)
             } label: {
                 label
             }
@@ -26,42 +26,42 @@ public extension Backport where Wrapped == Any {
     }
 }
 
-final class TransferableActivityProvider<Data, Image: View, Icon: View>: UIActivityItemProvider where Data: BackportTransferable {
-    let title: String?
-    let subject: String?
-    let message: String?
-    let image: Image?
-    let icon: Icon?
-    let data: Data
-
-    init(data: Data, title: String?, subject: String?, message: String?, image: Image?, icon: Icon?) {
-        self.title = title
-        self.subject = subject
-        self.message = message
-        self.image = image
-        self.icon = icon
-        self.data = data
-
-        let url = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent("tmp")
-            .appendingPathExtension(data.pathExtension)
-
-        super.init(placeholderItem: url)
-    }
-
-    override var item: Any {
-        data.itemProvider as Any
-    }
-
-    override func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
-        let metadata = LPLinkMetadata()
-        metadata.title = title
-//        let icon = ImageRenderer(content: activity.icon)
-//        metadata.iconProvider = NSItemProvider(object: UIImage())
-//        metadata.imageProvider = NSItemProvider(object: UIImage())
-        return metadata
-    }
-
-    override func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String { subject ?? "" }
-
-}
+//final class TransferableActivityProvider<Data: Shareable, Image: View, Icon: View>: UIActivityItemProvider {
+//    let title: String?
+//    let subject: String?
+//    let message: String?
+//    let image: Image?
+//    let icon: Icon?
+//    let data: Data
+//
+//    init(data: Data, title: String?, subject: String?, message: String?, image: Image?, icon: Icon?) {
+//        self.title = title
+//        self.subject = subject
+//        self.message = message
+//        self.image = image
+//        self.icon = icon
+//        self.data = data
+//
+//        let url = URL(fileURLWithPath: NSTemporaryDirectory())
+//            .appendingPathComponent("tmp")
+//            .appendingPathExtension(data.pathExtension)
+//
+//        super.init(placeholderItem: url)
+//    }
+//
+//    override var item: Any {
+//        data.itemProvider as Any
+//    }
+//
+//    override func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+//        let metadata = LPLinkMetadata()
+//        metadata.title = title
+////        let icon = ImageRenderer(content: activity.icon)
+////        metadata.iconProvider = NSItemProvider(object: UIImage())
+////        metadata.imageProvider = NSItemProvider(object: UIImage())
+//        return metadata
+//    }
+//
+//    override func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String { subject ?? "" }
+//
+//}
