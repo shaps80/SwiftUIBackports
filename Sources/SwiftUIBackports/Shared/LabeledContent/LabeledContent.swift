@@ -123,81 +123,43 @@ extension Backport where Wrapped == Any {
     ///
     /// You can set label styles using the ``View/labeledContentStyle(_:)``
     /// modifier. You can also build custom styles using ``LabeledContentStyle``.
-    public struct LabeledContent<Label, Content> {
+    public struct LabeledContent<Label, Content>: View {
+        @EnvironmentContains(key: "LabelsHiddenKey") private var isHidden
         @Environment(\.backportLabeledContentStyle) private var style
+
         let config: LabeledContentStyleConfiguration
+
         public var body: some View {
-            style.makeBody(configuration: config)
+            style.makeBody(configuration: config.labelHidden(isHidden))
+        }
+
+        /// Creates labeled content based on a labeled content style configuration.
+        ///
+        /// You can use this initializer within the
+        /// ``LabeledContentStyle/makeBody(configuration:)`` method of a
+        /// ``LabeledContentStyle`` to create a labeled content instance.
+        /// This is useful for custom styles that only modify the current style,
+        /// as opposed to implementing a brand new style.
+        ///
+        /// For example, the following style adds a red border around the labeled
+        /// content, but otherwise preserves the current style:
+        ///
+        ///     struct RedBorderLabeledContentStyle: LabeledContentStyle {
+        ///         func makeBody(configuration: Configuration) -> some View {
+        ///             LabeledContent(configuration)
+        ///                 .border(.red)
+        ///         }
+        ///     }
+        ///
+        /// - Parameter configuration: The properties of the labeled content
+        public init(_ config: Backport.LabeledContentStyleConfiguration) {
+            self.config = config
         }
     }
 
 }
 
-extension Backport.LabeledContent where Wrapped == Any, Label == Backport<Any>.LabeledContentStyleConfiguration.Label, Content == Backport<Any>.LabeledContentStyleConfiguration.Content {
-
-    /// Creates labeled content based on a labeled content style configuration.
-    ///
-    /// You can use this initializer within the
-    /// ``LabeledContentStyle/makeBody(configuration:)`` method of a
-    /// ``LabeledContentStyle`` to create a labeled content instance.
-    /// This is useful for custom styles that only modify the current style,
-    /// as opposed to implementing a brand new style.
-    ///
-    /// For example, the following style adds a red border around the labeled
-    /// content, but otherwise preserves the current style:
-    ///
-    ///     struct RedBorderLabeledContentStyle: LabeledContentStyle {
-    ///         func makeBody(configuration: Configuration) -> some View {
-    ///             LabeledContent(configuration)
-    ///                 .border(.red)
-    ///         }
-    ///     }
-    ///
-    /// - Parameter configuration: The properties of the labeled content
-    public init(_ config: Backport.LabeledContentStyleConfiguration) {
-        self.config = config
-    }
-}
-
-extension Backport.LabeledContent where Wrapped == Any, Label == Text, Content : View {
-
-    /// Creates a labeled view that generates its label from a localized string
-    /// key.
-    ///
-    /// This initializer creates a ``Text`` label on your behalf, and treats the
-    /// localized key similar to ``Text/init(_:tableName:bundle:comment:)``. See
-    /// `Text` for more information about localizing strings.
-    ///
-    /// - Parameters:
-    ///   - titleKey: The key for the view's localized title, that describes
-    ///     the purpose of the view.
-    ///   - content: The value content being labeled.
-    public init(_ titleKey: LocalizedStringKey, @ViewBuilder content: () -> Content) {
-        config = .init(
-            label: Text(titleKey),
-            content: content()
-        )
-    }
-
-    /// Creates a labeled view that generates its label from a string.
-    ///
-    /// This initializer creates a ``Text`` label on your behalf, and treats the
-    /// title similar to ``Text/init(_:)-9d1g4``. See `Text` for more
-    /// information about localizing strings.
-    ///
-    /// - Parameters:
-    ///   - title: A string that describes the purpose of the view.
-    ///   - content: The value content being labeled.
-    public init<S>(_ title: S, @ViewBuilder content: () -> Content) where S: StringProtocol {
-        config = .init(
-            label: Text(title),
-            content: content()
-        )
-    }
-
-}
-
-extension Backport.LabeledContent: View where Wrapped == Any, Label: View, Content: View {
+extension Backport.LabeledContent where Wrapped == Any, Label: View, Content: View {
 
     /// Creates a labeled view that generates its label from a localized string
     /// key.
@@ -215,6 +177,46 @@ extension Backport.LabeledContent: View where Wrapped == Any, Label: View, Conte
             label: label(),
             content: content()
         )
+    }
+
+}
+
+extension Backport.LabeledContent where Wrapped == Any, Label == Text, Content : View {
+
+    /// Creates a labeled view that generates its label from a localized string
+    /// key.
+    ///
+    /// This initializer creates a ``Text`` label on your behalf, and treats the
+    /// localized key similar to ``Text/init(_:tableName:bundle:comment:)``. See
+    /// `Text` for more information about localizing strings.
+    ///
+    /// - Parameters:
+    ///   - titleKey: The key for the view's localized title, that describes
+    ///     the purpose of the view.
+    ///   - content: The value content being labeled.
+    public init(_ titleKey: LocalizedStringKey, @ViewBuilder content: () -> Content) {
+        self.init {
+            content()
+        } label: {
+            Text(titleKey)
+        }
+    }
+
+    /// Creates a labeled view that generates its label from a string.
+    ///
+    /// This initializer creates a ``Text`` label on your behalf, and treats the
+    /// title similar to ``Text/init(_:)-9d1g4``. See `Text` for more
+    /// information about localizing strings.
+    ///
+    /// - Parameters:
+    ///   - title: A string that describes the purpose of the view.
+    ///   - content: The value content being labeled.
+    public init<S>(_ title: S, @ViewBuilder content: () -> Content) where S: StringProtocol {
+        self.init {
+            content()
+        } label: {
+            Text(title)
+        }
     }
 
 }
@@ -238,9 +240,11 @@ extension Backport.LabeledContent where Wrapped == Any, Label == Text, Content =
     ///     the purpose of the view.
     ///   - value: The value being labeled.
     public init<S: StringProtocol>(_ titleKey: LocalizedStringKey, value: S) {
-        config = .init(
-            label: Text(titleKey),
-            content: Text(value))
+        self.init {
+            Text(value)
+        } label: {
+            Text(titleKey)
+        }
     }
 
     /// Creates a labeled informational view.
@@ -259,10 +263,11 @@ extension Backport.LabeledContent where Wrapped == Any, Label == Text, Content =
     ///   - title: A string that describes the purpose of the view.
     ///   - value: The value being labeled.
     public init<S1: StringProtocol, S2: StringProtocol>(_ title: S1, value: S2) {
-        config = .init(
-            label: Text(title),
-            content: Text(value)
-        )
+        self.init {
+            Text(value)
+        } label: {
+            Text(title)
+        }
     }
 
 }

@@ -8,53 +8,39 @@ extension Backport where Wrapped == Any {
 
     /// The properties of a labeled content instance.
     public struct LabeledContentStyleConfiguration {
+        private struct Label<Content: View>: View {
+            let isHidden: Bool
+            let content: Content
 
-        /// A type-erased label of a labeled content instance.
-        public struct Label: View {
-            @EnvironmentContains(key: "LabelsHiddenKey") private var isHidden
-            let view: AnyView
             public var body: some View {
-                if isHidden {
-                    EmptyView()
-                } else {
-                    view
+                if !isHidden {
+                    content
                 }
             }
-            init<V: View>(_ view: V) {
-                self.view = .init(view)
-            }
         }
 
-        /// A type-erased content of a labeled content instance.
-        public struct Content: View {
-            @EnvironmentContains(key: "LabelsHiddenKey") private var isHidden
-            let view: AnyView
-            public var body: some View {
-                view
-                    .foregroundColor(isHidden ? .primary : .secondary)
-                    .frame(maxWidth: .infinity, alignment: isHidden ? .leading : .trailing)
-            }
-            init<V: View>(_ view: V) {
-                self.view = .init(view)
-            }
-        }
+        var labelHidden: Bool = false
+
+        private let _label: AnyView
 
         /// The label of the labeled content instance.
-        public let label: Label
+        public var label: some View {
+            Label(isHidden: labelHidden, content: _label)
+        }
 
         /// The content of the labeled content instance.
-        public let content: Content
+        public let content: AnyView
 
         internal init<L: View, C: View>(label: L, content: C) {
-            self.label = .init(label)
+            _label = .init(label)
             self.content = .init(content)
         }
 
-        internal init<L: View, C: View>(@ViewBuilder content: () -> C, @ViewBuilder label: () -> L) {
-            self.content = .init(content())
-            self.label = .init(label())
+        func labelHidden(_ hidden: Bool) -> Self {
+            var copy = self
+            copy.labelHidden = hidden
+            return copy
         }
-
     }
 
 }
