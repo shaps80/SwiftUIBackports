@@ -1,9 +1,9 @@
 import SwiftUI
 
-@available(iOS, deprecated: 15)
-@available(macOS, deprecated: 12)
-@available(tvOS, deprecated: 15)
-@available(watchOS, deprecated: 8)
+@available(iOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(tvOS, deprecated: 16)
+@available(watchOS, deprecated: 9)
 extension Backport where Wrapped: View {
 
     /// Marks this view as refreshable.
@@ -137,10 +137,10 @@ private struct RefreshEnvironmentKey: EnvironmentKey {
     static let defaultValue: Backport<Any>.RefreshAction? = nil
 }
 
-@available(iOS, deprecated: 15)
-@available(macOS, deprecated: 12)
-@available(tvOS, deprecated: 15)
-@available(watchOS, deprecated: 8)
+@available(iOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(tvOS, deprecated: 16)
+@available(watchOS, deprecated: 9)
 public extension EnvironmentValues {
 
     /// An action that initiates a refresh operation.
