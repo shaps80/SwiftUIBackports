@@ -220,6 +220,11 @@ private extension Backport.Representable {
             update(detents: detents, selection: selection, largestUndimmed: largestUndimmed)
         }
 
+        override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+            super.willTransition(to: newCollection, with: coordinator)
+            update(detents: detents, selection: selection, largestUndimmed: largestUndimmed)
+        }
+
         func update(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>?, largestUndimmed: Backport<Any>.PresentationDetent?) {
             self.detents = detents
             self.selection = selection
@@ -249,9 +254,9 @@ private extension Backport.Representable {
 
                 UIView.animate(withDuration: 0.25) {
                     if let undimmed = largestUndimmed {
-                        controller.presentingViewController.view.tintAdjustmentMode = (selection?.wrappedValue ?? .large) >= undimmed ? .automatic : .normal
+                        controller.presentingViewController.view?.tintAdjustmentMode = (selection?.wrappedValue ?? .large) >= undimmed ? .automatic : .normal
                     } else {
-                        controller.presentingViewController.view.tintAdjustmentMode = .automatic
+                        controller.presentingViewController.view?.tintAdjustmentMode = .automatic
                     }
                 }
             }
