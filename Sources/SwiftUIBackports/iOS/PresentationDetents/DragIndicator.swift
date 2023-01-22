@@ -78,6 +78,11 @@ private extension Backport.Representable {
             update(visibility: visibility)
         }
 
+        override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+            super.willTransition(to: newCollection, with: coordinator)
+            update(visibility: visibility)
+        }
+
         func update(visibility: Backport<Any>.Visibility) {
             self.visibility = visibility
 
