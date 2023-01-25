@@ -24,8 +24,6 @@ public extension Backport where Wrapped: URLSession {
         let sessionTask = URLSessionTaskActor()
 
         return try await withTaskCancellationHandler {
-            Task { await sessionTask.cancel() }
-        } operation: {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
                     await sessionTask.start(content.dataTask(with: request) { data, response, error in
@@ -39,14 +37,14 @@ public extension Backport where Wrapped: URLSession {
                     })
                 }
             }
+        } onCancel: {
+            Task { await sessionTask.cancel() }
         }
     }
 
     func upload(for request: URLRequest, fromFile fileURL: URL) async throws -> (Data, URLResponse) {
         let sessionTask = URLSessionTaskActor()
         return try await withTaskCancellationHandler {
-            Task { await sessionTask.cancel() }
-        } operation: {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
                     await sessionTask.start(content.uploadTask(with: request, fromFile: fileURL) { data, response, error in
@@ -59,14 +57,14 @@ public extension Backport where Wrapped: URLSession {
                     })
                 }
             }
+        } onCancel: {
+            Task { await sessionTask.cancel() }
         }
     }
 
     func upload(for request: URLRequest, from bodyData: Data) async throws -> (Data, URLResponse) {
         let sessionTask = URLSessionTaskActor()
         return try await withTaskCancellationHandler {
-            Task { await sessionTask.cancel() }
-        } operation: {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
                     await sessionTask.start(content.uploadTask(with: request, from: bodyData) { data, response, error in
@@ -79,14 +77,14 @@ public extension Backport where Wrapped: URLSession {
                     })
                 }
             }
+        } onCancel: {
+            Task { await sessionTask.cancel() }
         }
     }
 
     func download(for request: URLRequest) async throws -> (URL, URLResponse) {
         let sessionTask = URLSessionTaskActor()
         return try await withTaskCancellationHandler {
-            Task { await sessionTask.cancel() }
-        } operation: {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
                     await sessionTask.start(content.downloadTask(with: request) { data, response, error in
@@ -99,14 +97,14 @@ public extension Backport where Wrapped: URLSession {
                     })
                 }
             }
+        } onCancel: {
+            Task { await sessionTask.cancel() }
         }
     }
 
     func download(from url: URL) async throws -> (URL, URLResponse) {
         let sessionTask = URLSessionTaskActor()
         return try await withTaskCancellationHandler {
-            Task { await sessionTask.cancel() }
-        } operation: {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
                     await sessionTask.start(content.downloadTask(with: url) { data, response, error in
@@ -119,14 +117,14 @@ public extension Backport where Wrapped: URLSession {
                     })
                 }
             }
+        } onCancel: {
+            Task { await sessionTask.cancel() }
         }
     }
 
     func download(resumeFrom resumeData: Data) async throws -> (URL, URLResponse) {
         let sessionTask = URLSessionTaskActor()
         return try await withTaskCancellationHandler {
-            Task { await sessionTask.cancel() }
-        } operation: {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
                     await sessionTask.start(content.downloadTask(withResumeData: resumeData) { data, response, error in
@@ -139,6 +137,8 @@ public extension Backport where Wrapped: URLSession {
                     })
                 }
             }
+        } onCancel: {
+            Task { await sessionTask.cancel() }
         }
     }
 
