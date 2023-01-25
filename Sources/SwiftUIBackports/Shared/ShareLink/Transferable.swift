@@ -45,7 +45,13 @@ extension Image: Shareable {
                 .appendingPathComponent("\(UUID().uuidString)")
                 .appendingPathExtension(pathExtension)
             let renderer = ImageRenderer(content: self)
+
+            #if os(iOS)
             let data = renderer.uiImage?.jpegData(compressionQuality: 0.8)
+            #else
+            let data = renderer.nsImage?.jpg(quality: 0.8)
+            #endif
+
             try data?.write(to: url, options: .atomic)
             return .init(contentsOf: url)
         } catch {
@@ -61,7 +67,7 @@ extension PlatformImage: Shareable {
             let url = URL(fileURLWithPath: NSTemporaryDirectory())
                 .appendingPathComponent("\(UUID().uuidString)")
                 .appendingPathExtension(pathExtension)
-            let data = jpegData(compressionQuality: 0.8)
+            let data = jpg(quality: 0.8)
             try data?.write(to: url, options: .atomic)
             return .init(contentsOf: url)
         } catch {

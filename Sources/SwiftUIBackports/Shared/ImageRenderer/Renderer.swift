@@ -4,7 +4,7 @@ public final class ImageRenderer<Content>: ObservableObject where Content: View 
     public var content: Content
     public var label: String?
     public var proposedSize: ProposedViewSize = .unspecified
-    public var scale: CGFloat = UIScreen.main.scale
+    public var scale: CGFloat = PlatformScreen.mainScreen.scale
     public var isOpaque: Bool = false
     public var colorMode: ColorRenderingMode = .nonLinear
     
@@ -22,7 +22,7 @@ public final class ImageRenderer<Content>: ObservableObject where Content: View 
 public extension ImageRenderer {
     var cgImage: CGImage? {
         #if os(macOS)
-        nsImage?.cgImage
+        nsImage?.cgImage(forProposedRect: nil, context: .current, hints: nil)
         #else
         uiImage?.cgImage
         #endif
@@ -31,7 +31,7 @@ public extension ImageRenderer {
     #if os(macOS)
     
     var nsImage: NSImage? {
-        nil
+        NSHostingController(rootView: content).view.snapshot
     }
     
     #else
@@ -44,7 +44,6 @@ public extension ImageRenderer {
         
         let format = UIGraphicsImageRendererFormat(for: controller.traitCollection)
         format.opaque = isOpaque
-        format.preferredRange = colorMode.range
         format.scale = scale
         
         let renderer = UIGraphicsImageRenderer(size: size, format: format)
@@ -62,8 +61,7 @@ public extension ImageRenderer {
     #endif
 }
 
-#if os(macOS)
-#else
+#if os(iOS)
 extension ColorRenderingMode {
     var range: UIGraphicsImageRendererFormat.Range {
         switch self {
@@ -71,6 +69,14 @@ extension ColorRenderingMode {
         case .linear: return .standard
         default: return .automatic
         }
+    }
+}
+#endif
+
+#if os(macOS)
+private extension NSView {
+    var snapshot: NSImage? {
+        return NSImage(data: dataWithPDF(inside: bounds))
     }
 }
 #endif

@@ -13,7 +13,7 @@ extension View {
 
 #if os(macOS)
 
-private struct ShareSheet: NSViewRepresentable where Data: RandomAccessCollection, Data.Element: Shareable {
+private struct ShareSheet<Data>: NSViewRepresentable where Data: RandomAccessCollection, Data.Element: Shareable {
     @Binding var item: ActivityItem<Data>?
 
     public func makeNSView(context: Context) -> SourceView {
@@ -27,7 +27,7 @@ private struct ShareSheet: NSViewRepresentable where Data: RandomAccessCollectio
     final class SourceView: NSView, NSSharingServicePickerDelegate, NSSharingServiceDelegate {
         var picker: NSSharingServicePicker?
 
-        var item: Binding<ActivityItem?> {
+        var item: Binding<ActivityItem<Data>?> {
             didSet {
                 updateControllerLifecycle(
                     from: oldValue.wrappedValue,
@@ -36,7 +36,7 @@ private struct ShareSheet: NSViewRepresentable where Data: RandomAccessCollectio
             }
         }
 
-        init(item: Binding<ActivityItem?>) {
+        init(item: Binding<ActivityItem<Data>?>) {
             self.item = item
             super.init(frame: .zero)
         }
@@ -45,7 +45,7 @@ private struct ShareSheet: NSViewRepresentable where Data: RandomAccessCollectio
             fatalError("init(coder:) has not been implemented")
         }
 
-        private func updateControllerLifecycle(from oldValue: ActivityItem?, to newValue: ActivityItem?) {
+        private func updateControllerLifecycle(from oldValue: ActivityItem<Data>?, to newValue: ActivityItem<Data>?) {
             switch (oldValue, newValue) {
             case (.none, .some):
                 presentController()
@@ -57,7 +57,7 @@ private struct ShareSheet: NSViewRepresentable where Data: RandomAccessCollectio
         }
 
         func presentController() {
-            picker = NSSharingServicePicker(items: item.wrappedValue?.items ?? [])
+            picker = NSSharingServicePicker(items: item.wrappedValue?.data.map { $0 } ?? [])
             picker?.delegate = self
             DispatchQueue.main.async {
                 guard self.window != nil else { return }
@@ -139,6 +139,7 @@ private extension ShareSheet {
             let controller = UIActivityViewController(activityItems: item.wrappedValue?.data.map { $0 } ?? [], applicationActivities: nil)
             controller.presentationController?.delegate = self
             controller.popoverPresentationController?.permittedArrowDirections = .any
+            controller.popoverPresentationController?.sourceRect = view.bounds
             controller.popoverPresentationController?.sourceView = view
             controller.completionWithItemsHandler = { [weak self] _, _, _, _ in
                 self?.item.wrappedValue = nil
