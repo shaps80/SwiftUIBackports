@@ -97,15 +97,7 @@ extension Backport where Wrapped == Any {
         }
 
         @MainActor public var body: some View {
-            if #available(iOS 14, macOS 11, *) {
-                SwiftUI.Label {
-                    config.title
-                } icon: {
-                    config.icon
-                }
-            } else {
-                style.makeBody(configuration: config.environment(environment))
-            }
+            style.makeBody(configuration: config.environment(environment))
         }
     }
 
