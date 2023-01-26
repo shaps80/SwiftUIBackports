@@ -6,6 +6,7 @@ public typealias PlatformImage = UIImage
 public typealias PlatformScreen = UIScreen
 
 internal typealias PlatformView = UIView
+internal typealias PlatformScrollView = UIScrollView
 internal typealias PlatformViewController = UIViewController
 
 extension UIScreen {
@@ -33,6 +34,7 @@ public typealias PlatformImage = NSImage
 public typealias PlatformScreen = NSScreen
 
 internal typealias PlatformView = NSView
+internal typealias PlatformScrollView = NSScrollView
 internal typealias PlatformViewController = NSViewController
 
 extension NSScreen {

@@ -1,0 +1,17 @@
+import SwiftUI
+
+/*
+ WIP
+ */
+
+@available(iOS, deprecated: 16)
+private extension Backport where Wrapped: View {
+    func scrollContentBackground(_ visibility: Backport<Any>.Visibility) -> some View {
+        content.inspect { inspector in
+            inspector.sibling(ofType: PlatformScrollView.self)
+        } customize: { view in
+            let isHidden = visibility == .hidden
+            print(isHidden)
+        }
+    }
+}

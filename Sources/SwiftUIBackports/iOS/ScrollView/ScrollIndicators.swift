@@ -35,7 +35,7 @@ extension Backport where Wrapped: View {
     ///   - axes: The axes of scrollable views that the visibility applies to.
     ///
     /// - Returns: A view with the specified scroll indicator visibility.
-    public func scrollIndicators(_ visibility: Backport<Any>.ScrollIndicatorVisibility, axes: Axis.Set = [.vertical, .horizontal]) -> some View {
+    public func scrollIndicators(_ visibility: Backport<Any>.ScrollIndicatorVisibility, axes: Axis.Set = [.vertical]) -> some View {
         #if os(iOS)
         content
             .environment(\.backportHorizontalScrollIndicatorVisibility, axes.contains(.horizontal) ? visibility : .automatic)
@@ -50,10 +50,16 @@ extension Backport where Wrapped: View {
                 #if os(iOS)
                 if axes.contains(.horizontal) {
                     scrollView.showsHorizontalScrollIndicator = visibility.scrollViewVisible
+                    scrollView.alwaysBounceHorizontal = true
+                } else {
+                    scrollView.alwaysBounceHorizontal = false
                 }
 
                 if axes.contains(.vertical) {
                     scrollView.showsVerticalScrollIndicator = visibility.scrollViewVisible
+                    scrollView.alwaysBounceVertical = true
+                } else {
+                    scrollView.alwaysBounceVertical = false
                 }
                 #endif
             }
