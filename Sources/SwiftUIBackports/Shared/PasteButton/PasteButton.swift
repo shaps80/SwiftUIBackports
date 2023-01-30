@@ -165,7 +165,6 @@ struct PasteButtonStyle: PrimitiveButtonStyle {
                     }
             }
         }
-//            .opacity(configuration.isPressed ? 0.5 : 1)
     }
 }
 #endif

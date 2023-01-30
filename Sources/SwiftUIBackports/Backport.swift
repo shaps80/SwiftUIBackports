@@ -29,7 +29,6 @@ import ObjectiveC
 ///     }
 ///
 public struct Backport<Wrapped> {
-
     /// The underlying content this backport represents.
     public let content: Wrapped
 
@@ -38,7 +37,12 @@ public struct Backport<Wrapped> {
     public init(_ content: Wrapped) {
         self.content = content
     }
+}
 
+public extension Backport where Wrapped == Any {
+    init(_ content: Wrapped) {
+        self.content = content
+    }
 }
 
 public extension View {

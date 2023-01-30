@@ -1,79 +1,112 @@
 #if os(iOS)
 import SwiftUI
 import PhotosUI
+import CoreServices
 
 @available(iOS, introduced: 13, deprecated: 16)
 public extension Backport where Wrapped == Any {
     /// A filter that restricts which types of assets to show
     struct PHPickerFilter: Equatable, Hashable {
-        let predicate: NSPredicate
+        internal let predicate: NSPredicate
+        // this enables us to support iOS 13 for images vs videos
+        internal let mediaTypes: [String]
 
-        /// The filter for images.
-        public static var images: Self {
-            .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaType.image]))
+        internal init(mediaTypes: [String]) {
+            self.predicate = .init(value: true)
+            self.mediaTypes = mediaTypes
         }
 
-        /// The filter for videos.
-        public static var videos: Self {
-            .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaType.video]))
+        internal init(predicate: NSPredicate) {
+            self.predicate = predicate
+            self.mediaTypes = []
         }
+    }
+}
 
-        /// The filter for live photos.
-        public static var livePhotos: Self {
-            .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoLive]))
+@available(iOS 13, *)
+public extension Backport<Any>.PHPickerFilter {
+    /// The filter for images.
+    static var images: Self {
+        if #available(iOS 14, *) {
+            return .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaType.image]))
+        } else {
+            return .init(mediaTypes: [String(kUTTypeImage)])
         }
+    }
 
-        /// The filter for Depth Effect photos.
-        public static var depthEffectPhotos: Self {
-            .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoDepthEffect]))
+    /// The filter for videos.
+    static var videos: Self {
+        if #available(iOS 14, *) {
+            return .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaType.video]))
+        } else {
+            return .init(mediaTypes: [String(kUTTypeMovie)])
         }
+    }
 
-        /// The filter for panorama photos.
-        public static var panoramas: Self {
-            .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoPanorama]))
+    /// The filter for live photos.
+    static var livePhotos: Self {
+        if #available(iOS 14, *) {
+            return .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoLive]))
+        } else {
+            return .init(mediaTypes: [String(kUTTypeMovie), String(kUTTypeLivePhoto)])
         }
+    }
+}
 
-        /// The filter for screenshots.
-        public static var screenshots: Self {
-            .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoScreenshot]))
-        }
+@available(iOS 14, *)
+public extension Backport<Any>.PHPickerFilter {
+    /// The filter for Depth Effect photos.
+    static var depthEffectPhotos: Self {
+        .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoDepthEffect]))
+    }
 
-        /// The filter for Slow-Mo videos.
-        public static var slomoVideos: Self {
-            .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.videoHighFrameRate]))
-        }
+    /// The filter for panorama photos.
+    static var panoramas: Self {
+        .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoPanorama]))
+    }
 
-        /// The filter for time-lapse videos.
-        public static var timelapseVideos: Self {
-            .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.videoTimelapse]))
-        }
+    /// The filter for screenshots.
+    static var screenshots: Self {
+        .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoScreenshot]))
+    }
 
-        /// The filter for Cinematic videos.
-        @available(iOS 15.0, *)
-        public static var cinematicVideos: Self {
-            .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.videoCinematic]))
-        }
+    /// The filter for Slow-Mo videos.
+    static var slomoVideos: Self {
+        .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.videoHighFrameRate]))
+    }
 
-        /// Returns a new filter based on the asset playback style.
-        #warning("NEEDS TESTING!")
-        public static func playbackStyle(_ playbackStyle: PHAsset.PlaybackStyle) -> Self {
-            .init(predicate: NSPredicate(format: "(playbackStyle & %d) != 0", argumentArray: [playbackStyle.rawValue]))
-        }
+    /// The filter for time-lapse videos.
+    static var timelapseVideos: Self {
+        .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.videoTimelapse]))
+    }
 
-        /// Returns a new filter formed by OR-ing the filters in a given array.
-        public static func any(of subfilters: [Self]) -> Self {
-            .init(predicate: NSCompoundPredicate(orPredicateWithSubpredicates: subfilters.map { $0.predicate }))
-        }
+    /// Returns a new filter based on the asset playback style.
+#warning("NEEDS TESTING!")
+    static func playbackStyle(_ playbackStyle: PHAsset.PlaybackStyle) -> Self {
+        .init(predicate: NSPredicate(format: "(playbackStyle & %d) != 0", argumentArray: [playbackStyle.rawValue]))
+    }
 
-        /// Returns a new filter formed by AND-ing the filters in a given array.
-        public static func all(of subfilters: [Self]) -> Self {
-            .init(predicate: NSCompoundPredicate(andPredicateWithSubpredicates: subfilters.map { $0.predicate }))
-        }
+    /// Returns a new filter formed by OR-ing the filters in a given array.
+    static func any(of subfilters: [Self]) -> Self {
+        .init(predicate: NSCompoundPredicate(orPredicateWithSubpredicates: subfilters.map { $0.predicate }))
+    }
 
-        /// Returns a new filter formed by negating the given filter.
-        public static func not(_ filter: Self) -> Self {
-            .init(predicate: NSCompoundPredicate(notPredicateWithSubpredicate: filter.predicate))
-        }
+    /// Returns a new filter formed by AND-ing the filters in a given array.
+    static func all(of subfilters: [Self]) -> Self {
+        .init(predicate: NSCompoundPredicate(andPredicateWithSubpredicates: subfilters.map { $0.predicate }))
+    }
+
+    /// Returns a new filter formed by negating the given filter.
+    static func not(_ filter: Self) -> Self {
+        .init(predicate: NSCompoundPredicate(notPredicateWithSubpredicate: filter.predicate))
+    }
+}
+
+@available(iOS 15.0, *)
+public extension Backport<Any>.PHPickerFilter {
+    /// The filter for Cinematic videos.
+    static var cinematicVideos: Self {
+        .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.videoCinematic]))
     }
 }
 #endif
