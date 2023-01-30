@@ -84,6 +84,14 @@ extension View {
     func inspect<ViewType: PlatformView>(selector: @escaping (_ inspector: Inspector) -> ViewType?, customize: @escaping (ViewType) -> Void) -> some View {
         inject(InspectionView(selector: selector, customize: customize))
     }
+
+    func controller(_ customize: @escaping (UIViewController?) -> Void) -> some View {
+        inspect { inspector in
+            inspector.sourceController.view
+        } customize: { view in
+            customize(view.parentController)
+        }
+    }
 }
 
 private struct InspectionView<ViewType: PlatformView>: View {

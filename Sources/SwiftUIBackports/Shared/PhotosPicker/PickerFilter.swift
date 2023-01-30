@@ -8,17 +8,9 @@ public extension Backport where Wrapped == Any {
     /// A filter that restricts which types of assets to show
     struct PHPickerFilter: Equatable, Hashable {
         internal let predicate: NSPredicate
-        // this enables us to support iOS 13 for images vs videos
-        internal let mediaTypes: [String]
-
-        internal init(mediaTypes: [String]) {
-            self.predicate = .init(value: true)
-            self.mediaTypes = mediaTypes
-        }
 
         internal init(predicate: NSPredicate) {
             self.predicate = predicate
-            self.mediaTypes = []
         }
     }
 }
@@ -27,34 +19,19 @@ public extension Backport where Wrapped == Any {
 public extension Backport<Any>.PHPickerFilter {
     /// The filter for images.
     static var images: Self {
-        if #available(iOS 14, *) {
-            return .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaType.image]))
-        } else {
-            return .init(mediaTypes: [String(kUTTypeImage)])
-        }
+        .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaType.image]))
     }
 
     /// The filter for videos.
     static var videos: Self {
-        if #available(iOS 14, *) {
-            return .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaType.video]))
-        } else {
-            return .init(mediaTypes: [String(kUTTypeMovie)])
-        }
+        .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaType.video]))
     }
 
     /// The filter for live photos.
     static var livePhotos: Self {
-        if #available(iOS 14, *) {
-            return .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoLive]))
-        } else {
-            return .init(mediaTypes: [String(kUTTypeMovie), String(kUTTypeLivePhoto)])
-        }
+        .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoLive]))
     }
-}
 
-@available(iOS 14, *)
-public extension Backport<Any>.PHPickerFilter {
     /// The filter for Depth Effect photos.
     static var depthEffectPhotos: Self {
         .init(predicate: NSPredicate(format: "(mediaSubtypes & %d) != 0", argumentArray: [PHAssetMediaSubtype.photoDepthEffect]))
@@ -81,7 +58,6 @@ public extension Backport<Any>.PHPickerFilter {
     }
 
     /// Returns a new filter based on the asset playback style.
-#warning("NEEDS TESTING!")
     static func playbackStyle(_ playbackStyle: PHAsset.PlaybackStyle) -> Self {
         .init(predicate: NSPredicate(format: "(playbackStyle & %d) != 0", argumentArray: [playbackStyle.rawValue]))
     }

@@ -36,14 +36,6 @@ public extension Backport where Wrapped == Any {
         /// All supported content types of the item, in order of most preferred to least preferred.
         public let supportedContentTypes: [String]
 
-//        internal let provider: NSItemProvider?
-//
-//        internal init(itemIdentifier: String, provider: NSItemProvider) {
-//            self.itemIdentifier = itemIdentifier
-//            self.provider = provider
-//            supportedContentTypes = provider.registeredTypeIdentifiers
-//        }
-
         /// Creates an item without any representation using an identifier.
         ///
         /// - Parameters:

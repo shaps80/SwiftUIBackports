@@ -25,89 +25,19 @@ public extension Backport<Any> {
             } label: {
                 label
             }
-            ._photoPicker(
+            .backport.photosPicker(
                 isPresented: $isPresented,
                 selection: $selection,
-                filter: filter,
                 maxSelectionCount: maxSelection,
                 selectionBehavior: selectionBehavior,
+                matching: filter,
                 preferredItemEncoding: encoding,
-                library: library
+                photoLibrary: library
             )
         }
     }
 }
 
-@available(iOS, introduced: 13, deprecated: 14)
-public extension Backport<Any>.PhotosPicker {
-    init(
-        selection: Binding<Backport.PhotosPickerItem?>,
-        matching filter: Backport.PHPickerFilter? = nil,
-        @ViewBuilder label: () -> Label
-    ) {
-        _selection = .init(
-            get: {
-                [selection.wrappedValue].compactMap { $0 }
-            },
-            set: { newValue in
-                selection.wrappedValue = newValue.first
-            }
-        )
-        self.filter = filter
-        self.maxSelection = 1
-        self.selectionBehavior = .default
-        self.encoding = .automatic
-        self.library = .shared()
-        self.label = label()
-    }
-}
-
-@available(iOS, introduced: 13, deprecated: 14)
-public extension Backport<Any>.PhotosPicker<Text> {
-    init(
-        _ titleKey: LocalizedStringKey,
-        selection: Binding<Backport.PhotosPickerItem?>,
-        matching filter: Backport.PHPickerFilter? = nil
-    ) {
-        _selection = .init(
-            get: {
-                [selection.wrappedValue].compactMap { $0 }
-            },
-            set: { newValue in
-                selection.wrappedValue = newValue.first
-            }
-        )
-        self.filter = filter
-        self.maxSelection = 1
-        self.selectionBehavior = .default
-        self.encoding = .automatic
-        self.library = .shared()
-        self.label = Text(titleKey)
-    }
-
-    init<S>(
-        _ title: S,
-        selection: Binding<Backport.PhotosPickerItem?>,
-        matching filter: Backport.PHPickerFilter? = nil
-    ) where S: StringProtocol {
-        _selection = .init(
-            get: {
-                [selection.wrappedValue].compactMap { $0 }
-            },
-            set: { newValue in
-                selection.wrappedValue = newValue.first
-            }
-        )
-        self.filter = filter
-        self.maxSelection = 1
-        self.selectionBehavior = .default
-        self.encoding = .automatic
-        self.library = .shared()
-        self.label = Text(title)
-    }
-}
-
-@available(iOS 14, *)
 public extension Backport<Any>.PhotosPicker {
     /// Creates a Photos picker that selects a `PhotosPickerItem`.
     ///
@@ -176,7 +106,6 @@ public extension Backport<Any>.PhotosPicker {
 
 // MARK: Single selection
 
-@available(iOS 14, *)
 public extension Backport<Any>.PhotosPicker<Text> {
     /// Creates a Photos picker with its label generated from a localized string key that selects a `PhotosPickerItem`.
     ///
@@ -309,7 +238,6 @@ public extension Backport<Any>.PhotosPicker<Text> {
 
 // MARK: Multiple selection
 
-@available(iOS 15, *)
 public extension Backport<Any>.PhotosPicker {
     /// Creates a Photos picker that selects a collection of `PhotosPickerItem`.
     ///
@@ -370,7 +298,6 @@ public extension Backport<Any>.PhotosPicker {
     }
 }
 
-@available(iOS 15, *)
 public extension Backport<Any>.PhotosPicker<Text> {
     /// Creates a Photos picker with its label generated from a localized string key that selects a collection of `PhotosPickerItem`.
     ///
