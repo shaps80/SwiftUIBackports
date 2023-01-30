@@ -2,7 +2,7 @@
 import SwiftUI
 import PhotosUI
 
-@available(iOS, deprecated: 16)
+@available(iOS, introduced: 13, deprecated: 16)
 public extension Backport where Wrapped == Any {
     /// A filter that restricts which types of assets to show
     struct PHPickerFilter: Equatable, Hashable {

@@ -1,5 +1,4 @@
 #if os(iOS)
-
 import SwiftUI
 import PhotosUI
 
@@ -37,13 +36,21 @@ public extension Backport where Wrapped == Any {
         /// All supported content types of the item, in order of most preferred to least preferred.
         public let supportedContentTypes: [String]
 
+//        internal let provider: NSItemProvider?
+//
+//        internal init(itemIdentifier: String, provider: NSItemProvider) {
+//            self.itemIdentifier = itemIdentifier
+//            self.provider = provider
+//            supportedContentTypes = provider.registeredTypeIdentifiers
+//        }
+
         /// Creates an item without any representation using an identifier.
         ///
         /// - Parameters:
         ///     - itemIdentifier: The local identifier of the item.
         public init(itemIdentifier: String) {
             self.itemIdentifier = itemIdentifier
-            fatalError()
+            supportedContentTypes = []
         }
 
         /// Loads an object using a representation of the item by matching content types.
@@ -56,10 +63,26 @@ public extension Backport where Wrapped == Any {
         ///     - type: The actual type of the object.
         /// - Throws: The encountered error while loading the object.
         /// - Returns: The loaded object, or `nil` if no supported content type is found.
-//        public func loadTransferable<T>(type: T.Type) async throws -> T? where T {
-//            fatalError()
-//        }
+        ///
+        /// - Note: Supported types are `Data`, `UIImage` or `Image` exclusively. Attempting to pass any other value here will result in an error.
+        public func loadTransferable<T>(type: T.Type) async throws -> T? {
+            switch type {
+            case is Image.Type:
+                fatalError()
+            case is UIImage.Type:
+                fatalError()
+            case is Data.Type:
+                fatalError()
+            default:
+                throw PhotoError<T>()
+            }
+        }
+
+        private struct PhotoError<T>: LocalizedError {
+            var errorDescription: String? {
+                "Could not load photo as \(T.self)"
+            }
+        }
     }
 }
-
 #endif

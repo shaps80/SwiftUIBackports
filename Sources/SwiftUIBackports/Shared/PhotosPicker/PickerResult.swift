@@ -1,9 +1,8 @@
 #if os(iOS)
-
 import SwiftUI
 import PhotosUI
 
-@available(iOS, deprecated: 16)
+@available(iOS, introduced: 13, deprecated: 16)
 public extension Backport where Wrapped == Any {
     /// A user selected asset from `PHPickerViewController`.
     struct PHPickerResult: Equatable, Hashable {
@@ -19,5 +18,4 @@ public extension Backport where Wrapped == Any {
         }
     }
 }
-
 #endif

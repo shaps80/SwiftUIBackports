@@ -150,7 +150,7 @@ private extension ShareSheet {
         }
 
         private func dismissController() {
-            guard let controller = controller else { return }
+            guard let controller else { return }
             controller.presentingViewController?.dismiss(animated: true)
         }
 
