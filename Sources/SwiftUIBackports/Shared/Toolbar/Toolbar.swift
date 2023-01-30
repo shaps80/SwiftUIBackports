@@ -9,6 +9,7 @@ public extension Backport<Any> {
         case cancellationAction
         case destructiveAction
         case principal
+        case status
 
         var isLeading: Bool {
             switch self {
@@ -30,16 +31,18 @@ public extension Backport<Any> {
     }
 
     struct ToolbarItem: View {
+        let id: String
         let placement: Backport.ToolbarItemPlacement
         let content: AnyView
 
-        public init<Content: View>(placement: Backport.ToolbarItemPlacement, @ViewBuilder content: () -> Content) {
+        public init<Content: View>(id: String = UUID().uuidString, placement: Backport.ToolbarItemPlacement = .automatic, @ViewBuilder content: () -> Content) {
+            self.id = id
             self.placement = placement
             self.content = AnyView(content())
         }
 
         public var body: some View {
-            content
+            content.id(id)
         }
     }
 }
@@ -57,26 +60,101 @@ extension Collection where Element == Backport<Any>.ToolbarItem, Indices: Random
 }
 
 @available(iOS, introduced: 13, deprecated: 14)
-public extension Backport where Wrapped: View {
+struct ToolbarModifier: ViewModifier {
+    let leadingItems: [Backport<Any>.ToolbarItem]
+    let trailingItems: [Backport<Any>.ToolbarItem]
+    let principalItems: [Backport<Any>.ToolbarItem]
+    let statusItems: [Backport<Any>.ToolbarItem]
+
+    init(items: [Backport<Any>.ToolbarItem]) {
+        leadingItems = items.filter { $0.placement.isLeading }
+        trailingItems = items.filter { $0.placement.isTrailing }
+        principalItems = items.filter { $0.placement == .principal }
+        statusItems = items.filter { $0.placement == .status }
+    }
+
     @ViewBuilder
-    func toolbar(@BackportToolbarContentBuilder _ items: () -> [Backport<Any>.ToolbarItem]) -> some View {
-        let items = items()
+    private var leading: some View {
+        if !leadingItems.isEmpty {
+            HStack {
+                ForEach(leadingItems, id: \.id) { item in
+                    item.content
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var trailing: some View {
+        if !trailingItems.isEmpty {
+            HStack {
+                ForEach(trailingItems, id: \.id) { item in
+                    item.content
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var principal: some View {
+        if !principalItems.isEmpty {
+            HStack {
+                ForEach(principalItems, id: \.id) { item in
+                    item.content
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var status: some View {
+        if !statusItems.isEmpty {
+            HStack {
+                ForEach(statusItems, id: \.id) { item in
+                    item.content
+                }
+            }
+        }
+    }
+
+    @Namespace private var namespace
+
+    func body(content: Content) -> some View {
         content
-            .navigationBarItems(leading: items.filter { $0.placement.isLeading }.content, trailing: items.filter { $0.placement.isTrailing }.content)
+            .navigationBarItems(leading: leading, trailing: trailing)
             .controller { controller in
-                controller?.navigationItem.titleView = UIHostingController(
-                    rootView: items.filter { $0.placement == .principal }.content,
-                    ignoreSafeArea: false
-                ).view
+                if !principalItems.isEmpty {
+                    controller?.navigationItem.titleView = UIHostingController(
+                        rootView: principal,
+                        ignoreSafeArea: false
+                    ).view
+                }
+
+                if !statusItems.isEmpty {
+                    controller?.navigationController?.setToolbarHidden(false, animated: false)
+                    controller?.toolbarItems = [
+
+                    ]
+                }
             }
     }
 }
 
-@resultBuilder
-public struct BackportToolbarContentBuilder { }
-public extension BackportToolbarContentBuilder {
+@available(iOS, introduced: 13, deprecated: 14)
+public extension Backport where Wrapped: View {
+    @ViewBuilder
+    func toolbar(@Backport<Any>.ToolbarContentBuilder _ items: () -> [Backport<Any>.ToolbarItem]) -> some View {
+        content.modifier(ToolbarModifier(items: items()))
+    }
+}
+
+public extension Backport<Any> {
+    @resultBuilder struct ToolbarContentBuilder { }
+}
+
+public extension Backport<Any>.ToolbarContentBuilder {
     static func buildBlock() -> [Backport<Any>.ToolbarItem] {
-        [Backport<Any>.ToolbarItem(placement: .automatic, content: { EmptyView() })]
+        [.init(content: EmptyView.init)]
     }
 
     static func buildBlock(_ content: Backport<Any>.ToolbarItem) -> [Backport<Any>.ToolbarItem] {
