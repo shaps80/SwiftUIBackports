@@ -1,25 +1,21 @@
 import SwiftUI
 
-public final class ImageRenderer<Content>: ObservableObject where Content: View {
-    public var content: Content
-    public var label: String?
-    public var proposedSize: ProposedViewSize = .unspecified
-    public var scale: CGFloat = PlatformScreen.mainScreen.scale
-    public var isOpaque: Bool = false
-    public var colorMode: ColorRenderingMode = .nonLinear
-    
-    public init(content: Content) {
-        self.content = content
+public extension Backport<Any> {
+    final class ImageRenderer<Content>: ObservableObject where Content: View {
+        public var content: Content
+        public var label: String?
+        public var proposedSize: ProposedViewSize = .unspecified
+        public var scale: CGFloat = PlatformScreen.mainScreen.scale
+        public var isOpaque: Bool = false
+        public var colorMode: ColorRenderingMode = .nonLinear
+
+        public init(content: Content) {
+            self.content = content
+        }
     }
 }
 
-//public extension ImageRenderer {
-//    func render(rasterizationScale: CGFloat = 1, renderer: (CGSize, (CGContext) -> Void) -> Void) {
-//
-//    }
-//}
-
-public extension ImageRenderer {
+public extension Backport<Any>.ImageRenderer {
     var cgImage: CGImage? {
         #if os(macOS)
         nsImage?.cgImage(forProposedRect: nil, context: .current, hints: nil)

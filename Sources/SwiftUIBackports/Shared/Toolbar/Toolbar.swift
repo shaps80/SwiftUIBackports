@@ -9,7 +9,7 @@ public extension Backport<Any> {
         case cancellationAction
         case destructiveAction
         case principal
-        case status
+        case bottomBar
 
         var isLeading: Bool {
             switch self {
@@ -64,13 +64,13 @@ struct ToolbarModifier: ViewModifier {
     let leadingItems: [Backport<Any>.ToolbarItem]
     let trailingItems: [Backport<Any>.ToolbarItem]
     let principalItems: [Backport<Any>.ToolbarItem]
-    let statusItems: [Backport<Any>.ToolbarItem]
+    let bottomBarItems: [Backport<Any>.ToolbarItem]
 
     init(items: [Backport<Any>.ToolbarItem]) {
         leadingItems = items.filter { $0.placement.isLeading }
         trailingItems = items.filter { $0.placement.isTrailing }
         principalItems = items.filter { $0.placement == .principal }
-        statusItems = items.filter { $0.placement == .status }
+        bottomBarItems = items.filter { $0.placement == .bottomBar }
     }
 
     @ViewBuilder
@@ -107,10 +107,10 @@ struct ToolbarModifier: ViewModifier {
     }
 
     @ViewBuilder
-    private var status: some View {
-        if !statusItems.isEmpty {
+    private var bottomBar: some View {
+        if !bottomBarItems.isEmpty {
             HStack {
-                ForEach(statusItems, id: \.id) { item in
+                ForEach(bottomBarItems, id: \.id) { item in
                     item.content
                 }
             }
@@ -125,18 +125,35 @@ struct ToolbarModifier: ViewModifier {
             .controller { controller in
                 if !principalItems.isEmpty {
                     controller?.navigationItem.titleView = UIHostingController(
-                        rootView: principal,
+                        rootView: principal.backport.largeScale(),
                         ignoreSafeArea: false
                     ).view
+                    controller?.navigationItem.titleView?.backgroundColor = .clear
                 }
 
-                if !statusItems.isEmpty {
+                if !bottomBarItems.isEmpty {
                     controller?.navigationController?.setToolbarHidden(false, animated: false)
-                    controller?.toolbarItems = [
-
-                    ]
+                    controller?.toolbarItems = bottomBarItems.map {
+                        let view = UIHostingController(rootView: $0.content.backport.largeScale()).view!
+                        view.backgroundColor = .clear
+                        return .init(customView: view)
+                    }
                 }
             }
+    }
+}
+
+private extension Backport where Wrapped: View {
+    func largeScale() -> some View {
+        #if os(macOS)
+        if #available(macOS 11, *) {
+            content.imageScale(.large)
+        } else {
+            content
+        }
+        #else
+        content.imageScale(.large)
+        #endif
     }
 }
 

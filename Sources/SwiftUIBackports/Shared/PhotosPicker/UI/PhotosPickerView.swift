@@ -54,7 +54,7 @@ internal struct PhotosPickerView: View {
                     .fixedSize()
                 }
 
-                Backport.ToolbarItem(placement: .status) {
+                Backport.ToolbarItem(placement: .bottomBar) {
                     VStack {
                         Text(selection.isEmpty ? "Select Items" : "Selected (\(selection.count))")
                             .font(.subheadline.weight(.semibold))

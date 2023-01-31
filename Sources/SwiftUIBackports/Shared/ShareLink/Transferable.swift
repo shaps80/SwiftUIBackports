@@ -44,7 +44,7 @@ extension Image: Shareable {
             let url = URL(fileURLWithPath: NSTemporaryDirectory())
                 .appendingPathComponent("\(UUID().uuidString)")
                 .appendingPathExtension(pathExtension)
-            let renderer = ImageRenderer(content: self)
+            let renderer = Backport.ImageRenderer(content: self)
 
             #if os(iOS)
             let data = renderer.uiImage?.jpegData(compressionQuality: 0.8)
