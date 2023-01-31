@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 
 public extension Backport<Any> {
@@ -56,3 +57,4 @@ public extension Backport<Any> {
 //            )
 //    }
 //}
+#endif

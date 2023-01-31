@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 
 internal struct ToolbarBackgroundModifier: ViewModifier {
@@ -91,3 +92,4 @@ internal struct ToolbarBackgroundModifier: ViewModifier {
 private final class ControllerWrapper: ObservableObject {
     weak var controller: UIViewController?
 }
+#endif

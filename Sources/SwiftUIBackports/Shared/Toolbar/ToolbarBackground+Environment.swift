@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 
 struct ToolbarViews {
@@ -33,3 +34,4 @@ internal extension EnvironmentValues {
         set { self[ToolbarVisibilityKey.self] = newValue }
     }
 }
+#endif
