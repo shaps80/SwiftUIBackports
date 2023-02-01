@@ -54,7 +54,7 @@ public extension Backport<Any>.PHPickerFilter {
         if #available(iOS 14, *) {
             return .init(filter: .livePhotos)
         } else {
-            return .init(mediaTypes: [kUTTypeLivePhoto, kUTTypeMovie])
+            return .init(mediaTypes: [kUTTypeLivePhoto, kUTTypeImage])
         }
     }
 }
