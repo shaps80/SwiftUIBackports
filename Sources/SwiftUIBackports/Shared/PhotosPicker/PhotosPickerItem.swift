@@ -3,7 +3,7 @@ import SwiftUI
 import PhotosUI
 
 @available(iOS, deprecated: 16)
-public extension Backport where Wrapped == Any {
+public extension Backport<Any> {
     /// An item can contain multiple representations. Each representation has a corresponding content type.
     struct PhotosPickerItem: Equatable, Hashable {
         /// A policy that decides the encoding to use given a content type, if multiple encodings are available.
@@ -19,10 +19,9 @@ public extension Backport where Wrapped == Any {
             /// Uses the most compatible encoding if possible, even if transcoding is required.
             public static let compatible: Self = .init(rawValue: 2)
 
-            @available(iOS, introduced: 14)
-            public var mode: PHPickerConfiguration.AssetRepresentationMode {
+            @available(iOS 14, *)
+            internal var mode: PHPickerConfiguration.AssetRepresentationMode {
                 switch self {
-                case .automatic: return .automatic
                 case .current: return .current
                 case .compatible: return .compatible
                 default: return .automatic
