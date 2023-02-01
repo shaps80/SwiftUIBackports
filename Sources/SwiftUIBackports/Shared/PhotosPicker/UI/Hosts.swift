@@ -35,6 +35,7 @@ internal extension View {
                     preferredItemEncoding: preferredItemEncoding
                 )
                 .edgesIgnoringSafeArea(.all)
+                .backport.interactiveDismissDisabled()
             }
         }
     }
