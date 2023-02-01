@@ -1,5 +1,6 @@
+#if os(iOS)
 import Foundation
-import Photos
+import PhotosUI
 
 internal extension PHFetchOptions {
 
@@ -61,3 +62,4 @@ internal extension PHFetchOptions {
     }
 
 }
+#endif

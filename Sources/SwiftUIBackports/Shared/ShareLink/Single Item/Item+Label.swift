@@ -1,3 +1,4 @@
+#if os(macOS) || os(iOS)
 import SwiftUI
 
 @available(iOS, deprecated: 16)
@@ -59,3 +60,4 @@ public extension Backport.ShareLink where Wrapped == Any {
         self.preview = { .init($0.absoluteString) }
     }
 }
+#endif

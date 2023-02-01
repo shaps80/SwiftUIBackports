@@ -1,5 +1,8 @@
+#if os(macOS) || os(iOS)
 import SwiftUI
+#if canImport(LinkPresentation)
 import LinkPresentation
+#endif
 
 @available(iOS, deprecated: 16)
 @available(macOS, deprecated: 13)
@@ -65,3 +68,4 @@ public extension Backport where Wrapped == Any {
 //    override func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String { subject ?? "" }
 //
 //}
+#endif

@@ -1,3 +1,4 @@
+#if os(macOS) || os(iOS)
 import SwiftUI
 
 public extension Backport<Any> {
@@ -75,4 +76,5 @@ private extension NSView {
         return NSImage(data: dataWithPDF(inside: bounds))
     }
 }
+#endif
 #endif

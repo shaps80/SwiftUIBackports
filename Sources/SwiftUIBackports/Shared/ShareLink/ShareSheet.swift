@@ -1,5 +1,6 @@
 import SwiftUI
 
+#if os(macOS) || os(iOS)
 extension View {
     @ViewBuilder
     func shareSheet<Data>(item activityItems: Binding<ActivityItem<Data>?>) -> some View where Data: RandomAccessCollection, Data.Element: Shareable {
@@ -10,6 +11,7 @@ extension View {
 #endif
     }
 }
+#endif
 
 #if os(macOS)
 

@@ -1,3 +1,4 @@
+#if os(iOS)
 import Photos
 import SwiftUI
 
@@ -58,3 +59,4 @@ internal final class AssetObserver: NSObject, ObservableObject, PHPhotoLibraryCh
     }
 
 }
+#endif

@@ -1,3 +1,4 @@
+#if os(iOS)
 import Photos
 import SwiftUI
 
@@ -114,3 +115,4 @@ internal extension FetchAssetList {
     }
 
 }
+#endif

@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 
 /*
@@ -15,3 +16,4 @@ private extension Backport where Wrapped: View {
         }
     }
 }
+#endif

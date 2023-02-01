@@ -1,4 +1,5 @@
-import Photos
+#if os(iOS)
+import PhotosUI
 
 /// Represents a `PHFetchResult` that can be used as a `RandomAccessCollection` in a SwiftUI view such as `List`, `ForEach`, etc...
 internal struct MediaResults<Result>: RandomAccessCollection where Result: PHObject {
@@ -38,3 +39,4 @@ internal final class ResultsObserver<Result>: NSObject, ObservableObject, PHPhot
     }
 
 }
+#endif

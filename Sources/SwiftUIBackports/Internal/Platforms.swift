@@ -11,20 +11,20 @@ internal typealias PlatformViewController = UIViewController
 
 extension UIScreen {
     @nonobjc
-    public static var mainScreen: UIScreen {
-        return .main
-    }
+    public static var mainScreen: UIScreen { .main }
 }
 
 extension UIImage {
-    public var png: Data? {
-        return self.pngData()
-    }
+    public var png: Data? { pngData() }
+    public func jpg(quality: CGFloat) -> Data? { jpegData(compressionQuality: quality) }
+}
 
-    public func jpg(quality: CGFloat) -> Data? {
-        return self.jpegData(compressionQuality: quality)
+extension CGContext {
+    internal static var current: CGContext? {
+        UIGraphicsGetCurrentContext()
     }
 }
+
 
 #elseif os(macOS)
 
@@ -38,13 +38,8 @@ internal typealias PlatformScrollView = NSScrollView
 internal typealias PlatformViewController = NSViewController
 
 extension NSScreen {
-    public static var mainScreen: NSScreen {
-        return NSScreen.main!
-    }
-
-    public var scale: CGFloat {
-        return backingScaleFactor
-    }
+    public static var mainScreen: NSScreen { NSScreen.main! }
+    public var scale: CGFloat { backingScaleFactor }
 }
 
 extension NSImage {
@@ -57,16 +52,9 @@ extension NSImage {
     }
 }
 
-#endif
-
 extension CGContext {
-
     internal static var current: CGContext? {
-#if os(OSX)
-        return NSGraphicsContext.current?.cgContext
-#else
-        return UIGraphicsGetCurrentContext()
-#endif
+        NSGraphicsContext.current?.cgContext
     }
-
 }
+#endif

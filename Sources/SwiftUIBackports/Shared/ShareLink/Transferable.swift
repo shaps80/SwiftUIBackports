@@ -1,3 +1,4 @@
+#if os(macOS) || os(iOS)
 import SwiftUI
 
 @available(iOS, deprecated: 16.0)
@@ -7,6 +8,8 @@ import SwiftUI
 /// TEMPORARY, DO NOT RELY ON THIS!
 /// 
 /// - Note: This **will be removed** in an upcoming release, regardless of semantic versioning
+@available(iOS, message: "This **will be removed** in an upcoming release, regardless of semantic versioning")
+@available(macOS, message: "This **will be removed** in an upcoming release, regardless of semantic versioning")
 public protocol Shareable {
     var pathExtension: String { get }
     var itemProvider: NSItemProvider? { get }
@@ -75,3 +78,4 @@ extension PlatformImage: Shareable {
         }
     }
 }
+#endif
