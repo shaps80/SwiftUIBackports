@@ -12,7 +12,7 @@ Many backports support iOS 13+ but where UIKIt features were introduced in later
 
 In some cases, I've also included additional APIs that bring more features to your SwiftUI development.
 
-> Note, **all** backports will be API-matching to Apple's offical APIs, any additional features will be provided separately.
+> Note, **all** backports will be API-matching to Apple's official APIs, any additional features will be provided separately.
 
 All backports are fully documented, in most cases using Apple's own documentation for consistency. Please refer to the header docs or Apple's original documentation for more details.
 
@@ -34,7 +34,7 @@ The library adopts a backport design by [Dave DeLong](https://davedelong.com/blo
 
 Backports of pure types, can easily be discovered under the `Backport` namespace. Similarly, modifiers are discoverable under the `.backport` namespace.
 
-> Unfortuantely `Environment` backports cannot be access this way, in those cases the Apple API values will be prefixed with `backport` to simplify discovery.
+> Unfortunately `Environment` backports cannot be access this way, in those cases the Apple API values will be prefixed with `backport` to simplify discovery.
 
 Types:
 
