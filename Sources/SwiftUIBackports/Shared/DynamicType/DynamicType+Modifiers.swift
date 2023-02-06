@@ -96,8 +96,7 @@ private struct DynamicTypeRangeModifier: ViewModifier {
     @Environment(\.backportDynamicTypeSize) private var size
 
     private var resolvedSize: Backport<Any>.DynamicTypeSize {
-        print(range)
-        return range.contains(size)
+        range.contains(size)
         ? size
         : max(range.lowerBound, min(range.upperBound, size))
     }
