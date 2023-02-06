@@ -35,6 +35,38 @@ public extension Backport where Wrapped: View {
         content
         #endif
     }
+  
+    
+    /// Sets the available detents for the enclosing sheet.
+    ///
+    /// By default, sheets support the ``PresentationDetent/large`` detent.
+    ///
+    ///     struct ContentView: View {
+    ///         @State private var showSettings = false
+    ///
+    ///         var body: some View {
+    ///             Button("View Settings") {
+    ///                 showSettings = true
+    ///             }
+    ///             .sheet(isPresented: $showSettings) {
+    ///                 SettingsView()
+    ///                     .presentationDetents([.medium, .large])
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// - Parameter detents: A set of supported detents for the sheet.
+    ///   If you provide more than one detent, people can drag the sheet
+    ///   to resize it.
+    @ViewBuilder
+    @available(iOS, introduced: 15, deprecated: 16, message: "Presentation detents are only supported in iOS 15+")
+    func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>, largestUndimmedDetent: Backport<Any>.PresentationDetent? = nil) -> some View {
+        #if os(iOS)
+        content.background(Backport<Any>.Representable(detents: detents, selection: nil, largestUndimmed: largestUndimmedDetent))
+        #else
+        content
+        #endif
+    }
 
 
     /// Sets the available detents for the enclosing sheet, giving you
