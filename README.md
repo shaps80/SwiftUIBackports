@@ -114,10 +114,6 @@ A custom `GeometryReader` implementation that correctly auto-sizes itself to its
 
 A custom `ScrollView` that respects `Spacer`'s when the content is not scrollable. This is useful when you need to place a view at the edges of your scrollview while its content is small enough to not require scrolling. Another great use case is vertically centered content that becomes `top` aligned once the content requires scrolling.
 
-**PageView**
-
-A pure SwiftUI implementation of a page-based view, using the native `TabView` and my custom `FittingGeometryReader` to size itself correctly. Since this uses a `TabView` under-the-hood, this allows you to use the same APIs and features from that view.
-
 ## Installation
 
 You can install manually (by copying the files in the `Sources` directory) or using Swift Package Manager (**preferred**)
