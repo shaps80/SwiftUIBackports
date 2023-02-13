@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftBackports
 
 private struct BackportDynamicTypeKey: EnvironmentKey {
     static var defaultValue: Backport.DynamicTypeSize = .large

@@ -1,6 +1,7 @@
 #if os(iOS)
 import Photos
 import SwiftUI
+import SwiftBackports
 
 /// Fetches a single asset
 @propertyWrapper

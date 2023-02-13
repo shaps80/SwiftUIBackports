@@ -1,3 +1,5 @@
+import SwiftBackports
+
 #if os(iOS)
 import SwiftUI
 

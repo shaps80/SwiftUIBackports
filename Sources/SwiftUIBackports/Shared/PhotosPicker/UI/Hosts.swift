@@ -1,6 +1,7 @@
 #if os(iOS)
 import SwiftUI
 import PhotosUI
+import SwiftBackports
 
 internal extension View {
     @ViewBuilder

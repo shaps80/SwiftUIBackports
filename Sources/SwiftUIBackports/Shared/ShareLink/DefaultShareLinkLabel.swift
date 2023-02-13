@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftBackports
 
 public struct DefaultShareLinkLabel: View {
     let text: Text

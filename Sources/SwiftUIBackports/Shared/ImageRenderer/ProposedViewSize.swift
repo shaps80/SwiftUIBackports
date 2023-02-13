@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftBackports
 
 public struct ProposedViewSize: Equatable, Sendable {
     public var width: CGFloat?

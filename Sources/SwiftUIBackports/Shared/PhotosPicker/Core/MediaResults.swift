@@ -1,5 +1,6 @@
 #if os(iOS)
 import PhotosUI
+import SwiftBackports
 
 /// Represents a `PHFetchResult` that can be used as a `RandomAccessCollection` in a SwiftUI view such as `List`, `ForEach`, etc...
 internal struct MediaResults<Result>: RandomAccessCollection where Result: PHObject {

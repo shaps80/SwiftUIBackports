@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftBackports
 
 public struct SharePreview<Image, Icon> {
     let title: String

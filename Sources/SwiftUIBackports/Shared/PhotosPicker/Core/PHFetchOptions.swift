@@ -1,6 +1,7 @@
 #if os(iOS)
 import Foundation
 import PhotosUI
+import SwiftBackports
 
 internal extension PHFetchOptions {
 

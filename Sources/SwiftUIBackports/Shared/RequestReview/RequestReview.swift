@@ -1,5 +1,6 @@
 import SwiftUI
 import StoreKit
+import SwiftBackports
 
 #if os(iOS) || os(macOS)
 public extension EnvironmentValues {

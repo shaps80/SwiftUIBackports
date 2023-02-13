@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftBackports
 
 public extension Backport where Wrapped: View {
 
@@ -125,7 +126,7 @@ public extension Backport where Wrapped: View {
     ///
     /// - Returns: A view that uses the specified content as a background.
     func background<Content: View>(alignment: Alignment = .center, @ViewBuilder _ content: () -> Content) -> some View {
-        self.wrapped.background(content(), alignment: alignment)
+        wrapped.background(content(), alignment: alignment)
     }
 
 }

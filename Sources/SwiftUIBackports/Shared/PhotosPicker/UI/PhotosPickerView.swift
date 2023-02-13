@@ -1,6 +1,7 @@
 #if os(iOS)
 import SwiftUI
 import PhotosUI
+import SwiftBackports
 
 internal struct PhotosPickerView: View {
     @Environment(\.backportDismiss) private var dismiss

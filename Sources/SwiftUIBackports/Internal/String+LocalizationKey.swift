@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftBackports
 
 extension String {
     internal init?(_ stringKey: LocalizedStringKey) {

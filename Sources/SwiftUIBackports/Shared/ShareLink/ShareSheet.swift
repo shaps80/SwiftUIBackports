@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftBackports
 
 #if os(macOS) || os(iOS)
 extension View {

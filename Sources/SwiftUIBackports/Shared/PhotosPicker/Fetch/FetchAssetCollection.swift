@@ -1,6 +1,7 @@
 #if os(iOS)
 import Photos
 import SwiftUI
+import SwiftBackports
 
 /// Fetches a set of asset collections from the `Photos` framework
 @propertyWrapper

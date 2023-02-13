@@ -1,3 +1,5 @@
+import SwiftBackports
+
 #if os(macOS) || os(iOS)
 import SwiftUI
 #if canImport(LinkPresentation)

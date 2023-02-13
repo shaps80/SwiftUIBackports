@@ -1,5 +1,6 @@
 import SwiftUI
 import CoreServices
+import SwiftBackports
 
 public extension NSItemProvider {
     func loadObject<T>(of type: T.Type) async throws -> T where T: _ObjectiveCBridgeable, T._ObjectiveCType: NSItemProviderReading {

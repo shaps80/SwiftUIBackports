@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftBackports
 
 public extension Backport where Wrapped == AnyTransition {
     /// Creates a transition that when added to a view will animate the view’s insertion by moving it in from the specified edge while fading it in, and animate its removal by moving it out towards the opposite edge and fading it out.

@@ -1,6 +1,7 @@
 #if os(iOS)
 import Photos
 import SwiftUI
+import SwiftBackports
 
 @propertyWrapper
 internal struct FetchCollectionList<Result>: DynamicProperty where Result: PHCollectionList {

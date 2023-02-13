@@ -1,6 +1,7 @@
 #if os(iOS)
 import SwiftUI
 import PhotosUI
+import SwiftBackports
 
 @available(iOS, introduced: 13, deprecated: 16)
 public extension Backport where Wrapped == Any {

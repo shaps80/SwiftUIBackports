@@ -1,4 +1,6 @@
 import SwiftUI
+import SwiftBackports
+
 #if canImport(QuickLook)
 import QuickLook
 #endif

@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftBackports
 
 #if canImport(WatchKit)
 import WatchKit

@@ -1,3 +1,4 @@
+import SwiftBackports
 import SwiftUI
 
 /// A geometry reader that automatically sizes its height to 'fit' its content.
