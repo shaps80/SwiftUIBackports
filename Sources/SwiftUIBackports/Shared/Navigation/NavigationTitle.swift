@@ -9,12 +9,12 @@ public extension Backport where Wrapped: View {
     func navigationTitle<S: StringProtocol>(_ title: S) -> some View {
         #if os(macOS)
         if #available(macOS 11, *) {
-            content.navigationTitle(title)
+            wrapped.navigationTitle(title)
         } else {
-            content
+            wrapped
         }
         #else
-        content.navigationBarTitle(title)
+        wrapped.navigationBarTitle(title)
         #endif
     }
 
@@ -22,12 +22,12 @@ public extension Backport where Wrapped: View {
     func navigationTitle(_ titleKey: LocalizedStringKey) -> some View {
         #if os(macOS)
         if #available(macOS 11, *) {
-            content.navigationTitle(titleKey)
+            wrapped.navigationTitle(titleKey)
         } else {
-            content
+            wrapped
         }
         #else
-        content.navigationBarTitle(titleKey)
+        wrapped.navigationBarTitle(titleKey)
         #endif
     }
 

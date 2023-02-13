@@ -43,7 +43,7 @@ extension Backport where Wrapped: View {
     ///   disabled.
     public func scrollDisabled(_ disabled: Bool) -> some View {
         #if os(iOS)
-        content
+        wrapped
             .environment(\.backportIsScrollEnabled, !disabled)
             .inspect { inspector in
                 #if os(iOS)
@@ -66,7 +66,7 @@ extension Backport where Wrapped: View {
                 #endif
             }
         #else
-        content
+        wrapped
             .environment(\.backportIsScrollEnabled, !disabled)
         #endif
     }

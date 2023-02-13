@@ -42,7 +42,7 @@ extension Backport where Wrapped: View {
     /// - Returns: A view that uses the specified keyboard dismissal mode.
     public func scrollDismissesKeyboard(_ mode: Backport<Any>.ScrollDismissesKeyboardMode) -> some View {
         #if os(iOS)
-        content
+        wrapped
             .environment(\.backportScrollDismissesKeyboardMode, mode)
             .inspect { inspector in
                 #if os(iOS)
@@ -57,7 +57,7 @@ extension Backport where Wrapped: View {
                 #endif
             }
         #else
-        content
+        wrapped
             .environment(\.backportScrollDismissesKeyboardMode, mode)
         #endif
     }

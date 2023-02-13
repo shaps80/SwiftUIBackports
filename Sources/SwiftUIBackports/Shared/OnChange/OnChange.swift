@@ -24,7 +24,7 @@ public extension Backport where Wrapped: View {
     /// - Returns: A view that fires an action when the specified value changes.
     @ViewBuilder
     func onChange<Value: Equatable>(of value: Value, perform action: @escaping (Value) -> Void) -> some View {
-        content.modifier(ChangeModifier(value: value, action: action))
+        wrapped.modifier(ChangeModifier(value: value, action: action))
     }
 
 }

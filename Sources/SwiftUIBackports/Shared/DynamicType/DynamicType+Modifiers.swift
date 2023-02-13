@@ -28,7 +28,7 @@ extension Backport where Wrapped: View {
     ///   `size`.
     @ViewBuilder
     public func dynamicTypeSize(_ size: Backport<Any>.DynamicTypeSize) -> some View {
-        content.environment(\.backportDynamicTypeSize, size)
+        wrapped.environment(\.backportDynamicTypeSize, size)
     }
 
 
@@ -64,27 +64,27 @@ extension Backport where Wrapped: View {
     @ViewBuilder
     public func dynamicTypeSize<T>(_ range: T) -> some View where T: RangeExpression, T.Bound == Backport<Any>.DynamicTypeSize {
         if let range = range as? Range<T.Bound> {
-            content
+            wrapped
                 .modifier(DynamicTypeRangeModifier())
                 .environment(\.dynamicTypeRange, range)
         } else if let range = range as? ClosedRange<T.Bound> {
-            content
+            wrapped
                 .modifier(DynamicTypeRangeModifier())
                 .environment(\.dynamicTypeRange, .init(uncheckedBounds: (lower: range.lowerBound, upper: range.upperBound)))
         } else if let range = range as? PartialRangeFrom<T.Bound> {
-            content
+            wrapped
                 .modifier(DynamicTypeRangeModifier())
                 .environment(\.dynamicTypeRange, .init(uncheckedBounds: (range.lowerBound, .accessibility5)))
         } else if let range = range as? PartialRangeUpTo<T.Bound> {
-            content
+            wrapped
                 .modifier(DynamicTypeRangeModifier())
                 .environment(\.dynamicTypeRange, .init(uncheckedBounds: (.xSmall, range.upperBound)))
         } else if let range = range as? PartialRangeThrough<T.Bound> {
-            content
+            wrapped
                 .modifier(DynamicTypeRangeModifier())
                 .environment(\.dynamicTypeRange, .init(uncheckedBounds: (.xSmall, range.upperBound)))
         } else {
-            content
+            wrapped
                 .modifier(DynamicTypeRangeModifier())
         }
     }

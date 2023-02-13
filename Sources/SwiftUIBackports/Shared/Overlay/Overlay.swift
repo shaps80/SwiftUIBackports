@@ -118,7 +118,7 @@ public extension Backport where Wrapped: View {
     ///
     /// - Returns: A view that uses the specified content as a foreground.
     func overlay<Content: View>(alignment: Alignment = .center, @ViewBuilder _ content: () -> Content) -> some View {
-        self.content.overlay(content(), alignment: alignment)
+        self.wrapped.overlay(content(), alignment: alignment)
     }
 
 }

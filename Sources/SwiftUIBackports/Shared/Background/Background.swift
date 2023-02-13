@@ -125,7 +125,7 @@ public extension Backport where Wrapped: View {
     ///
     /// - Returns: A view that uses the specified content as a background.
     func background<Content: View>(alignment: Alignment = .center, @ViewBuilder _ content: () -> Content) -> some View {
-        self.content.background(content(), alignment: alignment)
+        self.wrapped.background(content(), alignment: alignment)
     }
 
 }

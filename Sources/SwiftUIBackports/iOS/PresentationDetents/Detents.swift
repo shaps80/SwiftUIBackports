@@ -30,9 +30,9 @@ public extension Backport where Wrapped: View {
     @available(iOS, introduced: 15, deprecated: 16, message: "Presentation detents are only supported in iOS 15+")
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>) -> some View {
         #if os(iOS)
-        content.background(Backport<Any>.Representable(detents: detents, selection: nil, largestUndimmed: .large))
+        wrapped.background(Backport<Any>.Representable(detents: detents, selection: nil, largestUndimmed: .large))
         #else
-        content
+        wrapped
         #endif
     }
   
@@ -62,9 +62,9 @@ public extension Backport where Wrapped: View {
     @available(iOS, introduced: 15, deprecated: 16, message: "Presentation detents are only supported in iOS 15+")
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>, largestUndimmedDetent: Backport<Any>.PresentationDetent? = nil) -> some View {
         #if os(iOS)
-        content.background(Backport<Any>.Representable(detents: detents, selection: nil, largestUndimmed: largestUndimmedDetent))
+        wrapped.background(Backport<Any>.Representable(detents: detents, selection: nil, largestUndimmed: largestUndimmedDetent))
         #else
-        content
+        wrapped
         #endif
     }
 
@@ -103,9 +103,9 @@ public extension Backport where Wrapped: View {
     @available(iOS, introduced: 15, deprecated: 16, message: "Presentation detents are only supported in iOS 15+")
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>) -> some View {
         #if os(iOS)
-        content.background(Backport<Any>.Representable(detents: detents, selection: selection, largestUndimmed: .large))
+        wrapped.background(Backport<Any>.Representable(detents: detents, selection: selection, largestUndimmed: .large))
         #else
-        content
+        wrapped
         #endif
     }
 
@@ -143,9 +143,9 @@ public extension Backport where Wrapped: View {
     @available(iOS, introduced: 15, deprecated: 16, message: "Presentation detents are only supported in iOS 15+")
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>, largestUndimmedDetent: Backport<Any>.PresentationDetent? = nil) -> some View {
         #if os(iOS)
-        content.background(Backport<Any>.Representable(detents: detents, selection: selection, largestUndimmed: largestUndimmedDetent))
+        wrapped.background(Backport<Any>.Representable(detents: detents, selection: selection, largestUndimmed: largestUndimmedDetent))
         #else
-        content
+        wrapped
         #endif
     }
 

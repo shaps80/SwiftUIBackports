@@ -26,15 +26,15 @@ extension Backport where Wrapped: UICollectionViewCell {
     public var contentConfiguration: BackportUIContentConfiguration? {
         get { nil } // we can't really support anything here, so for now we'll return nil
         nonmutating set {
-            content.configuredView?.removeFromSuperview()
+            wrapped.configuredView?.removeFromSuperview()
 
             guard let configuration = newValue else { return }
-            let contentView = content.contentView
+            let contentView = wrapped.contentView
 
             let configuredView = configuration.makeContentView()
             configuredView.translatesAutoresizingMaskIntoConstraints = false
 
-            content.clipsToBounds = false
+            wrapped.clipsToBounds = false
             contentView.clipsToBounds = false
             contentView.preservesSuperviewLayoutMargins = false
             contentView.addSubview(configuredView)
@@ -62,15 +62,15 @@ extension Backport where Wrapped: UICollectionViewCell {
 
             background.flatMap {
                 let host = UIHostingController(rootView: $0, ignoreSafeArea: true)
-                content.backgroundView = host.view
+                wrapped.backgroundView = host.view
             }
 
             background.flatMap {
                 let host = UIHostingController(rootView: $0, ignoreSafeArea: true)
-                content.selectedBackgroundView = host.view
+                wrapped.selectedBackgroundView = host.view
             }
 
-            content.configuredView = configuredView
+            wrapped.configuredView = configuredView
         }
     }
 

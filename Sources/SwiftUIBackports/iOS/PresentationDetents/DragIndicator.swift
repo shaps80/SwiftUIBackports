@@ -31,12 +31,12 @@ public extension Backport where Wrapped: View {
     func presentationDragIndicator(_ visibility: Backport<Any>.Visibility) -> some View {
         #if os(iOS)
         if #available(iOS 15, *) {
-            content.background(Backport<Any>.Representable(visibility: visibility))
+            wrapped.background(Backport<Any>.Representable(visibility: visibility))
         } else {
-            content
+            wrapped
         }
         #else
-        content
+        wrapped
         #endif
     }
 

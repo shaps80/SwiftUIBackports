@@ -25,9 +25,9 @@ extension Backport where Wrapped: View {
     /// - Returns: A view that presents the preview of the contents of the URL.
     public func quickLookPreview<Items>(_ selection: Binding<Items.Element?>, in items: Items) -> some View where Items: RandomAccessCollection, Items.Element == URL {
         #if os(iOS) || os(macOS)
-        content.background(QuicklookSheet(selection: selection, items: items))
+        wrapped.background(QuicklookSheet(selection: selection, items: items))
         #else
-        content
+        wrapped
         #endif
     }
 
@@ -47,9 +47,9 @@ extension Backport where Wrapped: View {
     /// - Returns: A view that presents the preview of the contents of the URL.
     public func quickLookPreview(_ item: Binding<URL?>) -> some View {
         #if os(iOS) || os(macOS)
-        content.background(QuicklookSheet(selection: item, items: [item.wrappedValue].compactMap { $0 }))
+        wrapped.background(QuicklookSheet(selection: item, items: [item.wrappedValue].compactMap { $0 }))
         #else
-        content
+        wrapped
         #endif
     }
 

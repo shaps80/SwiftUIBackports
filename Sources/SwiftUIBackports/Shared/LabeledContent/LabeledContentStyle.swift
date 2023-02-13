@@ -7,7 +7,7 @@ import SwiftUI
 extension Backport where Wrapped: View {
     /// Sets a style for labeled content.
     public func labeledContentStyle<S>(_ style: S) -> some View where S: BackportLabeledContentStyle {
-        content.environment(\.backportLabeledContentStyle, .init(style))
+        wrapped.environment(\.backportLabeledContentStyle, .init(style))
     }
 }
 

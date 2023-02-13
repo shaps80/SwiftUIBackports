@@ -35,12 +35,12 @@ public extension Backport where Wrapped: View {
     func presentationUndimmed(from identifier: Backport<Any>.PresentationDetent.Identifier?) -> some View {
         #if os(iOS)
         if #available(iOS 15, *) {
-            content.background(Backport<Any>.Representable(identifier: identifier))
+            wrapped.background(Backport<Any>.Representable(identifier: identifier))
         } else {
-            content
+            wrapped
         }
         #else
-        content
+        wrapped
         #endif
     }
 

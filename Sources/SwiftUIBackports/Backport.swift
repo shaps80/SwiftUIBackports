@@ -30,18 +30,18 @@ import ObjectiveC
 ///
 public struct Backport<Wrapped> {
     /// The underlying content this backport represents.
-    public let content: Wrapped
+    public let wrapped: Wrapped
 
     /// Initializes a new Backport for the specified content.
     /// - Parameter content: The content (type) that's being backported
     public init(_ content: Wrapped) {
-        self.content = content
+        self.wrapped = content
     }
 }
 
 public extension Backport where Wrapped == Any {
     init(_ content: Wrapped) {
-        self.content = content
+        self.wrapped = content
     }
 }
 

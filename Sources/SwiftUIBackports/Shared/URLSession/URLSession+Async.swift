@@ -26,7 +26,7 @@ public extension Backport where Wrapped: URLSession {
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
-                    await sessionTask.start(content.dataTask(with: request) { data, response, error in
+                    await sessionTask.start(wrapped.dataTask(with: request) { data, response, error in
                         guard let data = data, let response = response else {
                             let error = error ?? URLError(.badServerResponse)
                             continuation.resume(throwing: error)
@@ -47,7 +47,7 @@ public extension Backport where Wrapped: URLSession {
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
-                    await sessionTask.start(content.uploadTask(with: request, fromFile: fileURL) { data, response, error in
+                    await sessionTask.start(wrapped.uploadTask(with: request, fromFile: fileURL) { data, response, error in
                         guard let data = data, let response = response else {
                             let error = error ?? URLError(.badServerResponse)
                             return continuation.resume(throwing: error)
@@ -67,7 +67,7 @@ public extension Backport where Wrapped: URLSession {
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
-                    await sessionTask.start(content.uploadTask(with: request, from: bodyData) { data, response, error in
+                    await sessionTask.start(wrapped.uploadTask(with: request, from: bodyData) { data, response, error in
                         guard let data = data, let response = response else {
                             let error = error ?? URLError(.badServerResponse)
                             return continuation.resume(throwing: error)
@@ -87,7 +87,7 @@ public extension Backport where Wrapped: URLSession {
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
-                    await sessionTask.start(content.downloadTask(with: request) { data, response, error in
+                    await sessionTask.start(wrapped.downloadTask(with: request) { data, response, error in
                         guard let data = data, let response = response else {
                             let error = error ?? URLError(.badServerResponse)
                             return continuation.resume(throwing: error)
@@ -107,7 +107,7 @@ public extension Backport where Wrapped: URLSession {
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
-                    await sessionTask.start(content.downloadTask(with: url) { data, response, error in
+                    await sessionTask.start(wrapped.downloadTask(with: url) { data, response, error in
                         guard let data = data, let response = response else {
                             let error = error ?? URLError(.badServerResponse)
                             return continuation.resume(throwing: error)
@@ -127,7 +127,7 @@ public extension Backport where Wrapped: URLSession {
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 Task {
-                    await sessionTask.start(content.downloadTask(withResumeData: resumeData) { data, response, error in
+                    await sessionTask.start(wrapped.downloadTask(withResumeData: resumeData) { data, response, error in
                         guard let data = data, let response = response else {
                             let error = error ?? URLError(.badServerResponse)
                             return continuation.resume(throwing: error)

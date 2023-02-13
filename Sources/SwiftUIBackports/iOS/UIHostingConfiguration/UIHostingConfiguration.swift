@@ -33,7 +33,6 @@ extension Backport where Wrapped == Any {
          }
      */
     public struct UIHostingConfiguration<Label, Background>: BackportUIContentConfiguration where Label: View, Background: View {
-
         var content: Label
         var background: AnyView?
         var insets: ProposedInsets
@@ -88,7 +87,6 @@ extension Backport where Wrapped == Any {
 
             return view
         }
-
     }
     
 }
@@ -179,8 +177,8 @@ extension Backport.UIHostingConfiguration where Wrapped == Any, Background == Em
     ///
     /// - Parameter content: The contents of the SwiftUI hierarchy to be shown
     ///   inside the cell.
-    public init(@ViewBuilder content: () -> Label) {
-        self.init(content: content(), background: nil, insets: .init(), minSize: .unspecified)
+    public init(@ViewBuilder label: () -> Label) {
+        self.init(content: label(), background: nil, insets: .init(), minSize: .unspecified)
     }
 
 }

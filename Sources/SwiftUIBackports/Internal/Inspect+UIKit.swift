@@ -77,8 +77,8 @@ internal struct Inspector {
 }
 
 extension View {
-    private func inject<Wrapped>(_ content: Wrapped) -> some View where Wrapped: View {
-        overlay(content.frame(width: 0, height: 0))
+    private func inject<Wrapped>(_ wrapped: Wrapped) -> some View where Wrapped: View {
+        overlay(wrapped.frame(width: 0, height: 0))
     }
 
     func inspect<ViewType: PlatformView>(selector: @escaping (_ inspector: Inspector) -> ViewType?, customize: @escaping (ViewType) -> Void) -> some View {

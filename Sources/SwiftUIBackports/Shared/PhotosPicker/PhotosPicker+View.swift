@@ -61,7 +61,7 @@ public extension Backport where Wrapped: View {
         preferredItemEncoding: Backport<Any>.PhotosPickerItem.EncodingDisambiguationPolicy = .automatic,
         photoLibrary: PHPhotoLibrary = .shared()
     ) -> some View {
-        content._photoPicker(
+        wrapped._photoPicker(
             isPresented: isPresented,
             selection: selection,
             filter: filter,
@@ -99,7 +99,7 @@ public extension Backport where Wrapped: View {
             }
         )
 
-        return content._photoPicker(
+        return wrapped._photoPicker(
             isPresented: isPresented,
             selection: binding,
             filter: nil,
@@ -128,7 +128,7 @@ public extension Backport where Wrapped: View {
         matching filter: Backport<Any>.PHPickerFilter? = nil,
         preferredItemEncoding: Backport<Any>.PhotosPickerItem.EncodingDisambiguationPolicy = .automatic
     ) -> some View {
-        content._photoPicker(
+        wrapped._photoPicker(
             isPresented: isPresented,
             selection: selection,
             filter: filter,

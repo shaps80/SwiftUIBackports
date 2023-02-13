@@ -37,7 +37,7 @@ public extension Backport where Wrapped: View {
     ///     type `data`. The closure takes one argument, which is the value
     ///     of the data to present.
     func navigationDestination<D: Hashable, C: View>(for data: D.Type, @ViewBuilder destination: @escaping (D) -> C) -> some View {
-        content
+        wrapped
             .environment(\.navigationDestinations, [
                 .init(type: D.self): .init { destination($0 as! D) }
             ])

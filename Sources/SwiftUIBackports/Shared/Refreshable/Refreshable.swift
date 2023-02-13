@@ -25,7 +25,7 @@ extension Backport where Wrapped: View {
     /// - Returns: A view with a new refresh action in its environment.
     public func refreshable(action: @escaping @Sendable () async -> Void) -> some View {
         #if os(iOS)
-        content
+        wrapped
             .environment(\.backportRefresh, Backport<Any>.RefreshAction(action))
             .inspect { inspector in
                 inspector.sibling(ofType: UIScrollView.self)
@@ -36,7 +36,7 @@ extension Backport where Wrapped: View {
                 }
             }
         #else
-        content
+        wrapped
             .environment(\.backportRefresh, Backport<Any>.RefreshAction(action))
         #endif
     }

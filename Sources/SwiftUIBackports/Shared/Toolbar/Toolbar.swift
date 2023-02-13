@@ -147,12 +147,12 @@ private extension Backport where Wrapped: View {
     func largeScale() -> some View {
         #if os(macOS)
         if #available(macOS 11, *) {
-            content.imageScale(.large)
+            wrapped.imageScale(.large)
         } else {
-            content
+            wrapped
         }
         #else
-        content.imageScale(.large)
+        wrapped.imageScale(.large)
         #endif
     }
 }
@@ -161,7 +161,7 @@ private extension Backport where Wrapped: View {
 public extension Backport where Wrapped: View {
     @ViewBuilder
     func toolbar(@Backport<Any>.ToolbarContentBuilder _ items: () -> [Backport<Any>.ToolbarItem]) -> some View {
-        content.modifier(ToolbarModifier(items: items()))
+        wrapped.modifier(ToolbarModifier(items: items()))
     }
 }
 

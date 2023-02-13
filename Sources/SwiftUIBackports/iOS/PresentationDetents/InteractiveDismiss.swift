@@ -74,9 +74,9 @@ public extension Backport where Wrapped: View {
     @available(watchOS, deprecated: 9)
     func interactiveDismissDisabled(_ isDisabled: Bool = true) -> some View {
         #if os(iOS)
-        content.background(Backport<Any>.Representable(isModal: isDisabled, onAttempt: nil))
+        wrapped.background(Backport<Any>.Representable(isModal: isDisabled, onAttempt: nil))
         #else
-        content
+        wrapped
         #endif
     }
 
@@ -150,9 +150,9 @@ public extension Backport where Wrapped: View {
     @ViewBuilder
     func interactiveDismissDisabled(_ isDisabled: Bool = true, onAttempt: @escaping () -> Void) -> some View {
         #if os(iOS)
-        content.background(Backport<Any>.Representable(isModal: isDisabled, onAttempt: onAttempt))
+        wrapped.background(Backport<Any>.Representable(isModal: isDisabled, onAttempt: onAttempt))
         #else
-        content
+        wrapped
         #endif
     }
 

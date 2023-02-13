@@ -50,7 +50,7 @@ public extension Backport where Wrapped: View {
     ///   the view appears.
     @ViewBuilder
     func task(priority: TaskPriority = .userInitiated, _ action: @MainActor @escaping @Sendable () async -> Void) -> some View {
-        content.modifier(
+        wrapped.modifier(
             TaskModifier(
                 id: 0,
                 priority: priority,
@@ -120,7 +120,7 @@ public extension Backport where Wrapped: View {
     ///   the view appears, or restarts the task with the `id` value changes.
     @ViewBuilder
     func task<T: Equatable>(id: T, priority: TaskPriority = .userInitiated, _ action: @MainActor @escaping @Sendable () async -> Void) -> some View {
-        content.modifier(
+        wrapped.modifier(
             TaskModifier(
                 id: id,
                 priority: priority,
