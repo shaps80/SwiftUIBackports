@@ -103,8 +103,6 @@ private extension Backport.Representable {
                     case .scrolls:
                         controller.prefersScrollingExpandsWhenScrolledToEdge = false
                     }
-
-                    controller.preferredCornerRadius = 50
                 }
             }
         }
