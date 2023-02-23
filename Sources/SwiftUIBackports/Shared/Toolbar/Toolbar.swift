@@ -12,10 +12,11 @@ public extension Backport<Any> {
         case destructiveAction
         case principal
         case bottomBar
+        case navigation
 
         var isLeading: Bool {
             switch self {
-            case .cancellationAction:
+            case .cancellationAction, .navigation:
                 return true
             default:
                 return false
