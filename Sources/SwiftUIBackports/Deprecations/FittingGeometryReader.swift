@@ -1,7 +1,10 @@
 import SwiftBackports
 import SwiftUI
 
-/// A geometry reader that automatically sizes its height to 'fit' its content.
+@available(iOS, unavailable, message: "This has been moved to SwiftUIPlus. You should move to the new package which automatically includes all backports as well 👍")
+@available(macOS, unavailable, message: "This has been moved to SwiftUIPlus. You should move to the new package which automatically includes all backports as well 👍")
+@available(tvOS, unavailable, message: "This has been moved to SwiftUIPlus. You should move to the new package which automatically includes all backports as well 👍")
+@available(watchOS, unavailable, message: "This has been moved to SwiftUIPlus. You should move to the new package which automatically includes all backports as well 👍")
 public struct FittingGeometryReader<Content>: View where Content: View {
 
     @State private var height: CGFloat = 10 // must be non-zero
