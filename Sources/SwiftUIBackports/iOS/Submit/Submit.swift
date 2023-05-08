@@ -22,10 +22,10 @@ public extension Backport where Wrapped: View {
                     .onSubmit(action)
             } else {
                 wrapped
-                    .modifier(SubmitModifier())
-                    .environment(\.backportSubmit, .init(submit: action))
             }
         }
+        .modifier(SubmitModifier())
+        .environment(\.backportSubmit, .init(submit: action))
     }
 
     /// A semantic label describing the label of submission within a view hierarchy.
