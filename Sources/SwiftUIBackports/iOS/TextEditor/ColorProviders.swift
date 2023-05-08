@@ -95,7 +95,6 @@ extension OffsetShapeStyle<SystemColorsStyle> {
         case 3: color = .quaternaryLabel
         default: color = .label
         }
-        print(offset)
     }
 }
 
@@ -215,7 +214,6 @@ func resolveColorProvider(_ provider: Any) -> ColorProvider? {
 
 func printMirror(_ value: Any) {
     let mirror = Mirror(reflecting: value)
-    print(mirror.subjectType)
     for child in mirror.children {
         print(child)
     }

@@ -38,7 +38,7 @@ internal extension PlatformView {
         for subview in views.reversed() {
             if let typed = subview as? ViewType {
                 return typed
-            } else if let typed = subview.child(ofType: type) {
+            } else if let typed = subview.descendent(ofType: type) {
                 return typed
             }
         }
@@ -46,11 +46,11 @@ internal extension PlatformView {
         return nil
     }
 
-    func child<ViewType: PlatformView>(ofType type: ViewType.Type) -> ViewType? {
+    func descendent<ViewType: PlatformView>(ofType type: ViewType.Type) -> ViewType? {
         for subview in subviews {
             if let typed = subview as? ViewType {
                 return typed
-            } else if let typed = subview.child(ofType: type) {
+            } else if let typed = subview.descendent(ofType: type) {
                 return typed
             }
         }
@@ -64,6 +64,12 @@ internal struct Inspector {
     var sourceView: PlatformView
     var sourceController: PlatformViewController
 
+    func `any`<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
+        ancestor(ofType: ViewType.self)
+        ?? sibling(ofType: ViewType.self)
+        ?? descendent(ofType: ViewType.self)
+    }
+
     func ancestor<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
         hostView.ancestor(ofType: ViewType.self)
     }
@@ -72,8 +78,8 @@ internal struct Inspector {
         hostView.sibling(ofType: ViewType.self)
     }
 
-    func child<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
-        hostView.child(ofType: ViewType.self)
+    func descendent<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
+        hostView.descendent(ofType: ViewType.self)
     }
 }
 

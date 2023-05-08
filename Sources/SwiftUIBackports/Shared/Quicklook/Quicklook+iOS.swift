@@ -40,7 +40,6 @@ final class PreviewController<Items>: UIViewController, UIAdaptivePresentationCo
     }
 
     private func presentController() {
-        print("Present")
         let controller = QLPreviewController(nibName: nil, bundle: nil)
         controller.dataSource = self
         controller.delegate = self

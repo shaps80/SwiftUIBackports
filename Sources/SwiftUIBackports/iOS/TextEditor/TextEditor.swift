@@ -96,16 +96,16 @@ extension Backport where Wrapped == Any {
 
                 view.delegate = self
                 view.adjustsFontForContentSizeCategory = true
-                view.autocapitalizationType = .allCharacters
+                view.autocapitalizationType = .sentences
                 view.backgroundColor = .clear
+                view.dataDetectorTypes = []
+                view.returnKeyType = parent.environment.backportSubmitLabel.returnKeyType
 
-                switch parent.environment.disableAutocorrection {
-                case .some(true):
+                switch parent.environment.autocorrectionDisabled {
+                case true:
                     view.autocorrectionType = .yes
-                case .some(false):
+                case false:
                     view.autocorrectionType = .no
-                case nil:
-                    view.autocorrectionType = .default
                 }
 
                 let style = NSMutableParagraphStyle()

@@ -20,9 +20,6 @@ struct EnvironmentOutputModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .onAppear {
-                print(environment.debugDescription)
-            }
     }
 }
 extension View {

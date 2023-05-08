@@ -53,8 +53,6 @@ final class PreviewController<Items>: NSViewController, QLPreviewPanelDataSource
     }
 
     private func present() {
-        print("Present")
-
         NSApp.mainWindow?.nextResponder = self
 
         if isVisible {
@@ -88,18 +86,15 @@ final class PreviewController<Items>: NSViewController, QLPreviewPanelDataSource
     }
 
     override func acceptsPreviewPanelControl(_ panel: QLPreviewPanel!) -> Bool {
-        print("Accept")
         return true
     }
 
     override func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
-        print("Begin")
         panel.dataSource = self
         panel.reloadData()
     }
 
     override func endPreviewPanelControl(_ panel: QLPreviewPanel!) {
-        print("End")
         panel.dataSource = nil
         dismiss()
     }

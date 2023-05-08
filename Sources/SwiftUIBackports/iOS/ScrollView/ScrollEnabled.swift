@@ -50,11 +50,11 @@ extension Backport where Wrapped: View {
                 #if os(iOS)
                 inspector.sibling(ofType: UIScrollView.self)
                 ?? inspector.ancestor(ofType: UIScrollView.self)
-                ?? inspector.child(ofType: UIScrollView.self)
+                ?? inspector.descendent(ofType: UIScrollView.self)
                 #elseif os(macOS)
                 inspector.sibling(ofType: NSScrollView.self)
                 ?? inspector.ancestor(ofType: NSScrollView.self)
-                ?? inspector.child(ofType: NSScrollView.self)
+                ?? inspector.descendent(ofType: NSScrollView.self)
                 #endif
             } customize: { scrollView in
                 #if os(iOS)
