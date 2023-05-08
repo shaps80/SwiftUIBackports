@@ -9,7 +9,7 @@ public extension Backport where Wrapped: View {
     /// Different views may have different triggers for the provided action. A TextField, or SecureField will trigger this action when the user hits the hardware or software return key. This modifier may also bind this action to a default action keyboard shortcut. You may set this action on an individual view or an entire view hierarchy.
     ///
     ///     TextField("Username", text: $username)
-    ///         .onSubmit {
+    ///         .backport.onSubmit {
     ///             guard viewModel.validate() else { return }
     ///             viewModel.login()
     ///         }
@@ -31,7 +31,7 @@ public extension Backport where Wrapped: View {
     /// A semantic label describing the label of submission within a view hierarchy.
     ///
     /// A submit label is a description of a submission action provided to a
-    /// view hierarchy using the ``View/onSubmit(of:_:)`` modifier.
+    /// view hierarchy using the ``View/backport.onSubmit(of:_:)`` modifier.
     @ViewBuilder
     func submitLabel(_ label: Backport<Any>.SubmitLabel) -> some View {
         Group {

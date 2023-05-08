@@ -18,7 +18,7 @@ extension Backport where Wrapped == Any {
     ///         @State private var fullText: String = "This is some editable text..."
     ///
     ///         var body: some View {
-    ///             TextEditor(text: $fullText)
+    ///             Backport.TextEditor(text: $fullText)
     ///                .foregroundColor(Color.gray)
     ///                .font(.custom("HelveticaNeue", size: 13))
     ///                .lineSpacing(5)
@@ -42,7 +42,7 @@ extension Backport where Wrapped == Any {
         ///         @State private var fullText: String = "This is some editable text..."
         ///
         ///         var body: some View {
-        ///             TextEditor(text: $fullText)
+        ///             Backport.TextEditor(text: $fullText)
         ///                 .foregroundColor(Color.gray)
         ///                 .font(.custom("HelveticaNeue", size: 13))
         ///                 .lineSpacing(5)
@@ -100,6 +100,7 @@ extension Backport where Wrapped == Any {
                 view.backgroundColor = .clear
                 view.dataDetectorTypes = []
                 view.returnKeyType = parent.environment.backportSubmitLabel.returnKeyType
+                view.autocapitalizationType = parent.environment.textInputAutocapitalization?.capitalization ?? .sentences
 
                 switch parent.environment.autocorrectionDisabled {
                 case true:

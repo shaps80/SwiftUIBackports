@@ -2,22 +2,64 @@ import SwiftUI
 import SwiftBackports
 
 #if os(iOS)
-extension Backport where Wrapped: View {
+@available(iOS, deprecated: 15)
+public extension Backport where Wrapped: View {
+    /// Sets how often the shift key in the keyboard is automatically enabled.
+    ///
+    /// Use `backport.textInputAutocapitalization(_:)` when you need to automatically
+    /// capitalize words, sentences, or other text like proper nouns.
+    ///
+    /// In example below, as the user enters text the shift key is
+    /// automatically enabled before every word:
+    ///
+    ///     TextField("Last, First", text: $fullName)
+    ///         .backport.textInputAutocapitalization(.words)
+    ///
+    /// The ``TextInputAutocapitalization`` struct defines the available
+    /// autocapitalizing behavior. Providing `nil` to  this view modifier does
+    /// not change the autocapitalization behavior. The default is
+    /// `Backport<Any>.TextInputAutocapitalization.sentences`.
+    ///
+    /// - Parameter autocapitalization: One of the capitalizing behaviors
+    /// defined in the `Backport<Any>.TextInputAutocapitalization` struct or nil.
+    @ViewBuilder
     func textInputAutocapitalization(_ autocapitalization: Backport<Any>.TextInputAutocapitalization?) -> some View {
-        wrapped.modifier(
-            AutoCapitalizationModifier(
-                capitalization: autocapitalization?.capitalization ?? .none
-            )
-        )
+        Group {
+            if #available(iOS 16, *) {
+                var type: SwiftUI.TextInputAutocapitalization {
+                    switch autocapitalization {
+                    case .none:
+                        return .sentences
+                    case .some(let wrapped):
+                        switch wrapped {
+                        case .never: return .never
+                        case .words: return .words
+                        case .sentences: return .sentences
+                        case .characters: return .characters
+                        default: return .sentences
+                        }
+                    }
+                }
+                wrapped.textInputAutocapitalization(type)
+            } else {
+                wrapped.modifier(
+                    AutoCapitalizationModifier(
+                        capitalization: autocapitalization?.capitalization ?? .none
+                    )
+                )
+            }
+        }
+        .environment(\.textInputAutocapitalization, autocapitalization)
     }
 }
 
-@available(iOS, introduced: 13, deprecated: 15)
-@available(macOS, unavailable)
-@available(tvOS, unavailable)
-@available(watchOS, unavailable)
+@available(iOS, deprecated: 15)
 extension Backport<Any> {
-    public struct TextInputAutocapitalization {
+    /// The kind of autocapitalization behavior applied during text input.
+    ///
+    /// Pass an instance of `Backport<Any>.TextInputAutocapitalization` to the
+    /// ``View/backport.textInputAutocapitalization(_:)`` view modifier.
+    public struct TextInputAutocapitalization: Equatable {
         internal let capitalization: UITextAutocapitalizationType
 
         fileprivate init(capitalization: UITextAutocapitalizationType) {
@@ -38,27 +80,41 @@ extension Backport<Any> {
         /// Defines an autocapitalizing behavior that will capitalize every letter.
         public static var characters: TextInputAutocapitalization { .init(capitalization: .allCharacters) }
 
+        /// Creates a new `Backport<Any>.TextInputAutocapitalization` struct from a
+        /// `UITextAutocapitalizationType` enum.
         public init?(_ type: UITextAutocapitalizationType) {
             self.capitalization = type
         }
     }
 }
 
+@available(iOS, deprecated: 15)
 private struct AutoCapitalizationModifier: ViewModifier {
     let capitalization: UITextAutocapitalizationType
 
     func body(content: Content) -> some View {
         content
             .inspect { inspector in
-                inspector.ancestor(ofType: UITextField.self)
+                inspector.any(ofType: UITextField.self)
             } customize: { view in
                 view.autocapitalizationType = capitalization
             }
             .inspect { inspector in
-                inspector.ancestor(ofType: UITextView.self)
+                inspector.any(ofType: UITextView.self)
             } customize: { view in
                 view.autocapitalizationType = capitalization
             }
+    }
+}
+
+private struct AutoCapitalizationEnvironmentKey: EnvironmentKey {
+    static var defaultValue: Backport<Any>.TextInputAutocapitalization? = .sentences
+}
+
+internal extension EnvironmentValues {
+    var textInputAutocapitalization: Backport<Any>.TextInputAutocapitalization? {
+        get { self[AutoCapitalizationEnvironmentKey.self] }
+        set { self[AutoCapitalizationEnvironmentKey.self] = newValue }
     }
 }
 #endif
