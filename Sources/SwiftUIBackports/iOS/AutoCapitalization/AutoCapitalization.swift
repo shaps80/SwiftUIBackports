@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftBackports
 
+#if os(iOS)
 extension Backport where Wrapped: View {
     func textInputAutocapitalization(_ autocapitalization: Backport<Any>.TextInputAutocapitalization?) -> some View {
         wrapped.modifier(
@@ -60,3 +61,4 @@ private struct AutoCapitalizationModifier: ViewModifier {
             }
     }
 }
+#endif

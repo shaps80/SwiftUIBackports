@@ -1,6 +1,8 @@
 import SwiftUI
 import SwiftBackports
 
+#if os(iOS)
+@available(iOS, deprecated: 15)
 public extension Backport where Wrapped: View {
     /// Adds an action to perform when the user submits a value to this view.
     ///
@@ -159,3 +161,4 @@ private struct SubmitModifier: ViewModifier {
         }
     }
 }
+#endif
