@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftBackports
 
+#if os(iOS)
 public extension Backport where Wrapped: View {
     func focused<Value>(_ binding: Binding<Value?>, equals value: Value) -> some View where Value: Hashable {
         wrapped.modifier(FocusModifier(focused: binding, value: value))
@@ -128,4 +129,4 @@ private extension View {
         background(WillDisappearHandler(onWillDisappear: perform))
     }
 }
-
+#endif
