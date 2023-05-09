@@ -42,7 +42,11 @@ extension Backport<Any> {
 
         public var body: some View {
             Button {
+                #if os(watchOS)
+                _ = openUrl.handler(destination)
+                #else
                 openUrl(destination)
+                #endif
             } label: {
                 label
             }

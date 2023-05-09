@@ -1,16 +1,10 @@
 import SwiftUI
 
-#if canImport(SwiftUIPlus) && canImport(SafariServices)
-import SafariServices
+#if canImport(SwiftUIPlus)
 
-@available(iOS 15, macOS 12, *)
-@MainActor
-public extension OpenURLAction.Result {
-    static func safari(_ url: URL) -> Self {
-        _ = Backport<Any>.OpenURLAction.Result.safari(url)
-        return .handled
-    }
-}
+#if canImport(SafariServices)
+import SafariServices
+#endif
 
 @MainActor
 public extension Backport<Any>.OpenURLAction.Result {
@@ -26,6 +20,10 @@ public extension Backport<Any>.OpenURLAction.Result {
         }
 
         let controller = SFSafariViewController(url: url)
+        if window?.traitCollection.horizontalSizeClass == .regular {
+            controller.modalPresentationStyle = .pageSheet
+        }
+
         root.present(controller, animated: true)
 #elseif os(tvOS)
         UIApplication.shared.open(url)
@@ -34,5 +32,58 @@ public extension Backport<Any>.OpenURLAction.Result {
 #endif
         return .handled
     }
+
+#if os(iOS)
+    static func safari(_ url: URL, configure: (inout SafariConfiguration) -> Void) -> Self {
+        let scene = UIApplication.shared.connectedScenes.first { $0.activationState == .foregroundActive } as? UIWindowScene
+        let window = scene?.windows.first { $0.isKeyWindow }
+
+        guard let root = window?.rootViewController else {
+            UIApplication.shared.open(url)
+            return .handled
+        }
+
+        var config = SafariConfiguration()
+        configure(&config)
+
+        let configuration = SFSafariViewController.Configuration()
+        configuration.barCollapsingEnabled = config.barCollapsingEnabled
+        configuration.entersReaderIfAvailable = config.prefersReader
+
+        let controller = SFSafariViewController(url: url, configuration: configuration)
+        if #available(iOS 14, *) {
+            controller.preferredControlTintColor = UIColor(config.tintColor)
+        }
+        controller.dismissButtonStyle = config.dismissStyle.buttonStyle
+
+        if window?.traitCollection.horizontalSizeClass == .regular {
+            controller.modalPresentationStyle = .pageSheet
+        }
+
+        root.present(controller, animated: true)
+        return .handled
+    }
+
+    struct SafariConfiguration {
+        public enum DismissStyle {
+            case done
+            case close
+            case cancel
+
+            internal var buttonStyle: SFSafariViewController.DismissButtonStyle {
+                switch self {
+                case .cancel: return .cancel
+                case .close: return .close
+                case .done: return.done
+                }
+            }
+        }
+
+        public var prefersReader: Bool = false
+        public var barCollapsingEnabled: Bool = true
+        public var dismissStyle: DismissStyle = .done
+        public var tintColor: Color = .accentColor
+    }
+#endif
 }
 #endif

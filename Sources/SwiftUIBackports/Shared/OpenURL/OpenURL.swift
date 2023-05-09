@@ -1,6 +1,9 @@
 import SwiftUI
 import SwiftBackports
+
+#if canImport(SafariServices)
 import SafariServices
+#endif
 
 #if canImport(WatchKit)
 import WatchKit
@@ -11,7 +14,6 @@ import WatchKit
 @available(macOS, deprecated: 11)
 @available(watchOS, deprecated: 7)
 extension Backport where Wrapped == Any {
-
     /// An action that opens a URL.
     ///
     /// Read the ``EnvironmentValues.backportOpenURL`` environment value to get an
@@ -82,7 +84,6 @@ extension Backport where Wrapped == Any {
                 case handled
                 case discarded
                 case systemAction(_ url: URL?)
-//                case safari(_ url: URL?)
                 
                 var accepted: Bool {
                     if case .discarded = self {
@@ -137,9 +138,7 @@ extension Backport where Wrapped == Any {
 
             return result
         }
-
     }
-
 }
 
 private struct BackportOpenURLKey: EnvironmentKey {

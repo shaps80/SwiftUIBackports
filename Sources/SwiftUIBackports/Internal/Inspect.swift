@@ -284,7 +284,7 @@ private extension InspectionView {
                 )
 
                 guard let target = parent.selector(inspector) else { return }
-                parent.customize(target)
+                parent.customize(.init(inspector: inspector, instance: target))
             }
         }
     }
