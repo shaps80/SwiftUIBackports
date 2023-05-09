@@ -94,15 +94,11 @@ private struct AutoCapitalizationModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .inspect { inspector in
-                inspector.any(ofType: UITextField.self)
-            } customize: { view in
-                view.autocapitalizationType = capitalization
+            .any(forType: UITextField.self) { proxy in
+                proxy.instance.autocapitalizationType = capitalization
             }
-            .inspect { inspector in
-                inspector.any(ofType: UITextView.self)
-            } customize: { view in
-                view.autocapitalizationType = capitalization
+            .any(forType: UITextView.self) { proxy in
+                proxy.instance.autocapitalizationType = capitalization
             }
     }
 }

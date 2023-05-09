@@ -122,18 +122,19 @@ struct ToolbarModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .navigationBarItems(leading: leading, trailing: trailing)
-            .controller { controller in
+            .ancestor(forType: UIViewController.self) { proxy in
+                let controller = proxy.instance
                 if !principalItems.isEmpty {
-                    controller?.navigationItem.titleView = UIHostingController(
+                    controller.navigationItem.titleView = UIHostingController(
                         rootView: principal.backport.largeScale(),
                         ignoreSafeArea: false
                     ).view
-                    controller?.navigationItem.titleView?.backgroundColor = .clear
+                    controller.navigationItem.titleView?.backgroundColor = .clear
                 }
 
                 if !bottomBarItems.isEmpty {
-                    controller?.navigationController?.setToolbarHidden(false, animated: false)
-                    controller?.toolbarItems = bottomBarItems.map {
+                    controller.navigationController?.setToolbarHidden(false, animated: false)
+                    controller.toolbarItems = bottomBarItems.map {
                         let view = UIHostingController(rootView: $0.content.backport.largeScale()).view!
                         view.backgroundColor = .clear
                         return .init(customView: view)

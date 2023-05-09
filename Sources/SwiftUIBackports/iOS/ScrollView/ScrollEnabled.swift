@@ -43,33 +43,23 @@ extension Backport where Wrapped: View {
     /// - Parameter disabled: A Boolean that indicates whether scrolling is
     ///   disabled.
     public func scrollDisabled(_ disabled: Bool) -> some View {
-        #if os(iOS)
         wrapped
             .environment(\.backportIsScrollEnabled, !disabled)
-            .inspect { inspector in
-                #if os(iOS)
-                inspector.sibling(ofType: UIScrollView.self)
-                ?? inspector.ancestor(ofType: UIScrollView.self)
-                ?? inspector.descendent(ofType: UIScrollView.self)
-                #elseif os(macOS)
-                inspector.sibling(ofType: NSScrollView.self)
-                ?? inspector.ancestor(ofType: NSScrollView.self)
-                ?? inspector.descendent(ofType: NSScrollView.self)
-                #endif
-            } customize: { scrollView in
-                #if os(iOS)
+#if os(iOS)
+            .any(forType: UIScrollView.self) { proxy in
+                let scrollView = proxy.instance
                 scrollView.isScrollEnabled = !disabled
                 scrollView.alwaysBounceVertical = !disabled
                 scrollView.alwaysBounceHorizontal = !disabled
-                #elseif os(macOS)
+            }
+#endif
+#if os(macOS)
+            .any(forType: NSScrollView.self) { proxy in
+                let scrollView = proxy.instance
                 scrollView.hasHorizontalScroller = !disabled
                 scrollView.hasVerticalScroller = !disabled
-                #endif
             }
-        #else
-        wrapped
-            .environment(\.backportIsScrollEnabled, !disabled)
-        #endif
+#endif
     }
     
 }

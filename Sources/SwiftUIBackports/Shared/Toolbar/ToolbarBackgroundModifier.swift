@@ -11,8 +11,8 @@ internal struct ToolbarBackgroundModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .controller { controller in
-                wrapper.controller = controller
+            .ancestor(forType: UIViewController.self) { proxy in
+                wrapper.controller = proxy.instance
             }
             .backport.task {
                 updateNavigationBar()

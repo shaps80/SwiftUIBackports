@@ -42,25 +42,15 @@ extension Backport where Wrapped: View {
     ///
     /// - Returns: A view that uses the specified keyboard dismissal mode.
     public func scrollDismissesKeyboard(_ mode: Backport<Any>.ScrollDismissesKeyboardMode) -> some View {
-        #if os(iOS)
         wrapped
             .environment(\.backportScrollDismissesKeyboardMode, mode)
-            .inspect { inspector in
-                #if os(iOS)
-                inspector.sibling(ofType: UIScrollView.self)
-                #else
-                inspector.sourceView
-                #endif
-            } customize: { scrollView in
-                #if os(iOS)
+#if os(iOS)
+            .sibling(forType: UIScrollView.self) { proxy in
+                let scrollView = proxy.instance
                 guard scrollView.keyboardDismissMode != mode.scrollViewDismissMode else { return }
                 scrollView.keyboardDismissMode = mode.scrollViewDismissMode
-                #endif
             }
-        #else
-        wrapped
-            .environment(\.backportScrollDismissesKeyboardMode, mode)
-        #endif
+#endif
     }
 
 }

@@ -21,9 +21,7 @@ extension Backport where Wrapped == Any {
                 } else {
                     TitleAndIconLabelStyle().makeBody(configuration: configuration)
                         #if os(iOS)
-                        .inspect { inspector in
-                            inspector.ancestor(ofType: UINavigationBar.self)
-                        } customize: { _ in
+                        .ancestor(forType: UINavigationBar.self) { _ in
                             isToolbarElement = true
                         }
                         #endif

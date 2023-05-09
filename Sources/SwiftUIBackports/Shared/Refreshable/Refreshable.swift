@@ -28,9 +28,8 @@ extension Backport where Wrapped: View {
         #if os(iOS)
         wrapped
             .environment(\.backportRefresh, Backport<Any>.RefreshAction(action))
-            .inspect { inspector in
-                inspector.sibling(ofType: UIScrollView.self)
-            } customize: { scrollView in
+            .any(forType: UIScrollView.self) { proxy in
+                let scrollView = proxy.instance
                 guard scrollView.refreshControl == nil else { return }
                 scrollView.refreshControl = RefreshControl {
                     await action()

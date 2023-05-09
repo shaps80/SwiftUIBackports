@@ -134,14 +134,11 @@ private struct SubmitModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .inspect { inspector in
-                inspector.any(ofType: UITextView.self)
-            } customize: { view in
-                view.returnKeyType = label.returnKeyType
+            .any(forType: UITextView.self) { proxy in
+                proxy.instance.returnKeyType = label.returnKeyType
             }
-            .inspect { inspector in
-                inspector.any(ofType: UITextField.self)
-            } customize: { view in
+            .any(forType: UITextField.self) { proxy in
+                let view = proxy.instance
                 view.returnKeyType = label.returnKeyType
                 coordinator.onReturn = { submit() }
                 coordinator.observe(view: view)

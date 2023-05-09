@@ -18,9 +18,8 @@ private struct FocusModifier<Value: Hashable>: ViewModifier {
         content
             // this ensures when the field goes out of view, it doesn't retain focus
             .onWillDisappear { focused = nil }
-            .inspect { inspector in
-                inspector.sibling(ofType: UITextField.self)
-            } customize: { view in
+            .sibling(forType: UITextField.self) { proxy in
+                let view = proxy.instance
                 coordinator.observe(field: view)
 
                 coordinator.onBegin = {
