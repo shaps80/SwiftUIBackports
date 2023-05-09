@@ -82,7 +82,7 @@ extension Backport where Wrapped == Any {
                 case handled
                 case discarded
                 case systemAction(_ url: URL?)
-                case safari(_ url: URL?)
+//                case safari(_ url: URL?)
                 
                 var accepted: Bool {
                     if case .discarded = self {
@@ -99,13 +99,6 @@ extension Backport where Wrapped == Any {
             public static var discarded: Result { .init(value: .discarded) }
             public static var systemAction: Result { .init(value: .systemAction(nil)) }
             public static func systemAction(_ url: URL) -> Result { .init(value: .systemAction(url)) }
-
-#if canImport(SwiftUIPlus)
-#if canImport(SafariServices)
-            public static var safari: Result { .init(value: .safari(nil)) }
-            public static func safari(_ url: URL) -> Result { .init(value: .safari(url)) }
-#endif
-#endif
         }
 
         let handler: (URL) -> Result
@@ -140,25 +133,6 @@ extension Backport where Wrapped == Any {
                 #else
                 WKExtension.shared().openSystemURL(resolved)
                 #endif
-            case let .safari(updatedUrl):
-                let resolved = updatedUrl ?? url
-#if os(macOS)
-                NSWorkspace.shared.open(resolved)
-#elseif os(iOS)
-                let scene = UIApplication.shared.connectedScenes.first { $0.activationState == .foregroundActive } as? UIWindowScene
-                let window = scene?.windows.first { $0.isKeyWindow }
-                guard let root = window?.rootViewController else {
-                    UIApplication.shared.open(resolved)
-                    return .handled
-                }
-
-                let controller = SFSafariViewController(url: resolved)
-                root.present(controller, animated: true)
-#elseif os(tvOS)
-                UIApplication.shared.open(resolved)
-#else
-                WKExtension.shared().openSystemURL(resolved)
-#endif
             }
 
             return result
