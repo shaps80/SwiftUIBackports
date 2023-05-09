@@ -1,29 +1,24 @@
 import SwiftUI
 
 #if os(iOS)
-@available(iOS 14.0, *)
 protocol FontProvider {
     func fontDescriptor(with traitCollection: UITraitCollection?) -> UIFontDescriptor
 }
 
-@available(iOS 14.0, *)
 extension FontProvider {
     func font(with traitCollection: UITraitCollection?) -> UIFont {
         return UIFont(descriptor: fontDescriptor(with: traitCollection), size: 0)
     }
 }
 
-@available(iOS 14.0, *)
 protocol FontModifier {
     func modify(_ fontDescriptor: inout UIFontDescriptor)
 }
 
-@available(iOS 14.0, *)
 protocol StaticFontModifier: FontModifier {
     init()
 }
 
-@available(iOS 14.0, *)
 struct TextStyleProvider: FontProvider {
     var style: UIFont.TextStyle
     var design: UIFontDescriptor.SystemDesign?
@@ -36,7 +31,6 @@ struct TextStyleProvider: FontProvider {
     }
 }
 
-@available(iOS 14.0, *)
 struct SystemProvider: FontProvider {
     var size: CGFloat
     var design: UIFontDescriptor.SystemDesign
@@ -54,7 +48,6 @@ struct SystemProvider: FontProvider {
     }
 }
 
-@available(iOS 14.0, *)
 struct NamedProvider: FontProvider {
     var name: String
     var size: CGFloat
@@ -77,7 +70,6 @@ struct NamedProvider: FontProvider {
     }
 }
 
-@available(iOS 14.0, *)
 struct StaticModifierProvider<M: StaticFontModifier>: FontProvider {
     var base: FontProvider
 
@@ -88,7 +80,6 @@ struct StaticModifierProvider<M: StaticFontModifier>: FontProvider {
     }
 }
 
-@available(iOS 14.0, *)
 struct ModifierProvider<M: FontModifier>: FontProvider {
     var base: FontProvider
     var modifier: M
@@ -100,7 +91,6 @@ struct ModifierProvider<M: FontModifier>: FontProvider {
     }
 }
 
-@available(iOS 14.0, *)
 struct ItalicModifier: StaticFontModifier {
     init() { }
 
@@ -115,7 +105,6 @@ struct ItalicModifier: StaticFontModifier {
     }
 }
 
-@available(iOS 14.0, *)
 struct BoldModifier: StaticFontModifier {
     init() { }
 
@@ -131,7 +120,6 @@ struct BoldModifier: StaticFontModifier {
     }
 }
 
-@available(iOS 14.0, *)
 struct WeightModifier: FontModifier {
     var weight: UIFont.Weight?
 
@@ -144,7 +132,7 @@ struct WeightModifier: FontModifier {
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14, *)
 struct LeadingModifier: FontModifier {
     var leading: Font.Leading?
 
@@ -169,8 +157,7 @@ struct LeadingModifier: FontModifier {
         ])
     }
 }
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
-@available(iOS 14.0, *)
+
 func resolveFont(_ font: Font) -> FontProvider? {
     let mirror = Mirror(reflecting: font)
 
@@ -181,8 +168,71 @@ func resolveFont(_ font: Font) -> FontProvider? {
     return resolveFontProvider(provider)
 }
 
-@available(iOS 14.0, *)
 func resolveFontProvider(_ provider: Any) -> FontProvider? {
+    if #available(iOS 14, *) {
+        return resolveFontProvideriOS14(provider)
+    } else {
+        return resolveFontProvideriOS13(provider)
+    }
+}
+
+func resolveFontProvideriOS13(_ provider: Any) -> FontProvider? {
+    let mirror = Mirror(reflecting: provider)
+
+    switch String(describing: type(of: provider)) {
+    case String(describing: TextStyleProvider.self):
+        guard let style = mirror.descendant("style") as? Font.TextStyle else {
+            return nil
+        }
+
+        let design = mirror.descendant("design") as? Font.Design
+        return TextStyleProvider(style: style.uiTextStyle, design: design?.uiSystemDesign)
+    case String(describing: StaticModifierProvider<ItalicModifier>.self):
+        guard let base = mirror.descendant("base", "provider", "base") else {
+            return nil
+        }
+
+        return resolveFontProvider(base).map(StaticModifierProvider<ItalicModifier>.init)
+    case String(describing: StaticModifierProvider<BoldModifier>.self):
+        guard let base = mirror.descendant("base", "provider", "base") else {
+            return nil
+        }
+
+        return resolveFontProvider(base).map(StaticModifierProvider<BoldModifier>.init)
+    case String(describing: ModifierProvider<WeightModifier>.self):
+        guard let base = mirror.descendant("base", "provider", "base") else {
+            return nil
+        }
+
+        let weight = mirror.descendant("modifier", "weight") as? Font.Weight
+        let modifier = WeightModifier(weight: weight?.uiFontWeight)
+        return resolveFontProvider(base).map { ModifierProvider(base: $0, modifier: modifier) }
+    case String(describing: SystemProvider.self):
+        guard let size = mirror.descendant("size") as? CGFloat,
+              let design = mirror.descendant("design") as? Font.Design else {
+            return nil
+        }
+
+        let weight = mirror.descendant("weight") as? Font.Weight
+
+        return SystemProvider(size: size, design: design.uiSystemDesign, weight: weight?.uiFontWeight)
+    case String(describing: NamedProvider.self):
+        guard let name = mirror.descendant("name") as? String,
+              let size = mirror.descendant("size") as? CGFloat else {
+            return nil
+        }
+
+        let textStyle = mirror.descendant("textStyle") as? Font.TextStyle
+
+        return NamedProvider(name: name, size: size, textStyle: textStyle?.uiTextStyle)
+    default:
+        // Not exhaustive, more providers need to be handled here.
+        return nil
+    }
+}
+
+@available(iOS 14, *)
+func resolveFontProvideriOS14(_ provider: Any) -> FontProvider? {
     let mirror = Mirror(reflecting: provider)
 
     switch String(describing: type(of: provider)) {

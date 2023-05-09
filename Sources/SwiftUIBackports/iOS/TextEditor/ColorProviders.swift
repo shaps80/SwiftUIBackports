@@ -1,44 +1,44 @@
 import SwiftUI
 
 #if os(iOS)
-@available(iOS 14.0, *)
+
 protocol ColorProvider {
     var color: UIColor? { get }
 }
 
-@available(iOS 14.0, *)
 struct AccentColorProvider: ColorProvider {
     var color: UIColor? {
         if #available(iOS 15, *) {
             return .tintColor
-        } else {
+        } else if #available(iOS 14, *) {
             return UIColor(Color.accentColor)
+        } else {
+            return UIColor.systemBlue
         }
     }
 }
 
-@available(iOS 14.0, *)
 struct TintShapeStyle: ColorProvider {
     var color: UIColor? {
         if #available(iOS 15, *) {
             return .tintColor
-        } else {
+        } else if #available(iOS 14, *) {
             return UIColor(Color.accentColor)
+        } else {
+            return UIColor.systemBlue
         }
     }
 }
 
-@available(iOS 14.0, *)
 struct ForegroundStyle: ColorProvider {
     var color: UIColor? { .label }
 }
 
-@available(iOS 14.0, *)
+
 struct BackgroundStyle: ColorProvider {
     var color: UIColor? { .systemBackground }
 }
 
-@available(iOS 14.0, *)
 struct UICachedDeviceRGBColor: ColorProvider {
     var color: UIColor?
 
@@ -56,12 +56,10 @@ struct UICachedDeviceRGBColor: ColorProvider {
     }
 }
 
-@available(iOS 14.0, *)
 struct UIDynamicCatalogSystemColor: ColorProvider {
     var color: UIColor?
 }
 
-@available(iOS 14.0, *)
 struct DisplayP3: ColorProvider {
     var color: UIColor?
 
@@ -79,12 +77,10 @@ struct DisplayP3: ColorProvider {
     }
 }
 
-@available(iOS 14.0, *)
 struct OffsetShapeStyle<T: ColorProvider>: ColorProvider {
     var color: UIColor?
 }
 
-@available(iOS 14.0, *)
 extension OffsetShapeStyle<SystemColorsStyle> {
     init(provider: Any) {
         let mirror = Mirror(reflecting: provider)
@@ -98,18 +94,16 @@ extension OffsetShapeStyle<SystemColorsStyle> {
     }
 }
 
-@available(iOS 14.0, *)
 struct SelectionShapeStyle: ColorProvider {
     var color: UIColor? { nil }
 }
 
-@available(iOS 14.0, *)
+
 struct SystemColorsStyle: ColorProvider {
     let style: SystemColorType.Style
     var color: UIColor? { style.color }
 }
 
-@available(iOS 14.0, *)
 struct SystemColorType: ColorProvider {
     enum Style: String {
         case primary, secondary
@@ -156,7 +150,6 @@ struct SystemColorType: ColorProvider {
     var color: UIColor? { style.color }
 }
 
-@available(iOS 14.0, *)
 func colorProvider(from values: EnvironmentValues) -> Any? {
     let mirror = Mirror(reflecting: values)
     guard let provider = mirror.descendant(
@@ -168,18 +161,15 @@ func colorProvider(from values: EnvironmentValues) -> Any? {
     return provider
 }
 
-@available(iOS 14.0, *)
 func isAccentColor(provider: Any) -> Bool {
     String(describing: type(of: provider)) == String(describing: AccentColorProvider.self)
 }
 
-@available(iOS 14.0, *)
 func resolveColor(_ values: EnvironmentValues) -> UIColor? {
     guard let provider = colorProvider(from: values) else { return nil }
     return resolveColorProvider(provider)?.color
 }
 
-@available(iOS 14.0, *)
 func resolveColorProvider(_ provider: Any) -> ColorProvider? {
     switch String(describing: type(of: provider)) {
     case String(describing: SelectionShapeStyle.self):

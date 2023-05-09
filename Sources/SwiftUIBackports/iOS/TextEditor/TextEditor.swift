@@ -1,8 +1,6 @@
 import SwiftUI
 
 #if os(iOS)
-@available(iOS 14.0, *)
-
 extension Backport where Wrapped == Any {
 
     /// A view that can display and edit long-form text.
