@@ -26,21 +26,7 @@ public extension Backport where Wrapped: View {
     func textInputAutocapitalization(_ autocapitalization: Backport<Any>.TextInputAutocapitalization?) -> some View {
         Group {
             if #available(iOS 16, *) {
-                var type: SwiftUI.TextInputAutocapitalization {
-                    switch autocapitalization {
-                    case .none:
-                        return .sentences
-                    case .some(let wrapped):
-                        switch wrapped {
-                        case .never: return .never
-                        case .words: return .words
-                        case .sentences: return .sentences
-                        case .characters: return .characters
-                        default: return .sentences
-                        }
-                    }
-                }
-                wrapped.textInputAutocapitalization(type)
+                wrapped.textInputAutocapitalization(textInputAutocapitalizationType(autocapitalization))
             } else {
                 wrapped.modifier(
                     AutoCapitalizationModifier(
@@ -50,6 +36,22 @@ public extension Backport where Wrapped: View {
             }
         }
         .environment(\.textInputAutocapitalization, autocapitalization)
+    }
+    
+    @available(iOS 16.0, *)
+    private func textInputAutocapitalizationType(_ autocapitalization: Backport<Any>.TextInputAutocapitalization?) -> SwiftUI.TextInputAutocapitalization {
+        switch autocapitalization {
+        case .none:
+            return .sentences
+        case .some(let wrapped):
+            switch wrapped {
+            case .never: return .never
+            case .words: return .words
+            case .sentences: return .sentences
+            case .characters: return .characters
+            default: return .sentences
+            }
+        }
     }
 }
 
