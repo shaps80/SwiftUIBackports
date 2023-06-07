@@ -91,8 +91,8 @@ private extension EnvironmentValues {
 
 @propertyWrapper
 internal struct StringlyTypedEnvironment<Value> {
-    final class Store<Value>: ObservableObject {
-        var value: Value? = nil
+    final class Store<StoredValue>: ObservableObject {
+        var value: StoredValue? = nil
     }
 
     @Environment(\.self) private var env
