@@ -34,29 +34,29 @@ public extension Backport<Any> {
     }
 }
 
-//@available(iOS, deprecated: 16)
-//@available(macOS, deprecated: 13)
-//@available(tvOS, unavailable)
-//@available(watchOS, unavailable)
-//public extension Backport where Wrapped: View {
-//    func toolbarBackground(_ visibility: Backport<Any>.Visibility, for bars: Backport<Any>.ToolbarPlacement...) -> some View {
-//        content
-//            .modifier(ToolbarBackgroundModifier())
-//            .environment(\.toolbarVisibility, .init(
-//                navigationBar: bars.contains(.navigationBar) ? visibility : nil,
-//                bottomBar: bars.contains(.bottomBar) ? visibility : nil,
-//                tabBar: bars.contains(.tabBar) ? visibility : nil)
-//            )
-//    }
-//
-//    func toolbarBackground<S>(_ style: S, for bars: Backport<Any>.ToolbarPlacement...) -> some View where S: ShapeStyle & View {
-//        content
-//            .modifier(ToolbarBackgroundModifier())
-//            .environment(\.toolbarViews, .init(
-//                navigationBar: bars.contains(.navigationBar) ? .init(style) : nil,
-//                bottomBar: bars.contains(.bottomBar) ? .init(style) : nil,
-//                tabBar: bars.contains(.tabBar) ? .init(style) : nil)
-//            )
-//    }
-//}
+@available(iOS, deprecated: 16)
+@available(macOS, deprecated: 13)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+public extension Backport where Wrapped: View {
+    func toolbarBackground(_ visibility: Backport<Any>.Visibility, for bars: Backport<Any>.ToolbarPlacement...) -> some View {
+        wrapped
+            .modifier(ToolbarBackgroundModifier())
+            .environment(\.toolbarVisibility, .init(
+                navigationBar: bars.contains(.navigationBar) ? visibility : nil,
+                bottomBar: bars.contains(.bottomBar) ? visibility : nil,
+                tabBar: bars.contains(.tabBar) ? visibility : nil)
+            )
+    }
+
+    func toolbarBackground<S>(_ style: S, for bars: Backport<Any>.ToolbarPlacement...) -> some View where S: ShapeStyle & View {
+        wrapped
+            .modifier(ToolbarBackgroundModifier())
+            .environment(\.toolbarViews, .init(
+                navigationBar: bars.contains(.navigationBar) ? .init(style) : nil,
+                bottomBar: bars.contains(.bottomBar) ? .init(style) : nil,
+                tabBar: bars.contains(.tabBar) ? .init(style) : nil)
+            )
+    }
+}
 #endif

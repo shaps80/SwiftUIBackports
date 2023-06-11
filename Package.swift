@@ -23,7 +23,11 @@ let package = Package(
     targets: [
         .target(
             name: "SwiftUIBackports",
-            dependencies: ["SwiftBackports"]
+            dependencies: ["SwiftBackports", "SwiftUIBackportsC"]
+        ),
+        .target(
+            name: "SwiftUIBackportsC",
+            publicHeadersPath: "Internal"
         )
     ],
     swiftLanguageVersions: [.v5]

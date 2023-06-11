@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftBackports
+import SwiftUIBackportsC
 
 @available(tvOS, deprecated: 16)
 @available(macOS, deprecated: 13)
@@ -30,7 +31,7 @@ public extension Backport where Wrapped: View {
     @available(iOS, introduced: 15, deprecated: 16, message: "Presentation detents are only supported in iOS 15+")
     func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>) -> some View {
         #if os(iOS)
-        wrapped.background(Backport<Any>.Representable(detents: detents, selection: nil))
+        wrapped.background(Backport<Any>.Representable(detents: detents, largestUndimmed: nil, selection: nil))
         #else
         wrapped
         #endif
@@ -69,9 +70,9 @@ public extension Backport where Wrapped: View {
     ///     provide for the `detents` parameter.
     @ViewBuilder
     @available(iOS, introduced: 15, deprecated: 16, message: "Presentation detents are only supported in iOS 15+")
-    func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>) -> some View {
+    func presentationDetents(_ detents: Set<Backport<Any>.PresentationDetent>, largestUndimmed: Backport<Any>.PresentationDetent? = nil, selection: Binding<Backport<Any>.PresentationDetent>) -> some View {
         #if os(iOS)
-        wrapped.background(Backport<Any>.Representable(detents: detents, selection: selection))
+        wrapped.background(Backport<Any>.Representable(detents: detents, largestUndimmed: largestUndimmed, selection: selection))
         #else
         wrapped
         #endif
@@ -85,47 +86,70 @@ public extension Backport where Wrapped: View {
 public extension Backport<Any> {
 
     /// A type that represents a height where a sheet naturally rests.
-    struct PresentationDetent: Hashable, Comparable {
+    enum PresentationDetent: Hashable, Comparable {
 
-        public struct Identifier: RawRepresentable, Hashable {
-            public var rawValue: String
-            public init(rawValue: String) {
-                self.rawValue = rawValue
+        case medium, large, height(_ constant: CGFloat)
+
+        @available(iOS 15.0, *)
+        init?(id: UISheetPresentationController.Detent.Identifier) {
+                switch id {
+                case .medium:
+                    self = .medium
+
+                case .large:
+                    self = .large
+
+                default:
+                    if let number = NumberFormatter().number(from: id.rawValue) {
+                        let value = CGFloat(truncating: number)
+                        self = .height(value)
+                    } else {
+                        return nil
+                    }
+                }
             }
 
-            public static var medium: Identifier {
-                .init(rawValue: "com.apple.UIKit.medium")
-            }
+        @available(iOS 15.0, *)
+        public var id: UISheetPresentationController.Detent.Identifier {
+            switch self {
+            case .medium:
+                return .medium
 
-            public static var large: Identifier {
-                .init(rawValue: "com.apple.UIKit.large")
+            case .large:
+                return .large
+
+            case let .height(value):
+                return .init(value.description)
             }
         }
 
-        public let id: Identifier
+        @available(iOS 15.0, *)
+        var system: UISheetPresentationController.Detent {
+            switch self {
+            case .medium:
+                return .medium()
 
-        /// The system detent for a sheet that's approximately half the height of
-        /// the screen, and is inactive in compact height.
-        public static var medium: PresentationDetent {
-            .init(id: .medium)
-        }
+            case .large:
+                return .large()
 
-        /// The system detent for a sheet at full height.
-        public static var large: PresentationDetent {
-            .init(id: .large)
-        }
-
-        fileprivate static var none: PresentationDetent {
-            return .init(id: .init(rawValue: ""))
+            case let .height(constant):
+                if #available(iOS 16.0, *) {
+                    return .custom(identifier: id, resolver: {_ in constant})
+                } else {
+                    return ._detent(withIdentifier: id.rawValue, constant: constant)
+                }
+            }
         }
 
         public static func < (lhs: PresentationDetent, rhs: PresentationDetent) -> Bool {
-            switch (lhs, rhs) {
-            case (.large, .medium):
-                return false
-            default:
-                return true
+            func approxHeight(_ detent: PresentationDetent) -> CGFloat {
+                switch detent {
+                case .medium: return UIScreen.main.bounds.height * 0.5
+                case .large: return UIScreen.main.bounds.height
+                case .height(let height): return height
+                }
             }
+            return approxHeight(lhs) < approxHeight(rhs)
         }
     }
 }
@@ -135,14 +159,15 @@ public extension Backport<Any> {
 private extension Backport<Any> {
     struct Representable: UIViewControllerRepresentable {
         let detents: Set<Backport<Any>.PresentationDetent>
+        let largestUndimmed: Backport<Any>.PresentationDetent?
         let selection: Binding<Backport<Any>.PresentationDetent>?
 
         func makeUIViewController(context: Context) -> Backport.Representable.Controller {
-            Controller(detents: detents, selection: selection)
+            Controller(detents: detents, largestUndimmed: largestUndimmed, selection: selection)
         }
 
         func updateUIViewController(_ controller: Backport.Representable.Controller, context: Context) {
-            controller.update(detents: detents, selection: selection)
+            controller.update(detents: detents, largestUndimmed: largestUndimmed, selection: selection)
         }
     }
 }
@@ -156,9 +181,10 @@ private extension Backport.Representable {
         var largestUndimmed: Backport<Any>.PresentationDetent?
         weak var _delegate: UISheetPresentationControllerDelegate?
 
-        init(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>?) {
+        init(detents: Set<Backport<Any>.PresentationDetent>, largestUndimmed: Backport<Any>.PresentationDetent? = nil, selection: Binding<Backport<Any>.PresentationDetent>?) {
             self.detents = detents
             self.selection = selection
+            self.largestUndimmed = largestUndimmed
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -174,41 +200,33 @@ private extension Backport.Representable {
                     controller.delegate = self
                 }
             }
-            update(detents: detents, selection: selection)
+            update(detents: detents, largestUndimmed: largestUndimmed, selection: selection)
         }
 
         override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
             super.willTransition(to: newCollection, with: coordinator)
-            update(detents: detents, selection: selection)
+            update(detents: detents, largestUndimmed: largestUndimmed, selection: selection)
         }
 
-        func update(detents: Set<Backport<Any>.PresentationDetent>, selection: Binding<Backport<Any>.PresentationDetent>?) {
+        func update(detents: Set<Backport<Any>.PresentationDetent>, largestUndimmed: Backport<Any>.PresentationDetent?, selection: Binding<Backport<Any>.PresentationDetent>?) {
             self.detents = detents
             self.selection = selection
+            self.largestUndimmed = largestUndimmed
 
             if let controller = parent?.sheetPresentationController {
-                controller.animateChanges {
-                    controller.detents = detents.sorted().map {
-                        switch $0 {
-                        case .medium:
-                            return .medium()
-                        default:
-                            return .large()
+                DispatchQueue.main.async {
+                    controller.animateChanges {
+                        controller.detents = detents.sorted().map {
+                            $0.system
                         }
-                    }
 
-                    if let selection = selection {
-                        controller.selectedDetentIdentifier = .init(selection.wrappedValue.id.rawValue)
-                    }
+                        controller.largestUndimmedDetentIdentifier = largestUndimmed?.id
 
-                    controller.prefersScrollingExpandsWhenScrolledToEdge = true
-                }
+                        if let selection = selection {
+                            controller.selectedDetentIdentifier = .init(selection.wrappedValue.id.rawValue)
+                        }
 
-                UIView.animate(withDuration: 0.25) {
-                    if let undimmed = controller.largestUndimmedDetentIdentifier {
-                        controller.presentingViewController.view?.tintAdjustmentMode = (selection?.wrappedValue ?? .large) >= .init(id: .init(rawValue: undimmed.rawValue)) ? .automatic : .normal
-                    } else {
-                        controller.presentingViewController.view?.tintAdjustmentMode = .automatic
+                        controller.prefersScrollingExpandsWhenScrolledToEdge = true
                     }
                 }
             }
@@ -217,11 +235,11 @@ private extension Backport.Representable {
         func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
             guard
                 let selection = selection,
-                let id = sheetPresentationController.selectedDetentIdentifier?.rawValue,
-                selection.wrappedValue.id.rawValue != id
+                let id = sheetPresentationController.selectedDetentIdentifier,
+                let newSection = Backport<Any>.PresentationDetent(id: id),
+                selection.wrappedValue != newSection
             else { return }
-
-            selection.wrappedValue = .init(id: .init(rawValue: id))
+            selection.wrappedValue = newSection
         }
 
         override func responds(to aSelector: Selector!) -> Bool {

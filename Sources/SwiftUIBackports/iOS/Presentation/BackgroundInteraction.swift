@@ -152,7 +152,7 @@ private extension Backport.Representable {
                         controller.largestUndimmedDetentIdentifier = .init(detent.id.rawValue)
 
                         let selectedId = controller.selectedDetentIdentifier ?? .large
-                        let selected = Backport<Any>.PresentationDetent(id: .init(rawValue: selectedId.rawValue))
+                        let selected = Backport<Any>.PresentationDetent(id: .init(rawValue: selectedId.rawValue))!
                         controller.presentingViewController.view?.tintAdjustmentMode = selected > detent ? .dimmed : .normal
                     }
                 }
