@@ -9,7 +9,7 @@ extension Backport<Any> {
     /// A container that animates its content by automatically cycling through
     /// a collection of phases that you provide, each defining a discrete step
     /// within an animation.
-    public struct PhaseAnimator<Phase, Content>: View where Phase: Equatable, Content: View {
+    struct PhaseAnimator<Phase, Content>: View where Phase: Equatable, Content: View {
         /// Cycles through the given phases when the trigger value changes,
         /// updating the view builder closure that you supply.
         ///
@@ -109,7 +109,7 @@ extension Backport<Any> {
     }
 }
 
-extension Backport where Wrapped: View {
+public extension Backport where Wrapped: View {
     /// Cycles through the given phases when the trigger value changes,
     /// updating the view using the modifiers you apply in `body`.
     ///
@@ -134,7 +134,7 @@ extension Backport where Wrapped: View {
     ///   - animation: A closure that returns the animation to use when
     ///     transitioning to the next phase. If `nil` is returned, the
     ///     transition will not be animated.
-    public func phaseAnimator<Phase>(_ phases: some Sequence<Phase>, trigger: some Equatable, @ViewBuilder content: @escaping (Backport<Any>.PlaceholderContentView<Self>, Phase) -> some View, animation: @escaping (Phase) -> Animation? = { _ in .default }) -> some View where Phase: Equatable {
+    func phaseAnimator<Phase>(_ phases: some Sequence<Phase>, trigger: some Equatable, @ViewBuilder content: @escaping (Backport<Any>.PlaceholderContentView<Self>, Phase) -> some View, animation: @escaping (Phase) -> Animation? = { _ in .default }) -> some View where Phase: Equatable {
         Backport<Any>.PhaseAnimator(phases, trigger: trigger) { phase in
             Backport<Any>.PlaceholderContentView(wrapped)
         } animation: { phase in
@@ -165,7 +165,7 @@ extension Backport where Wrapped: View {
     ///   - animation: A closure that returns the animation to use when
     ///     transitioning to the next phase. If `nil` is returned, the
     ///     transition will not be animated.
-    public func phaseAnimator<Phase>(_ phases: some Sequence<Phase>, @ViewBuilder content: @escaping (Backport<Any>.PlaceholderContentView<Self>, Phase) -> some View, animation: @escaping (Phase) -> Animation? = { _ in .default }) -> some View where Phase: Equatable {
+    func phaseAnimator<Phase>(_ phases: some Sequence<Phase>, @ViewBuilder content: @escaping (Backport<Any>.PlaceholderContentView<Self>, Phase) -> some View, animation: @escaping (Phase) -> Animation? = { _ in .default }) -> some View where Phase: Equatable {
         Backport<Any>.PhaseAnimator(phases, trigger: Trigger()) { phase in
             Backport<Any>.PlaceholderContentView(wrapped)
         } animation: { phase in
