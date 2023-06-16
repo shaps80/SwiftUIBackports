@@ -18,7 +18,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/shaps80/SwiftBackports", from: "1.0.2")
+        .package(url: "https://github.com/shaps80/SwiftBackports", from: "1.0.3")
     ],
     targets: [
         .target(
