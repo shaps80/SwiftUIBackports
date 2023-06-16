@@ -33,7 +33,7 @@ public extension Backport<Any>.OpenURLAction.Result {
         return .handled
     }
 
-#if os(iOS)
+#if os(iOS) && canImport(SafariServices)
     static func safari(_ url: URL, configure: (inout SafariConfiguration) -> Void) -> Self {
         let scene = UIApplication.shared.connectedScenes.first { $0.activationState == .foregroundActive } as? UIWindowScene
         let window = scene?.windows.first { $0.isKeyWindow }

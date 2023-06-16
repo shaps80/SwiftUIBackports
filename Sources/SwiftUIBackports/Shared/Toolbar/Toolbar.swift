@@ -12,6 +12,9 @@ public extension Backport<Any> {
         case destructiveAction
         case principal
         case bottomBar
+//        #if os(iOS)
+//        case keyboard
+//        #endif
 
         var isLeading: Bool {
             switch self {
@@ -67,12 +70,14 @@ struct ToolbarModifier: ViewModifier {
     let trailingItems: [Backport<Any>.ToolbarItem]
     let principalItems: [Backport<Any>.ToolbarItem]
     let bottomBarItems: [Backport<Any>.ToolbarItem]
+//    let keyboardItems: [Backport<Any>.ToolbarItem]
 
     init(items: [Backport<Any>.ToolbarItem]) {
         leadingItems = items.filter { $0.placement.isLeading }
         trailingItems = items.filter { $0.placement.isTrailing }
         principalItems = items.filter { $0.placement == .principal }
         bottomBarItems = items.filter { $0.placement == .bottomBar }
+//        keyboardItems = items.filter { $0.placement == .keyboard }
     }
 
     @ViewBuilder
@@ -119,6 +124,17 @@ struct ToolbarModifier: ViewModifier {
         }
     }
 
+//    @ViewBuilder
+//    private var keyboard: some View {
+//        if !keyboardItems.isEmpty {
+//            HStack {
+//                ForEach(keyboardItems, id: \.id) { item in
+//                    item.content
+//                }
+//            }
+//        }
+//    }
+
     func body(content: Content) -> some View {
         content
             .navigationBarItems(leading: leading, trailing: trailing)
@@ -140,6 +156,10 @@ struct ToolbarModifier: ViewModifier {
                         return .init(customView: view)
                     }
                 }
+
+//                if !keyboardItems.isEmpty {
+//                    let toolbar = UIToolbar()
+//                }
             }
     }
 }
