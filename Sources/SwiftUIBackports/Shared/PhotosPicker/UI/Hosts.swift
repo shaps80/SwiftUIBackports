@@ -102,6 +102,9 @@ private extension PhotosViewController {
 
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             isPresented.wrappedValue = false
+            selection.wrappedValue = results.map {
+                Backport<Any>.PhotosPickerItem(itemIdentifier: $0.assetIdentifier ?? "")
+            }
         }
 
         func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {

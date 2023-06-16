@@ -4,7 +4,7 @@ import PhotosUI
 import SwiftBackports
 
 @available(iOS, introduced: 13, deprecated: 16)
-public extension Backport<Any> {
+internal extension Backport<Any> {
     /// Available when SwiftUI is imported with PhotosUI
     /// A control that allows a user to choose photos and/or videos from the photo library.
     ///
@@ -40,7 +40,7 @@ public extension Backport<Any> {
 }
 
 @available(iOS, introduced: 13, deprecated: 16)
-public extension Backport<Any>.PhotosPicker {
+internal extension Backport<Any>.PhotosPicker {
     /// Creates a Photos picker that selects a `PhotosPickerItem`.
     ///
     /// The user explicitly grants access only to items they choose, so photo library access authorization is not needed.
@@ -74,7 +74,7 @@ public extension Backport<Any>.PhotosPicker {
 }
 
 @available(iOS, introduced: 14, deprecated: 16)
-public extension Backport<Any>.PhotosPicker {
+internal extension Backport<Any>.PhotosPicker {
     /// Creates a Photos picker that selects a `PhotosPickerItem` from a given photo library.
     ///
     /// The user explicitly grants access only to items they choose, so photo library access authorization is not needed.
@@ -113,7 +113,7 @@ public extension Backport<Any>.PhotosPicker {
 // MARK: Single selection
 
 @available(iOS, introduced: 13, deprecated: 16)
-public extension Backport<Any>.PhotosPicker<Text> {
+internal extension Backport<Any>.PhotosPicker<Text> {
     /// Creates a Photos picker with its label generated from a localized string key that selects a `PhotosPickerItem`.
     ///
     /// The user explicitly grants access only to items they choose, so photo library access authorization is not needed.
@@ -248,7 +248,7 @@ public extension Backport<Any>.PhotosPicker<Text> {
 // MARK: Multiple selection (iOS 15+)
 
 @available(iOS 15, *)
-public extension Backport<Any>.PhotosPicker {
+internal extension Backport<Any>.PhotosPicker {
     /// Creates a Photos picker that selects a collection of `PhotosPickerItem`.
     ///
     /// The user explicitly grants access only to items they choose, so photo library access authorization is not needed.
@@ -309,7 +309,7 @@ public extension Backport<Any>.PhotosPicker {
 }
 
 @available(iOS 15, *)
-public extension Backport<Any>.PhotosPicker<Text> {
+internal extension Backport<Any>.PhotosPicker<Text> {
     /// Creates a Photos picker with its label generated from a localized string key that selects a collection of `PhotosPickerItem`.
     ///
     /// The user explicitly grants access only to items they choose, so photo library access authorization is not needed.
@@ -430,7 +430,7 @@ public extension Backport<Any>.PhotosPicker<Text> {
 // MARK: Multiple selection (iOS 13+)
 
 @available(iOS 13, *)
-public extension Backport<Any>.PhotosPicker {
+internal extension Backport<Any>.PhotosPicker {
     /// Creates a Photos picker that selects a collection of `PhotosPickerItem`.
     ///
     /// The user explicitly grants access only to items they choose, so photo library access authorization is not needed.
@@ -459,7 +459,7 @@ public extension Backport<Any>.PhotosPicker {
 }
 
 @available(iOS 13, *)
-public extension Backport<Any>.PhotosPicker<Text> {
+internal extension Backport<Any>.PhotosPicker<Text> {
     /// Creates a Photos picker with its label generated from a localized string key that selects a collection of `PhotosPickerItem`.
     ///
     /// The user explicitly grants access only to items they choose, so photo library access authorization is not needed.
