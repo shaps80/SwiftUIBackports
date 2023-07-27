@@ -7,6 +7,7 @@ import SafariServices
 #endif
 
 @MainActor
+@available(iOS 15, tvOS 15, macOS 12, watchOS 8, *)
 public extension Backport<Any>.OpenURLAction.Result {
     static func safari(_ url: URL) -> Self {
 #if os(macOS)
