@@ -4,8 +4,14 @@ import SwiftUI
 extension Backport<Any> {
     /// The tip style for a minitip view.
     public struct MiniTipViewStyle: BackportTipViewStyle {
-        @State private var isHovering: Bool = false
+        @Environment(\.backportDismiss) private var dismiss
         @Environment(\.colorScheme) private var scheme
+        @Environment(\.tipCorner) private var corner
+        @Environment(\.tipAssetSize) private var assetSize
+        @Environment(\.tipBackgroundStyle) private var backgroundStyle
+        @Environment(\.tipBackgroundColor) private var backgroundColor
+
+        @State private var isHovering: Bool = false
 
         public func makeBody(configuration: Configuration) -> some View {
 #if os(iOS)
@@ -17,7 +23,7 @@ extension Backport<Any> {
 
                         Spacer()
                         Button {
-
+                            dismiss()
                         } label: {
                             Image(systemName: "xmark")
                                 .foregroundColor(Color(.quaternaryLabel))
@@ -53,9 +59,8 @@ extension Backport<Any> {
             .frame(maxWidth: .infinity, alignment: .topLeading)
             .padding(.vertical, 14)
             .padding(.horizontal, 13)
-            .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
-            .padding(.vertical, 0)
+            .background(style: backgroundStyle, color: backgroundColor, placement: configuration.placement)
+            .clipShape(RoundedRectangle(cornerRadius: corner.radius, style: .continuous), style: .init(antialiased: corner.antialiased))
             .buttonStyle(.plain)
 #endif
 
@@ -92,12 +97,12 @@ extension Backport<Any> {
             .frame(maxWidth: .infinity, alignment: .topLeading)
             .padding(.vertical, 9)
             .padding(.horizontal, 13)
-            .background(Color.primary.opacity(0.055))
-            .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+            .background(style: backgroundStyle, color: backgroundColor, placement: configuration.placement)
+            .clipShape(RoundedRectangle(cornerRadius: corner.radius, style: .continuous), style: .init(antialiased: corner.antialiased))
             .backport.overlay(alignment: .topLeading) {
                 if isHovering {
                     Button {
-
+                        dismiss()
                     } label: {
                         ZStack {
                             Circle()
@@ -114,7 +119,7 @@ extension Backport<Any> {
                     .offset(x: -6, y: -8)
                 }
             }
-            .padding(.vertical, 8)
+            .padding(.vertical, configuration.placement == .inline ? 8 : 0)
             .onHover { isHovering = $0 }
 #endif
         }
@@ -131,5 +136,28 @@ internal extension EnvironmentValues {
     var tipStyle: any BackportTipViewStyle {
         get { self[TipStyleEnvironmentKey.self] }
         set { self[TipStyleEnvironmentKey.self] = newValue }
+    }
+}
+
+@available(iOS 13, tvOS 13, macOS 11, watchOS 6, *)
+private extension View {
+    @ViewBuilder
+    func background(style: any ShapeStyle, color: Color, placement: Backport<Any>.TipViewStyleConfiguration.Placement) -> some View {
+        backport.background {
+            if #available(iOS 16.4, tvOS 16.4, macOS 13.3, watchOS 9.4, *) {
+                Rectangle()
+                    .foregroundStyle(placement == .inline ? AnyShapeStyle(style) : AnyShapeStyle(.clear))
+#if os(iOS)
+                    .presentationBackground(AnyShapeStyle(style))
+#endif
+                    .presentationCompactAdaptation(.popover)
+            } else if #available(iOS 15, macOS 12, *) {
+                Rectangle()
+                    .foregroundStyle(AnyShapeStyle(style))
+            } else {
+                Rectangle()
+                    .foregroundColor(color)
+            }
+        }
     }
 }

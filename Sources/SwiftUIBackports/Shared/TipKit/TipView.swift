@@ -55,6 +55,7 @@ extension Backport<Any> {
         public var tip: Content
         public var arrowEdge: Edge?
         public var action: (Backport<Any>.Tips.Action) -> Void
+        internal var placement: Backport<Any>.TipViewStyleConfiguration.Placement = .inline
 
         /// Creates a tip view with an optional arrow.
         ///
@@ -73,8 +74,15 @@ extension Backport<Any> {
             self.action = action
         }
 
+        @MainActor internal init(_ tip: Content, arrowEdge: Edge? = nil, placement: Backport<Any>.TipViewStyleConfiguration.Placement, action: @escaping (Backport<Any>.Tips.Action) -> Void = { _ in }) {
+            self.tip = tip
+            self.arrowEdge = arrowEdge
+            self.placement = placement
+            self.action = action
+        }
+
         public var body: some View {
-            AnyView(tipStyle.makeBody(configuration: .init(tip: tip, arrowEdge: arrowEdge, action: action)))
+            AnyView(tipStyle.makeBody(configuration: .init(tip: tip, arrowEdge: arrowEdge, action: action, placement: placement)))
         }
     }
 }

@@ -17,9 +17,15 @@ public protocol BackportTipViewStyle {
 extension Backport<Any> {
     /// The container type that holds a tip's configuration.
     public struct TipViewStyleConfiguration {
+        internal enum Placement {
+            case inline
+            case popover
+        }
+
         public let tip: any BackportTip
         internal let arrowEdge: Edge?
         internal var action: (Backport<Any>.Tips.Action) -> Void
+        internal var placement: Placement
     }
 }
 
