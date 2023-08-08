@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftBackports
+import Combine
 
 @available(iOS, deprecated: 15.0)
 @available(macOS, deprecated: 12.0)
@@ -139,18 +140,22 @@ private struct TaskModifier<ID: Equatable>: ViewModifier {
     var action: @Sendable () async -> Void
 
     @State private var task: Task<Void, Never>?
+    @State private var oldID: ID
 
     init(id: ID, priority: TaskPriority, action: @Sendable @escaping () async -> Void) {
         self.id = id
         self.priority = priority
         self.action = action
+        _oldID = .init(initialValue: id)
     }
 
     func body(content: Content) -> some View {
         content
-            .backport.onChange(of: id) { _ in
+            .onReceive(Just(id)) { newID in
+                guard newID != oldID else { return }
                 task?.cancel()
                 task = Task(priority: priority, operation: action)
+                oldID = newID
             }
             .onAppear {
                 task?.cancel()
