@@ -169,7 +169,7 @@ private extension Backport.Representable {
         override func willMove(toParent parent: UIViewController?) {
             super.willMove(toParent: parent)
             if let controller = parent?.sheetPresentationController {
-                if controller.delegate !== self && _delegate != nil {
+                if controller.delegate !== self && _delegate == nil {
                     _delegate = controller.delegate
                     controller.delegate = self
                 }
