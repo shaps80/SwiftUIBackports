@@ -118,7 +118,7 @@ extension Backport<Any> {
                                             configuration.action(action)
                                         } label: {
                                             action.label
-                                                .font(body.weight(index == 0 ? .semibold : .regular))
+                                                .font(.body.weight(index == 0 ? .semibold : .regular))
                                         }
                                         .disabled(action.disabled)
                                         .tag(action.id)
