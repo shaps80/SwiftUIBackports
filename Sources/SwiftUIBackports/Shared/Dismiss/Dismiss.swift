@@ -71,7 +71,11 @@ public extension EnvironmentValues {
     /// presented. If you need to query whether SwiftUI is currently presenting
     /// a view, read the ``EnvironmentValues/backportIsPresented`` environment value.
     var backportDismiss: Backport<Any>.DismissAction {
-        .init(presentation: presentationMode)
+        if #available(iOS 15, tvOS 15,  macOS 12, watchOS 8, *) {
+            return .init { dismiss() }
+        } else {
+            return .init { presentationMode.wrappedValue.dismiss() }
+        }
     }
 
     /// A Boolean value that indicates whether the view associated with this
@@ -101,7 +105,11 @@ public extension EnvironmentValues {
     /// To dismiss the currently presented view, use
     /// ``EnvironmentValues/backportDismiss``.
     var backportIsPresented: Bool {
-        presentationMode.wrappedValue.isPresented
+        if #available(iOS 15, tvOS 15,  macOS 12, watchOS 8, *) {
+            return isPresented
+        } else {
+            return presentationMode.wrappedValue.isPresented
+        }
     }
 
 }
@@ -180,9 +188,9 @@ extension Backport where Wrapped: Any {
     /// presented. If you need to query whether SwiftUI is currently presenting
     /// a view, read the ``EnvironmentValues/backportIsPresented`` environment value.
     public struct DismissAction {
-        var presentation: Binding<PresentationMode>
+        var action: () -> Void
         public func callAsFunction() {
-            presentation.wrappedValue.dismiss()
+            action()
         }
     }
 

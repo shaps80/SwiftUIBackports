@@ -29,7 +29,7 @@ private struct PopoverTipModifier<Tip: BackportTip>: ViewModifier {
                 }
             }
             .onPreferenceChange(SizePreferenceKey.self) { value in
-                width = min(value.width, 375)
+                width = min(value.width, 320)
             }
             .popover(isPresented: $isPresented, arrowEdge: arrowEdge) {
                 AnyView(
@@ -42,6 +42,7 @@ private struct PopoverTipModifier<Tip: BackportTip>: ViewModifier {
                         )
                     )
                 )
+                .popoverDismissDisabled()
 #if os(iOS)
                 .frame(minWidth: width)
 #endif
@@ -50,6 +51,25 @@ private struct PopoverTipModifier<Tip: BackportTip>: ViewModifier {
                 #warning("This should only be based on a rule later on")
                 isPresented = true
             }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func popoverDismissDisabled() -> some View {
+#if os(iOS)
+        if #available(iOS 15, *) {
+            interactiveDismissDisabled()
+        } else {
+            backport.interactiveDismissDisabled()
+        }
+#else
+        if #available(macOS 12, *) {
+            interactiveDismissDisabled()
+        } else {
+            self
+        }
+#endif
     }
 }
 
