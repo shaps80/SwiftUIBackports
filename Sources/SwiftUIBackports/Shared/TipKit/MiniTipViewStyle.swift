@@ -12,116 +12,132 @@ extension Backport<Any> {
         @Environment(\.tipBackgroundColor) private var backgroundColor
 
         @State private var isHovering: Bool = false
+        @State private var isHidden: Bool = false
 
         public func makeBody(configuration: Configuration) -> some View {
+            if (configuration.placement == .inline && !isHidden) || configuration.placement == .popover {
 #if os(iOS)
-            VStack(alignment: .leading) {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(alignment: .firstTextBaseline) {
-                        configuration.tip.title
-                            .font(.body.weight(.semibold))
-
-                        Spacer()
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "xmark")
-                                .foregroundColor(Color(.quaternaryLabel))
+                VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(alignment: .firstTextBaseline) {
+                            configuration.tip.title
                                 .font(.body.weight(.semibold))
-                        }
-                    }
 
-                    configuration.tip.message
-                        .foregroundColor(.secondary)
-                        .font(.subheadline)
-                }
-
-                let actions = configuration.tip.actions
-                if !actions.isEmpty {
-                    VStack(alignment: .leading, spacing: 11) {
-                        ForEach(actions.indices, id: \.self) { index in
-                            Divider()
-
-                            let action = actions[index]
+                            Spacer()
                             Button {
-                                action.handler?()
-                                configuration.action(action)
+                                dismissTip(configuration: configuration)
                             } label: {
-                                action.label
+                                Image(systemName: "xmark")
+                                    .foregroundColor(Color(.quaternaryLabel))
+                                    .font(.body.weight(.semibold))
                             }
-                            .disabled(action.disabled)
                         }
+
+                        configuration.tip.message
+                            .foregroundColor(.secondary)
+                            .font(.subheadline)
                     }
-                    .padding(.bottom, 3)
-                    .foregroundColor(.accentColor)
+
+                    let actions = configuration.tip.actions
+                    if !actions.isEmpty {
+                        VStack(alignment: .leading, spacing: 11) {
+                            ForEach(actions.indices, id: \.self) { index in
+                                Divider()
+
+                                let action = actions[index]
+                                Button {
+                                    action.handler?()
+                                    configuration.action(action)
+                                } label: {
+                                    action.label
+                                        .font(.body.weight(index == 0 ? .medium : .regular))
+                                }
+                                .disabled(action.disabled)
+                            }
+                        }
+                        .padding(.bottom, 3)
+                        .foregroundColor(.accentColor)
+                    }
                 }
-            }
-            .frame(maxWidth: .infinity, alignment: .topLeading)
-            .padding(.vertical, 14)
-            .padding(.horizontal, 13)
-            .background(style: backgroundStyle, color: backgroundColor, placement: configuration.placement)
-            .clipShape(RoundedRectangle(cornerRadius: corner.radius, style: .continuous), style: .init(antialiased: corner.antialiased))
-            .buttonStyle(.plain)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .padding(.vertical, 14)
+                .padding(.horizontal, 13)
+                .background(style: backgroundStyle, color: backgroundColor, placement: configuration.placement)
+                .clipShape(RoundedRectangle(cornerRadius: corner.radius, style: .continuous), style: .init(antialiased: corner.antialiased))
+                .buttonStyle(.plain)
 #endif
 
 #if os(macOS)
-            VStack(alignment: .leading) {
-                VStack(alignment: .leading, spacing: 2) {
-                    configuration.tip.title
-                        .font(.body.weight(.bold))
+                VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        configuration.tip.title
+                            .font(.body.weight(.bold))
 
-                    configuration.tip.message
-                        .foregroundColor(.secondary)
-                        .font(.subheadline)
-                }
+                        configuration.tip.message
+                            .foregroundColor(.secondary)
+                            .font(.subheadline)
+                    }
 
-                let actions = configuration.tip.actions
-                if !actions.isEmpty {
-                    HStack {
-                        ForEach(actions.indices, id: \.self) { index in
-                            let action = actions[index]
-                            Button {
-                                action.handler?()
-                                configuration.action(action)
-                            } label: {
-                                action.label
+                    let actions = configuration.tip.actions
+                    if !actions.isEmpty {
+                        HStack {
+                            ForEach(actions.indices, id: \.self) { index in
+                                let action = actions[index]
+                                Button {
+                                    action.handler?()
+                                    configuration.action(action)
+                                } label: {
+                                    action.label
+                                }
+                                .disabled(action.disabled)
+                                .tag(action.id)
+                                .id(action.id)
                             }
-                            .disabled(action.disabled)
-                            .tag(action.id)
-                            .id(action.id)
                         }
+                        .padding(.bottom, 2)
                     }
-                    .padding(.bottom, 2)
                 }
-            }
-            .frame(maxWidth: .infinity, alignment: .topLeading)
-            .padding(.vertical, 9)
-            .padding(.horizontal, 13)
-            .background(style: backgroundStyle, color: backgroundColor, placement: configuration.placement)
-            .clipShape(RoundedRectangle(cornerRadius: corner.radius, style: .continuous), style: .init(antialiased: corner.antialiased))
-            .backport.overlay(alignment: .topLeading) {
-                if isHovering {
-                    Button {
-                        dismiss()
-                    } label: {
-                        ZStack {
-                            Circle()
-                                .foregroundColor(Color(scheme == .dark ? .underPageBackgroundColor : .windowBackgroundColor))
-                                .frame(width: 21, height: 21)
-                                .shadow(color: .primary.opacity(0.5), radius: 1, x: 0.0, y: 0.0)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .padding(.vertical, 9)
+                .padding(.horizontal, 13)
+                .background(style: backgroundStyle, color: backgroundColor, placement: configuration.placement)
+                .clipShape(RoundedRectangle(cornerRadius: corner.radius, style: .continuous), style: .init(antialiased: corner.antialiased))
+                .backport.overlay(alignment: configuration.placement == .inline ? .topLeading : .topTrailing) {
+                    if isHovering || configuration.placement == .popover {
+                        Button {
+                            dismissTip(configuration: configuration)
+                        } label: {
+                            ZStack {
+                                Circle()
+                                    .foregroundColor(Color(scheme == .dark ? .underPageBackgroundColor : .windowBackgroundColor))
+                                    .frame(width: 21, height: 21)
+                                    .shadow(color: .primary.opacity(0.5), radius: 1, x: 0.0, y: 0.0)
 
-                            Image(systemName: "xmark")
-                                .font(.system(size: 9, weight: .bold))
-                                .foregroundColor(.primary.opacity(scheme == .dark ? 1 : 0.8))
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 9, weight: .bold))
+                                    .foregroundColor(.primary.opacity(scheme == .dark ? 1 : 0.8))
+                            }
                         }
+                        .buttonStyle(.plain)
+                        .padding(.horizontal, configuration.placement == .inline ? 0 : nil)
+                        .padding(.top, configuration.placement == .inline ? 0 : 10)
+                        .offset(
+                            x: configuration.placement == .inline ? -6 : 0,
+                            y: configuration.placement == .inline ? -8 : 0
+                        )
                     }
-                    .buttonStyle(.plain)
-                    .offset(x: -6, y: -8)
                 }
-            }
-            .padding(.vertical, configuration.placement == .inline ? 8 : 0)
-            .onHover { isHovering = $0 }
+                .padding(.vertical, configuration.placement == .inline ? 8 : 0)
+                .onHover { isHovering = $0 }
 #endif
+            }
+        }
+
+        private func dismissTip(configuration: BackportTipViewStyle.Configuration) {
+#warning("Should be updating data here")
+            if configuration.placement == .popover {
+                dismiss()
+            }
         }
     }
 }

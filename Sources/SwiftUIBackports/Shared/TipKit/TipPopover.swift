@@ -10,21 +10,65 @@ extension Backport where Wrapped: View {
 
 @available(iOS 13, tvOS 13, macOS 11, watchOS 6, *)
 private struct PopoverTipModifier<Tip: BackportTip>: ViewModifier {
+    @Environment(\.tipStyle) private var tipStyle
     @State private var isPresented: Bool = false
+    @State private var width: CGFloat = 200
+
     let tip: Tip
     let arrowEdge: Edge
     let action: (Backport<Any>.Tips.Action) -> Void
 
     func body(content: Content) -> some View {
-        content.popover(isPresented: $isPresented, arrowEdge: arrowEdge) {
-            Backport<Any>.TipView(tip, arrowEdge: arrowEdge, placement: .popover, action: action)
+        content
+            .backport.overlay {
+                GeometryReader { proxy in
+                    Color.clear.preference(
+                        key: SizePreferenceKey.self, 
+                        value: proxy.size
+                    )
+                }
+            }
+            .onPreferenceChange(SizePreferenceKey.self) { value in
+                width = min(value.width, 375)
+            }
+            .popover(isPresented: $isPresented, arrowEdge: arrowEdge) {
+                AnyView(
+                    tipStyle.resolve(
+                        configuration: .init(
+                            tip: tip,
+                            arrowEdge: arrowEdge,
+                            action: action,
+                            placement: .popover
+                        )
+                    )
+                )
 #if os(iOS)
-                .frame(minWidth: 200)
+                .frame(minWidth: width)
 #endif
-        }
-        .onAppear {
-            #warning("This should only be based on a rule later on")
-            isPresented = true
-        }
+            }
+            .onAppear {
+                #warning("This should only be based on a rule later on")
+                isPresented = true
+            }
+    }
+}
+
+private struct SizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
+    }
+}
+
+private struct SizeModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content.overlay(
+            GeometryReader { geo in
+                Color.clear.preference(
+                    key: SizePreferenceKey.self,
+                    value: geo.size
+                )
+            }
+        )
     }
 }
