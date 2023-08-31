@@ -87,7 +87,6 @@ extension Backport where Wrapped == Any {
     ///     }
     ///
     public struct Label<Title, Icon>: View where Title: View, Icon: View {
-
         @Environment(\.self) private var environment
         @Environment(\.backportLabelStyle) private var style
         private var config: Backport<Any>.LabelStyleConfiguration
@@ -98,14 +97,12 @@ extension Backport where Wrapped == Any {
         }
 
         @MainActor public var body: some View {
-            style.makeBody(configuration: config.environment(environment))
+            style.resolve(configuration: config)
         }
     }
-
 }
 
 extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
-
     /// Creates a label with an icon image and a title generated from a
     /// localized string.
     ///
@@ -124,12 +121,10 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
     public init<S>(_ title: S, image name: String) where S: StringProtocol {
         self.init(title: { Text(title) }, icon: { Image(name) })
     }
-
 }
 
 @available(macOS, introduced: 11, message: "SFSymbols support was only introduced in macOS 11")
 extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
-
     /// Creates a label with a system icon image and a title generated from a
     /// localized string.
     ///
@@ -149,11 +144,9 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
     public init<S>(_ title: S, systemImage name: String) where S: StringProtocol {
         self.init(title: { Text(title) }, icon: { Image(systemName: name) })
     }
-
 }
 
 extension Backport.Label where Wrapped == Any {
-
     /// Creates a label representing the configuration of a style.
     ///
     /// You can use this initializer within the ``LabelStyle/makeBody(configuration:)``
@@ -176,5 +169,4 @@ extension Backport.Label where Wrapped == Any {
     public init(_ configuration: Backport.LabelStyleConfiguration) {
         self.config = configuration
     }
-
 }

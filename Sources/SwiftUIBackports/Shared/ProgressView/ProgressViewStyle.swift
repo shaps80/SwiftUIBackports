@@ -10,7 +10,7 @@ import SwiftBackports
 ///
 /// To configure the current progress view style for a view hierarchy, use the
 /// ``View/progressViewStyle(_:)`` modifier.
-public protocol BackportProgressViewStyle {
+public protocol BackportProgressViewStyle: DynamicProperty {
     /// A type alias for the properties of a progress view instance.
     typealias Configuration = Backport<Any>.ProgressViewStyleConfiguration
 

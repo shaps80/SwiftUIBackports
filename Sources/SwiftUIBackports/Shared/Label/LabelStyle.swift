@@ -9,8 +9,7 @@ import SwiftBackports
 ///
 /// To configure the current label style for a view hierarchy, use the
 /// ``View/labelStyle(_:)`` modifier.
-public protocol BackportLabelStyle {
-
+public protocol BackportLabelStyle: DynamicProperty {
     /// The properties of a label.
     typealias Configuration = Backport<Any>.LabelStyleConfiguration
 
@@ -24,7 +23,6 @@ public protocol BackportLabelStyle {
     ///
     /// - Parameter configuration: The properties of the label.
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
-
 }
 
 

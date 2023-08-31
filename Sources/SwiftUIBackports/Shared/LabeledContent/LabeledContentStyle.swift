@@ -16,7 +16,7 @@ extension Backport where Wrapped: View {
 @available(tvOS, deprecated: 16)
 @available(macOS, deprecated: 13)
 @available(watchOS, deprecated: 9)
-public protocol BackportLabeledContentStyle {
+public protocol BackportLabeledContentStyle: DynamicProperty {
     typealias Configuration = Backport<Any>.LabeledContentStyleConfiguration
     associatedtype Body: View
     @ViewBuilder func makeBody(configuration: Configuration) -> Body

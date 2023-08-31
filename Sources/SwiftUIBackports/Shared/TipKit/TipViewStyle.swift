@@ -2,7 +2,7 @@ import SwiftUI
 import TipKit
 
 @available(iOS 13, tvOS 13, macOS 11, watchOS 6, *)
-public protocol BackportTipViewStyle {
+public protocol BackportTipViewStyle: DynamicProperty {
     /// The tip style's configuration.
     typealias Configuration = Backport<Any>.TipViewStyleConfiguration
 

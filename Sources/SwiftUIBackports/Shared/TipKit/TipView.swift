@@ -82,7 +82,16 @@ extension Backport<Any> {
         }
 
         public var body: some View {
-            AnyView(tipStyle.makeBody(configuration: .init(tip: tip, arrowEdge: arrowEdge, action: action, placement: placement)))
+            AnyView(
+                tipStyle.resolve(
+                    configuration: .init(
+                        tip: tip, 
+                        arrowEdge: arrowEdge,
+                        action: action,
+                        placement: placement
+                    )
+                )
+            )
         }
     }
 }

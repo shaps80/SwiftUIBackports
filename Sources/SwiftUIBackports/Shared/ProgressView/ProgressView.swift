@@ -13,7 +13,7 @@ public extension Backport where Wrapped == Any {
         public var body: some View {
             Group {
                 if let style = style {
-                    style.makeBody(configuration: config)
+                    style.resolve(configuration: config)
                 } else {
                     DefaultProgressViewStyle().makeBody(configuration: config)
                 }

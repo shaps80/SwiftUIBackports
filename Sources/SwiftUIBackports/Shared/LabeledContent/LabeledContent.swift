@@ -131,7 +131,7 @@ extension Backport where Wrapped == Any {
         let config: LabeledContentStyleConfiguration
 
         public var body: some View {
-            style.makeBody(configuration: config.labelHidden(isHidden))
+            style.resolve(configuration: config.labelHidden(isHidden))
         }
 
         /// Creates labeled content based on a labeled content style configuration.
