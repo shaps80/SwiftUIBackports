@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftBackports
+import Combine
 
 @available(iOS, deprecated: 15.0)
 @available(macOS, deprecated: 12.0)
@@ -50,7 +51,7 @@ public extension Backport where Wrapped: View {
     /// - Returns: A view that runs the specified action asynchronously when
     ///   the view appears.
     @ViewBuilder
-    func task(priority: TaskPriority = .userInitiated, _ action: @MainActor @escaping @Sendable () async -> Void) -> some View {
+    func task(priority: TaskPriority = .userInitiated, @_inheritActorContext _ action: @escaping @Sendable () async -> Void) -> some View {
         wrapped.modifier(
             TaskModifier(
                 id: 0,
@@ -120,7 +121,7 @@ public extension Backport where Wrapped: View {
     /// - Returns: A view that runs the specified action asynchronously when
     ///   the view appears, or restarts the task with the `id` value changes.
     @ViewBuilder
-    func task<T: Equatable>(id: T, priority: TaskPriority = .userInitiated, _ action: @MainActor @escaping @Sendable () async -> Void) -> some View {
+    func task<T: Equatable>(id: T, priority: TaskPriority = .userInitiated, @_inheritActorContext _ action: @escaping @Sendable () async -> Void) -> some View {
         wrapped.modifier(
             TaskModifier(
                 id: id,
@@ -136,29 +137,29 @@ private struct TaskModifier<ID: Equatable>: ViewModifier {
 
     var id: ID
     var priority: TaskPriority
-    var action: () async -> Void
+    var action: @Sendable () async -> Void
 
     @State private var task: Task<Void, Never>?
+    @State private var oldID: ID
 
-    init(id: ID, priority: TaskPriority, action: @MainActor @escaping () async -> Void) {
+    init(id: ID, priority: TaskPriority, action: @Sendable @escaping () async -> Void) {
         self.id = id
         self.priority = priority
         self.action = action
+        _oldID = .init(initialValue: id)
     }
 
     func body(content: Content) -> some View {
         content
-            .backport.onChange(of: id) { _ in
+            .onReceive(Just(id)) { newID in
+                guard newID != oldID else { return }
                 task?.cancel()
-                task = Task(priority: priority) {
-                    await action()
-                }
+                task = Task(priority: priority, operation: action)
+                oldID = newID
             }
             .onAppear {
                 task?.cancel()
-                task = Task(priority: priority) {
-                    await action()
-                }
+                task = Task(priority: priority, operation: action)
             }
             .onDisappear {
                 task?.cancel()
