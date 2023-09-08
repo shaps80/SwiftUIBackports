@@ -1,4 +1,3 @@
-#if canImport(SwiftUI)
 import SwiftUI
 import SwiftBackports
 
@@ -86,4 +85,16 @@ internal extension EnvironmentValues {
         set { self[TipBackgroundColorEnvironmentKey.self] = newValue }
     }
 }
-#endif
+
+@available(iOS 13, tvOS 13, macOS 11, watchOS 6, *)
+private struct TipStyleEnvironmentKey: EnvironmentKey {
+    static var defaultValue: any BackportTipViewStyle { Backport.MiniTipViewStyle() }
+}
+
+@available(iOS 13, tvOS 13, macOS 11, watchOS 6, *)
+internal extension EnvironmentValues {
+    var tipStyle: any BackportTipViewStyle {
+        get { self[TipStyleEnvironmentKey.self] }
+        set { self[TipStyleEnvironmentKey.self] = newValue }
+    }
+}

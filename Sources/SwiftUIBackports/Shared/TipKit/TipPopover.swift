@@ -1,4 +1,3 @@
-#if canImport(SwiftUI)
 import SwiftUI
 import SwiftBackports
 
@@ -21,6 +20,9 @@ private struct PopoverTipModifier<Tip: BackportTip>: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            .backport.onChange(of: isPresented) { newValue in
+                if !newValue { tip.invalidate(reason: .tipClosed) }
+            }
             .backport.overlay {
                 GeometryReader { proxy in
                     Color.clear.preference(
@@ -48,10 +50,7 @@ private struct PopoverTipModifier<Tip: BackportTip>: ViewModifier {
                 .frame(minWidth: width)
 #endif
             }
-            .onAppear {
-                #warning("This should only be based on a rule later on")
-                isPresented = true
-            }
+            .backport.task(id: tip.id) { isPresented = tip.shouldDisplay }
     }
 }
 
@@ -93,4 +92,3 @@ private struct SizeModifier: ViewModifier {
         )
     }
 }
-#endif
