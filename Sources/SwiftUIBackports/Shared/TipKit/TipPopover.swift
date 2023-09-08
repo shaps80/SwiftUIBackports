@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 import SwiftBackports
 
@@ -92,3 +93,4 @@ private struct SizeModifier: ViewModifier {
         )
     }
 }
+#endif

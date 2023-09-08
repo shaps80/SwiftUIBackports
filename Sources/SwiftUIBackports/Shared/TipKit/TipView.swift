@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 @available(iOS 13, tvOS 13, macOS 11, watchOS 6, *)
@@ -92,6 +93,10 @@ extension Backport<Any> {
                     )
                 )
             )
+//            .task(id: tip.id) {
+////                tip.
+//            }
         }
     }
 }
+#endif

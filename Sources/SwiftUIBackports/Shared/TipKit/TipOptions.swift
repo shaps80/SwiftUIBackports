@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 import SwiftBackports
 
@@ -85,3 +86,4 @@ internal extension EnvironmentValues {
         set { self[TipBackgroundColorEnvironmentKey.self] = newValue }
     }
 }
+#endif
