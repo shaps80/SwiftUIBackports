@@ -60,7 +60,7 @@ private final class Coordinator: NSObject, ObservableObject, UITextFieldDelegate
     func observe(field: UITextField) {
         self.field = field
 
-        if field.delegate !== self {
+        if field.delegate !== self && _delegate == nil {
             _delegate = field.delegate
             field.delegate = self
         }
