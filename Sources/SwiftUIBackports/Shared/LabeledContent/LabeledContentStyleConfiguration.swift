@@ -20,7 +20,7 @@ extension Backport where Wrapped == Any {
             }
         }
 
-        var labelHidden: Bool = false
+        public internal(set) var labelHidden: Bool = false
 
         private let _label: AnyView
 
