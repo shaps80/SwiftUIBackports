@@ -194,7 +194,7 @@ private extension Backport.Representable {
         override func willMove(toParent parent: UIViewController?) {
             super.willMove(toParent: parent)
             if let controller = parent?.presentationController {
-                if controller.delegate !== self {
+                if controller.delegate !== self  && _delegate == nil {
                     _delegate = controller.delegate
                     controller.delegate = self
                 }
