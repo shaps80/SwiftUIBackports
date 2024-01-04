@@ -14,8 +14,8 @@ extension UICollectionViewCell {
     }
 }
 
-@available(iOS, deprecated: 14)
-@available(tvOS, deprecated: 14)
+@available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
 @available(macOS, unavailable)
 @available(watchOS, unavailable)
 extension Backport where Wrapped: UICollectionViewCell {
