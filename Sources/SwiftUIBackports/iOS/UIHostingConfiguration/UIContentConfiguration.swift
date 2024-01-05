@@ -7,8 +7,8 @@ import SwiftUI
 /// default styling and content for a content view. The content configuration encapsulates
 /// all of the supported properties and behaviors for content view customization.
 /// You use the configuration to create the content view.
-@available(iOS, deprecated: 14)
-@available(tvOS, deprecated: 14)
+@available(iOS, deprecated: 16)
+@available(tvOS, deprecated: 16)
 @available(macOS, unavailable)
 @available(watchOS, unavailable)
 public protocol BackportUIContentConfiguration {
