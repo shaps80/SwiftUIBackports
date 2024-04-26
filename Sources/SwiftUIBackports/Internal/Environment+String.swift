@@ -91,12 +91,12 @@ private extension EnvironmentValues {
 
 @propertyWrapper
 internal struct StringlyTypedEnvironment<Value> {
-    final class Store<Value>: ObservableObject {
+    final class Store: ObservableObject {
         var value: Value? = nil
     }
 
     @Environment(\.self) private var env
-    @ObservedObject private var store = Store<Value>()
+    @ObservedObject private var store = Store()
 
     var key: String
 
