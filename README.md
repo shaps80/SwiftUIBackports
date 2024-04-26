@@ -22,7 +22,7 @@ There is also a [Demo project](https://github.com/shaps80/SwiftUIBackportsDemo) 
 
 ## Documentation
 
-Full [documentation](https://shaps80.github.io/SwiftUIBackports/) can be found [here](https://shaps80.github.io/SwiftUIBackports/).
+Full [documentation](https://shaps80.github.io/SwiftUIBackports/documentation/SwiftUIBackports) can be found [here](https://shaps80.github.io/SwiftUIBackports/documentation/SwiftUIBackports).
 
 ## Sponsor
 
