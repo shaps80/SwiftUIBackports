@@ -56,6 +56,39 @@ struct UICachedDeviceRGBColor: ColorProvider {
     }
 }
 
+struct NamedColor: ColorProvider {
+    var color: UIColor?
+
+    init(provider: Any) {
+        let mirror = Mirror(reflecting: provider)
+        if let colorName = mirror.descendant("name") as? String {
+            let bundle = mirror.descendant("bundle") as? Bundle
+            color = UIColor(named: colorName, in: bundle, compatibleWith: nil)
+        }
+    }
+}
+
+struct UICGColor: ColorProvider {
+    var color: UIColor?
+
+    init(provider: Any) {
+        if let color = provider as? UIColor {
+            self.color = color
+        }
+    }
+}
+
+struct NSCFType: ColorProvider {
+    var color: UIColor?
+
+    init(provider: Any) {
+        let isCGColor = CFGetTypeID(provider as CFTypeRef) == CGColor.typeID
+        if isCGColor {
+            color = UIColor(cgColor: provider as! CGColor)
+        }
+    }
+}
+
 struct UIDynamicCatalogSystemColor: ColorProvider {
     var color: UIColor?
 }
@@ -196,6 +229,12 @@ func resolveColorProvider(_ provider: Any) -> ColorProvider? {
         return DisplayP3(provider: provider)
     case "Resolved":
         return UICachedDeviceRGBColor(provider: provider)
+    case String(describing: NamedColor.self):
+        return NamedColor(provider: provider)
+    case String(describing: UICGColor.self):
+        return UICGColor(provider: provider)
+    case "__\(String(describing: NSCFType.self))":
+        return NSCFType(provider: provider)
     default:
         print("Unhandled color provider: \(String(describing: type(of: provider)))")
         return nil
