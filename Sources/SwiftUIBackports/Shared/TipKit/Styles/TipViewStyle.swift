@@ -24,7 +24,7 @@ extension Backport<Any> {
 
         public let tip: any BackportTip
         internal let arrowEdge: Edge?
-        internal var action: (Backport<Any>.Tips.Action) -> Void
+        internal var action: (BackportTipAction) -> Void
         internal var placement: Placement
     }
 }

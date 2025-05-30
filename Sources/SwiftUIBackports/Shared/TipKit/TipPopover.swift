@@ -3,7 +3,7 @@ import SwiftBackports
 
 @available(iOS 13, tvOS 13, macOS 11, watchOS 6, *)
 extension Backport where Wrapped: View {
-    @MainActor public func popoverTip<Content>(_ tip: Content, arrowEdge: Edge = .top, action: @escaping (Backport<Any>.Tips.Action) -> Void = { _ in }) -> some View where Content: BackportTip {
+    @MainActor public func popoverTip<Content>(_ tip: Content, arrowEdge: Edge = .top, action: @escaping (BackportTipAction) -> Void = { _ in }) -> some View where Content: BackportTip {
         wrapped.modifier(PopoverTipModifier(tip: tip, arrowEdge: arrowEdge, action: action))
     }
 }
@@ -16,7 +16,7 @@ private struct PopoverTipModifier<Tip: BackportTip>: ViewModifier {
 
     let tip: Tip
     let arrowEdge: Edge
-    let action: (Backport<Any>.Tips.Action) -> Void
+    let action: (BackportTipAction) -> Void
 
     func body(content: Content) -> some View {
         content

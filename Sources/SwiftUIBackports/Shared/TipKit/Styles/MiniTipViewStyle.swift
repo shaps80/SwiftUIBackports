@@ -1,4 +1,5 @@
 import SwiftUI
+import TipKit
 import SwiftBackports
 
 @available(iOS 13, tvOS 13, macOS 11, watchOS 6, *)
@@ -14,11 +15,11 @@ extension Backport<Any> {
 @available(iOS 13, tvOS 13, macOS 11, watchOS 6, *)
 struct ConfiguredMiniTipView: View {
     typealias Configuration = Backport<Any>.MiniTipViewStyle.Configuration
-    @Tip var tip: Backport<Any>.AnyTip
+    var tip: BackportTip
     let configuration: Configuration
 
     init(configuration: Configuration) {
-        _tip = .init(tip: .init(configuration.tip))
+        tip = configuration.tip
         self.configuration = configuration
     }
 
