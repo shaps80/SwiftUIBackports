@@ -3,7 +3,7 @@ import SwiftUI
 import PhotosUI
 import SwiftBackports
 
-extension PHObject: Identifiable {
+extension PHObject: @retroactive Identifiable {
     public var id: String { localIdentifier }
 }
 #endif

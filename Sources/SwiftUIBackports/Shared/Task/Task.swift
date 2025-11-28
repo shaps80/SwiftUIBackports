@@ -6,6 +6,7 @@ import Combine
 @available(macOS, deprecated: 12.0)
 @available(tvOS, deprecated: 15.0)
 @available(watchOS, deprecated: 8.0)
+@MainActor
 public extension Backport where Wrapped: View {
 
     /// Adds an asynchronous task to perform when this view appears.

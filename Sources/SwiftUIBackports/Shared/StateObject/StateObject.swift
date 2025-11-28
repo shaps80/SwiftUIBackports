@@ -2,10 +2,10 @@ import Combine
 import SwiftUI
 import SwiftBackports
 
-@available(iOS, deprecated: 14.0)
-@available(macOS, deprecated: 11.0)
-@available(tvOS, deprecated: 14.0)
-@available(watchOS, deprecated: 7.0)
+@available(iOS, deprecated: 14.0, message: "Use SwiftUI.StateObject instead")
+@available(macOS, deprecated: 11.0, message: "Use SwiftUI.StateObject instead")
+@available(tvOS, deprecated: 14.0, message: "Use SwiftUI.StateObject instead")
+@available(watchOS, deprecated: 7.0, message: "Use SwiftUI.StateObject instead")
 public extension Backport where Wrapped: ObservableObject {
 
     /// A property wrapper type that instantiates an observable object.

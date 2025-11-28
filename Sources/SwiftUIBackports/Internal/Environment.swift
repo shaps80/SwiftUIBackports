@@ -6,7 +6,7 @@ import SwiftBackports
  */
 
 #if DEBUG
-extension EnvironmentValues: CustomDebugStringConvertible {
+extension EnvironmentValues: @retroactive CustomDebugStringConvertible {
     public var debugDescription: String {
         "\(self)"
             .trimmingCharacters(in: .init(["[", "]"]))

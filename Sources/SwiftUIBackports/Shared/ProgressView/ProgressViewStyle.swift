@@ -1,10 +1,10 @@
 import SwiftUI
 import SwiftBackports
 
-@available(iOS, deprecated: 14)
-@available(macOS, deprecated: 11)
-@available(tvOS, deprecated: 14.0)
-@available(watchOS, deprecated: 7.0)
+@available(iOS, deprecated: 14, message: "Use SwiftUI.ProgressViewStyle instead")
+@available(macOS, deprecated: 11, message: "Use SwiftUI.ProgressViewStyle instead")
+@available(tvOS, deprecated: 14.0, message: "Use SwiftUI.ProgressViewStyle instead")
+@available(watchOS, deprecated: 7.0, message: "Use SwiftUI.ProgressViewStyle instead")
 /// A type that applies standard interaction behavior to all progress views
 /// within a view hierarchy.
 ///
@@ -30,10 +30,11 @@ public protocol BackportProgressViewStyle {
     @ViewBuilder func makeBody(configuration: Configuration) -> Body
 }
 
-@available(iOS, deprecated: 14)
-@available(macOS, deprecated: 11)
-@available(tvOS, deprecated: 14.0)
-@available(watchOS, deprecated: 7.0)
+@available(iOS, deprecated: 14, message: "Use View.progressViewStyle instead")
+@available(macOS, deprecated: 11, message: "Use View.progressViewStyle instead")
+@available(tvOS, deprecated: 14.0, message: "Use View.progressViewStyle instead")
+@available(watchOS, deprecated: 7.0, message: "Use View.progressViewStyle instead")
+@MainActor
 public extension Backport where Wrapped: View {
     func progressViewStyle<S: BackportProgressViewStyle>(_ style: S) -> some View {
         wrapped.environment(\.backportProgressViewStyle, .init(style))

@@ -5,6 +5,7 @@ import SwiftBackports
 @available(tvOS, deprecated: 16)
 @available(macOS, deprecated: 13)
 @available(watchOS, deprecated: 9)
+@MainActor
 public extension Backport where Wrapped: View {
 
     /// Sets the visibility of the drag indicator on top of a sheet.

@@ -1,7 +1,5 @@
 import SwiftUI
 
-#if canImport(SwiftUIPlus)
-
 #if canImport(SafariServices)
 import SafariServices
 #endif
@@ -52,9 +50,7 @@ public extension Backport<Any>.OpenURLAction.Result {
         configuration.entersReaderIfAvailable = config.prefersReader
 
         let controller = SFSafariViewController(url: url, configuration: configuration)
-        if #available(iOS 14, *) {
-            controller.preferredControlTintColor = UIColor(config.tintColor)
-        }
+        controller.preferredControlTintColor = UIColor(config.tintColor)
         controller.dismissButtonStyle = config.dismissStyle.buttonStyle
 
         if window?.traitCollection.horizontalSizeClass == .regular {
@@ -87,4 +83,3 @@ public extension Backport<Any>.OpenURLAction.Result {
     }
 #endif
 }
-#endif

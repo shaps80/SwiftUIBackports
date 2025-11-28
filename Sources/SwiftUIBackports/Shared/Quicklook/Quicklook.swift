@@ -5,8 +5,8 @@ import SwiftBackports
 import QuickLook
 #endif
 
-@available(iOS, deprecated: 14)
-@available(macOS, deprecated: 11)
+@available(iOS, deprecated: 14, message: "Use QuickLook framework instead")
+@available(macOS, deprecated: 11, message: "Use QuickLook framework instead")
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 extension Backport where Wrapped: View {

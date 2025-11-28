@@ -4,7 +4,7 @@ import SwiftBackports
 #if os(iOS) || os(macOS)
 
 internal extension PlatformViewController {
-    func ancestor<ControllerType: PlatformViewController>(ofType type: ControllerType.Type) -> ControllerType? {
+    @MainActor func ancestor<ControllerType: PlatformViewController>(ofType type: ControllerType.Type) -> ControllerType? {
         var controller = parent
         while let c = controller {
             if let typed = c as? ControllerType {
@@ -45,6 +45,7 @@ internal extension PlatformViewController {
     }
 }
 
+@MainActor
 internal extension PlatformView {
     func ancestor<ViewType: PlatformView>(ofType type: ViewType.Type) -> ViewType? {
         var view = superview
@@ -103,39 +104,39 @@ internal struct Inspector {
     var sourceView: PlatformView
     var sourceController: PlatformViewController
 
-    func `any`<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
+    @MainActor func `any`<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
         ancestor(ofType: ViewType.self)
         ?? sibling(ofType: ViewType.self)
         ?? descendent(ofType: ViewType.self)
     }
 
-    func ancestor<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
+    @MainActor func ancestor<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
         hostView.ancestor(ofType: ViewType.self)
     }
 
-    func sibling<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
+    @MainActor func sibling<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
         hostView.sibling(ofType: ViewType.self)
     }
 
-    func descendent<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
+    @MainActor func descendent<ViewType: PlatformView>(ofType: ViewType.Type) -> ViewType? {
         hostView.descendent(ofType: ViewType.self)
     }
 
-    func `any`<ControllerType: PlatformViewController>(ofType: ControllerType.Type) -> ControllerType? {
+    @MainActor func `any`<ControllerType: PlatformViewController>(ofType: ControllerType.Type) -> ControllerType? {
         ancestor(ofType: ControllerType.self)
         ?? sibling(ofType: ControllerType.self)
         ?? descendent(ofType: ControllerType.self)
     }
 
-    func ancestor<ControllerType: PlatformViewController>(ofType: ControllerType.Type) -> ControllerType? {
+    @MainActor func ancestor<ControllerType: PlatformViewController>(ofType: ControllerType.Type) -> ControllerType? {
         sourceController.ancestor(ofType: ControllerType.self)
     }
 
-    func sibling<ControllerType: PlatformViewController>(ofType: ControllerType.Type) -> ControllerType? {
+    @MainActor func sibling<ControllerType: PlatformViewController>(ofType: ControllerType.Type) -> ControllerType? {
         sourceController.sibling(ofType: ControllerType.self)
     }
 
-    func descendent<ControllerType: PlatformViewController>(ofType: ControllerType.Type) -> ControllerType? {
+    @MainActor func descendent<ControllerType: PlatformViewController>(ofType: ControllerType.Type) -> ControllerType? {
         sourceController.descendent(ofType: ControllerType.self)
     }
 }
@@ -146,11 +147,11 @@ internal struct Proxy<T> {
 }
 
 extension View {
-    private func inject<Wrapped>(_ wrapped: Wrapped) -> some View where Wrapped: View {
+    @MainActor private func inject<Wrapped>(_ wrapped: Wrapped) -> some View where Wrapped: View {
         overlay(wrapped.frame(width: 0, height: 0))
     }
 
-    func `any`<T: PlatformView>(forType type: T.Type, body: @escaping (Proxy<T>) -> Void) -> some View {
+    @MainActor func `any`<T: PlatformView>(forType type: T.Type, body: @MainActor @Sendable @escaping (Proxy<T>) -> Void) -> some View {
         inject(InspectionView { inspector in
             inspector.any(ofType: T.self)
         } customize: { proxy in
@@ -158,7 +159,7 @@ extension View {
         })
     }
 
-    func ancestor<T: PlatformView>(forType type: T.Type, body: @escaping (Proxy<T>) -> Void) -> some View {
+    @MainActor func ancestor<T: PlatformView>(forType type: T.Type, body: @MainActor @Sendable @escaping (Proxy<T>) -> Void) -> some View {
         inject(InspectionView { inspector in
             inspector.ancestor(ofType: T.self)
         } customize: { proxy in
@@ -166,7 +167,7 @@ extension View {
         })
     }
 
-    func sibling<T: PlatformView>(forType type: T.Type, body: @escaping (Proxy<T>) -> Void) -> some View {
+    @MainActor func sibling<T: PlatformView>(forType type: T.Type, body: @MainActor @Sendable @escaping (Proxy<T>) -> Void) -> some View {
         inject(InspectionView { inspector in
             inspector.sibling(ofType: T.self)
         } customize: { proxy in
@@ -174,7 +175,7 @@ extension View {
         })
     }
 
-    func descendent<T: PlatformView>(forType type: T.Type, body: @escaping (Proxy<T>) -> Void) -> some View {
+    @MainActor func descendent<T: PlatformView>(forType type: T.Type, body: @MainActor @Sendable @escaping (Proxy<T>) -> Void) -> some View {
         inject(InspectionView { inspector in
             inspector.descendent(ofType: T.self)
         } customize: { proxy in
@@ -182,7 +183,7 @@ extension View {
         })
     }
 
-    func `any`<T: PlatformViewController>(forType type: T.Type, body: @escaping (Proxy<T>) -> Void) -> some View {
+    @MainActor func `any`<T: PlatformViewController>(forType type: T.Type, body: @MainActor @Sendable @escaping (Proxy<T>) -> Void) -> some View {
         inject(InspectionView { inspector in
             inspector.any(ofType: T.self)
         } customize: { proxy in
@@ -190,7 +191,7 @@ extension View {
         })
     }
 
-    func ancestor<T: PlatformViewController>(forType type: T.Type, body: @escaping (Proxy<T>) -> Void) -> some View {
+    @MainActor func ancestor<T: PlatformViewController>(forType type: T.Type, body: @MainActor @Sendable @escaping (Proxy<T>) -> Void) -> some View {
         inject(InspectionView { inspector in
             inspector.ancestor(ofType: T.self)
         } customize: { proxy in
@@ -198,7 +199,7 @@ extension View {
         })
     }
 
-    func sibling<T: PlatformViewController>(forType type: T.Type, body: @escaping (Proxy<T>) -> Void) -> some View {
+    @MainActor func sibling<T: PlatformViewController>(forType type: T.Type, body: @MainActor @Sendable @escaping (Proxy<T>) -> Void) -> some View {
         inject(InspectionView { inspector in
             inspector.sibling(ofType: T.self)
         } customize: { proxy in
@@ -206,7 +207,7 @@ extension View {
         })
     }
 
-    func descendent<T: PlatformViewController>(forType type: T.Type, body: @escaping (Proxy<T>) -> Void) -> some View {
+    @MainActor func descendent<T: PlatformViewController>(forType type: T.Type, body: @MainActor @Sendable @escaping (Proxy<T>) -> Void) -> some View {
         inject(InspectionView { inspector in
             inspector.descendent(ofType: T.self)
         } customize: { proxy in

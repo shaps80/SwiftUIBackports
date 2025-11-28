@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftBackports
 
+@MainActor
 public extension Backport where Wrapped: View {
 
     /// Layers the views that you specify behind this view.

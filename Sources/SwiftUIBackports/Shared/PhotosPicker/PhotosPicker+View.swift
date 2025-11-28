@@ -4,6 +4,7 @@ import PhotosUI
 import SwiftBackports
 
 @available(iOS, introduced: 14, deprecated: 16.0)
+@MainActor
 public extension Backport where Wrapped: View {
     /// Presents a Photos picker that selects a `PhotosPickerItem` from a given photo library.
     ///
@@ -75,6 +76,7 @@ public extension Backport where Wrapped: View {
 }
 
 @available(iOS, introduced: 13, deprecated: 14.0)
+@MainActor
 public extension Backport where Wrapped: View {
     /// Presents a Photos picker that selects a `PhotosPickerItem` from a given photo library.
     ///

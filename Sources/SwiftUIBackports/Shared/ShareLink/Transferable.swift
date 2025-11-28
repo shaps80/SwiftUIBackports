@@ -3,15 +3,11 @@ import SwiftBackports
 #if os(macOS) || os(iOS)
 import SwiftUI
 
-@available(iOS, deprecated: 16.0)
-@available(macOS, deprecated: 13.0)
-@available(watchOS, deprecated: 9.0)
-
 /// TEMPORARY, DO NOT RELY ON THIS!
 /// 
 /// - Note: This **will be removed** in an upcoming release, regardless of semantic versioning
-@available(iOS, message: "This **will be removed** in an upcoming release, regardless of semantic versioning")
-@available(macOS, message: "This **will be removed** in an upcoming release, regardless of semantic versioning")
+@available(iOS, deprecated: 16, message: "This **will be removed** in an upcoming release, regardless of semantic versioning")
+@available(macOS, deprecated: 13, message: "This **will be removed** in an upcoming release, regardless of semantic versioning")
 public protocol Shareable {
     var pathExtension: String { get }
     var itemProvider: NSItemProvider? { get }

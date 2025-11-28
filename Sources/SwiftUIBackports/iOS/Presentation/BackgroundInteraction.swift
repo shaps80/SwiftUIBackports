@@ -45,6 +45,7 @@ extension Backport<Any> {
 @available(tvOS, deprecated: 16.4)
 @available(macOS, deprecated: 13.3)
 @available(watchOS, deprecated: 9.4)
+@MainActor
 public extension Backport where Wrapped: View {
     /// Controls whether people can interact with the view behind a
     /// presentation.

@@ -5,6 +5,7 @@ import SwiftBackports
 @available(tvOS, deprecated: 16)
 @available(watchOS, deprecated: 9)
 @available(macOS, deprecated: 13)
+@MainActor
 public extension Backport where Wrapped: View {
 
     /// Associates a destination view with a presented data type for use within

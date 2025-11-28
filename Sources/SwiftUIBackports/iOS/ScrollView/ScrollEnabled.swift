@@ -5,6 +5,7 @@ import SwiftBackports
 @available(tvOS, deprecated: 16)
 @available(macOS, deprecated: 13)
 @available(watchOS, deprecated: 9)
+@MainActor
 extension Backport where Wrapped: View {
 
     /// Disables or enables scrolling in scrollable views.

@@ -2,10 +2,11 @@ import SwiftUI
 import SwiftBackports
 import Combine
 
-@available(iOS, deprecated: 14.0)
-@available(macOS, deprecated: 11.0)
-@available(tvOS, deprecated: 14.0)
-@available(watchOS, deprecated: 7.0)
+@available(iOS, deprecated: 14.0, message: "Use View.onChange instead")
+@available(macOS, deprecated: 11.0, message: "Use View.onChange instead")
+@available(tvOS, deprecated: 14.0, message: "Use View.onChange instead")
+@available(watchOS, deprecated: 7.0, message: "Use View.onChange instead")
+@MainActor
 public extension Backport where Wrapped: View {
 
     /// Adds a modifier for this view that fires an action when a specific

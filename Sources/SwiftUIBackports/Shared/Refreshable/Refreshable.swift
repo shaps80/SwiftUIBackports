@@ -5,6 +5,7 @@ import SwiftBackports
 @available(macOS, deprecated: 13)
 @available(tvOS, deprecated: 16)
 @available(watchOS, deprecated: 9)
+@MainActor
 extension Backport where Wrapped: View {
 
     /// Marks this view as refreshable.
@@ -24,7 +25,7 @@ extension Backport where Wrapped: View {
     ///   an update of model data displayed in the modified view. Use
     ///   `await` in front of any asynchronous calls inside the handler.
     /// - Returns: A view with a new refresh action in its environment.
-    public func refreshable(action: @escaping @Sendable () async -> Void) -> some View {
+    @MainActor public func refreshable(action: @MainActor @escaping @Sendable () async -> Void) -> some View {
         #if os(iOS)
         wrapped
             .environment(\.backportRefresh, Backport<Any>.RefreshAction(action))
@@ -47,11 +48,11 @@ extension Backport where Wrapped: View {
 private final class RefreshControl: UIRefreshControl {
     var handler: (@Sendable () async -> Void)?
 
-    init(_ handler: @Sendable @escaping () async -> Void) {
+    init(_ handler: @MainActor @Sendable @escaping () async -> Void) {
         super.init()
         self.handler = { [weak self] in
             await handler()
-            await self?.endRefreshing()
+            self?.endRefreshing()
         }
 
         addTarget(self, action: #selector(update), for: .valueChanged)
@@ -117,10 +118,10 @@ extension Backport where Wrapped == Any {
     /// user to cancel the task. For more information, see
     /// [Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
     /// in *The Swift Programming Language*.
-    public struct RefreshAction {
-        private var action: () async -> Void
+    public struct RefreshAction: Sendable {
+        private var action: @MainActor @Sendable () async -> Void
 
-        internal init(_ action: @escaping () async -> Void) {
+        internal init(_ action: @MainActor @Sendable @escaping () async -> Void) {
             self.action = action
         }
 
@@ -129,10 +130,6 @@ extension Backport where Wrapped == Any {
         }
     }
 
-}
-
-private struct RefreshEnvironmentKey: EnvironmentKey {
-    static let defaultValue: Backport<Any>.RefreshAction? = nil
 }
 
 @available(iOS, deprecated: 16)
@@ -180,9 +177,5 @@ public extension EnvironmentValues {
     /// user to cancel the task. For more information, see
     /// [Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
     /// in *The Swift Programming Language*.
-    var backportRefresh: Backport<Any>.RefreshAction? {
-        get { self[RefreshEnvironmentKey.self] }
-        set { self[RefreshEnvironmentKey.self] = newValue }
-    }
-
+    @Entry var backportRefresh: Backport<Any>.RefreshAction?
 }

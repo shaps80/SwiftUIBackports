@@ -1,10 +1,10 @@
 import SwiftUI
 import SwiftBackports
 
-@available(iOS, deprecated: 14)
-@available(macOS, deprecated: 11)
-@available(tvOS, deprecated: 14)
-@available(watchOS, deprecated: 7)
+@available(iOS, deprecated: 14, message: "Use SwiftUI.AppStorage instead")
+@available(macOS, deprecated: 11, message: "Use SwiftUI.AppStorage instead")
+@available(tvOS, deprecated: 14, message: "Use SwiftUI.AppStorage instead")
+@available(watchOS, deprecated: 7, message: "Use SwiftUI.AppStorage instead")
 extension Backport where Wrapped == Any {
 
     /// A property wrapper type that reflects a value from `Store` and

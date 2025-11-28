@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftBackports
 
 #if os(iOS)
+@MainActor
 public extension Backport where Wrapped: View {
     func focused<Value>(_ binding: Binding<Value?>, equals value: Value) -> some View where Value: Hashable {
         wrapped.modifier(FocusModifier(focused: binding, value: value))

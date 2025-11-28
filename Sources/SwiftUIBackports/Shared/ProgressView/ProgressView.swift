@@ -1,10 +1,10 @@
 import SwiftUI
 import SwiftBackports
 
-@available(iOS, deprecated: 14)
-@available(macOS, deprecated: 11)
-@available(tvOS, deprecated: 14.0)
-@available(watchOS, deprecated: 7.0)
+@available(iOS, deprecated: 14, message: "Use SwiftUI.ProgressView instead")
+@available(macOS, deprecated: 11, message: "Use SwiftUI.ProgressView instead")
+@available(tvOS, deprecated: 14.0, message: "Use SwiftUI.ProgressView instead")
+@available(watchOS, deprecated: 7.0, message: "Use SwiftUI.ProgressView instead")
 public extension Backport where Wrapped == Any {
     struct ProgressView<Label: View, CurrentValueLabel: View>: View {
         @Environment(\.backportProgressViewStyle) private var style
@@ -22,9 +22,9 @@ public extension Backport where Wrapped == Any {
     }
 }
 
-@available(iOS, deprecated: 14)
-@available(macOS, deprecated: 11)
-@available(tvOS, deprecated: 14.0)
+@available(iOS, deprecated: 14, message: "Use SwiftUI.ProgressView instead")
+@available(macOS, deprecated: 11, message: "Use SwiftUI.ProgressView instead")
+@available(tvOS, deprecated: 14.0, message: "Use SwiftUI.ProgressView instead")
 @available(watchOS, unavailable)
 public extension Backport.ProgressView where Wrapped == Any, CurrentValueLabel == EmptyView {
     /// Creates a progress view for showing indeterminate progress, without a
@@ -75,10 +75,10 @@ public extension Backport.ProgressView where Wrapped == Any, CurrentValueLabel =
     }
 }
 
-@available(iOS, deprecated: 14)
-@available(macOS, deprecated: 11)
-@available(tvOS, deprecated: 14.0)
-@available(watchOS, deprecated: 7.0)
+@available(iOS, deprecated: 14, message: "Use SwiftUI.ProgressView instead")
+@available(macOS, deprecated: 11, message: "Use SwiftUI.ProgressView instead")
+@available(tvOS, deprecated: 14.0, message: "Use SwiftUI.ProgressView instead")
+@available(watchOS, deprecated: 7.0, message: "Use SwiftUI.ProgressView instead")
 extension Backport.ProgressView where Wrapped == Any {
 
     /// Creates a progress view for showing determinate progress.

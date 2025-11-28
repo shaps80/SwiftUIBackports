@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftBackports
 
+@MainActor
 public extension Backport where Wrapped: View {
 
     /// Conditionally prevents interactive dismissal of a popover or a sheet.

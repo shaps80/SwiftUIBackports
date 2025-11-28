@@ -37,6 +37,7 @@ public extension Backport<Any> {
 @available(tvOS, deprecated: 16.4)
 @available(macOS, deprecated: 13.3)
 @available(watchOS, deprecated: 9.4)
+@MainActor
 public extension Backport where Wrapped: View {
     @ViewBuilder
     func presentationContentInteraction(_ interaction: Backport<Any>.PresentationContentInteraction) -> some View {

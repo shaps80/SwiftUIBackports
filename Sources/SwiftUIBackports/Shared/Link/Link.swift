@@ -31,10 +31,10 @@ extension Backport<Any> {
     /// label could be modified with a custom ``View/font(_:)`` or
     /// ``View/foregroundColor(_:)`` to customize the appearance of the link in
     /// your app's UI.
-    @available(iOS, deprecated: 14)
-    @available(tvOS, deprecated: 14)
-    @available(macOS, deprecated: 11)
-    @available(watchOS, deprecated: 7)
+    @available(iOS, deprecated: 14, message: "Use SwiftUI.Link instead")
+    @available(tvOS, deprecated: 14, message: "Use SwiftUI.Link instead")
+    @available(macOS, deprecated: 11, message: "Use SwiftUI.Link instead")
+    @available(watchOS, deprecated: 7, message: "Use SwiftUI.Link instead")
     public struct Link<Label>: View where Label: View {
         @Environment(\.backportOpenURL) private var openUrl
         let label: Label

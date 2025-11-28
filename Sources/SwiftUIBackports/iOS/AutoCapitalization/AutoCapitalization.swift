@@ -3,6 +3,7 @@ import SwiftBackports
 
 #if os(iOS)
 @available(iOS, deprecated: 15)
+@MainActor
 public extension Backport where Wrapped: View {
     /// Sets how often the shift key in the keyboard is automatically enabled.
     ///

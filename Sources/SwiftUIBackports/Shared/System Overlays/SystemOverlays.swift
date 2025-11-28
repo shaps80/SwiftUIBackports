@@ -5,6 +5,7 @@ import SwiftBackports
 @available(macOS, deprecated: 13)
 @available(tvOS, deprecated: 16)
 @available(watchOS, deprecated: 9)
+@MainActor
 public extension Backport where Wrapped: View {
     /// Sets the preferred visibility of the non-transient system views
     /// overlaying the app.

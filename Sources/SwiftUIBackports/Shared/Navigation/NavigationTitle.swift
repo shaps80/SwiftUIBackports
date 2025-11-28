@@ -4,6 +4,7 @@ import SwiftBackports
 @available(iOS, deprecated: 14)
 @available(watchOS, deprecated: 7)
 @available(tvOS, deprecated: 14)
+@MainActor
 public extension Backport where Wrapped: View {
 
     @ViewBuilder

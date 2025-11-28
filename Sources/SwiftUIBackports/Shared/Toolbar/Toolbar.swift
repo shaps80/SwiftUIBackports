@@ -179,6 +179,7 @@ private extension Backport where Wrapped: View {
 }
 
 @available(iOS, introduced: 13, deprecated: 14)
+@MainActor
 public extension Backport where Wrapped: View {
     @ViewBuilder
     func toolbar(@Backport<Any>.ToolbarContentBuilder _ items: () -> [Backport<Any>.ToolbarItem]) -> some View {

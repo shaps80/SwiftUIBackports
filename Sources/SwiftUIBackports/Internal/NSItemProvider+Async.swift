@@ -20,7 +20,7 @@ public extension NSItemProvider {
     }
 }
 
-extension NSData: NSItemProviderReading {
+extension NSData: @retroactive NSItemProviderReading {
     public static var readableTypeIdentifiersForItemProvider: [String] { [String(kUTTypeData)] }
     public static func object(withItemProviderData data: Data, typeIdentifier: String) throws -> Self { NSData(data: data) as! Self }
 }
