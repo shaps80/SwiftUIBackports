@@ -33,4 +33,16 @@ public extension Backport where Wrapped: View {
         #endif
     }
 
+    @ViewBuilder
+    func navigationTitle(_ title: Text) -> some View {
+#if os(macOS)
+        if #available(macOS 11, *) {
+            wrapped.navigationTitle(title)
+        } else {
+            wrapped
+        }
+#else
+        wrapped.navigationBarTitle(title)
+#endif
+    }
 }
