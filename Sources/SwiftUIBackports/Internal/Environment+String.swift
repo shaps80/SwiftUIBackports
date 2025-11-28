@@ -137,6 +137,10 @@ internal struct EnvironmentContains: DynamicProperty {
     }
 
     func update() {
-        wrappedValue = env.containsValue(forKey: key)
+        if #available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *) {
+            wrappedValue = env.labelsVisibility == .hidden
+        } else {
+            wrappedValue = env.containsValue(forKey: key)
+        }
     }
 }
