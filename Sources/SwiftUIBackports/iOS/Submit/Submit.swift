@@ -17,7 +17,7 @@ public extension Backport where Wrapped: View {
     ///
     @ViewBuilder
     func onSubmit(_ action: @escaping () -> Void) -> some View {
-        Group {
+        SwiftUI.Group {
             if #available(iOS 15, *) {
                 wrapped
                     .onSubmit(action)
@@ -35,7 +35,7 @@ public extension Backport where Wrapped: View {
     /// view hierarchy using the ``View/backport.onSubmit(of:_:)`` modifier.
     @ViewBuilder
     func submitLabel(_ label: Backport<Any>.SubmitLabel) -> some View {
-        Group {
+        SwiftUI.Group {
             if #available(iOS 15, *) {
                 wrapped
                     .submitLabel(.init(label))

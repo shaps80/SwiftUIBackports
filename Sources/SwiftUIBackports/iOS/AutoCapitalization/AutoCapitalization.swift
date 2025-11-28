@@ -25,7 +25,7 @@ public extension Backport where Wrapped: View {
     /// defined in the `Backport<Any>.TextInputAutocapitalization` struct or nil.
     @ViewBuilder
     func textInputAutocapitalization(_ autocapitalization: Backport<Any>.TextInputAutocapitalization?) -> some View {
-        Group {
+        SwiftUI.Group {
             if #available(iOS 16, *) {
                 wrapped.textInputAutocapitalization(textInputAutocapitalizationType(autocapitalization))
             } else {

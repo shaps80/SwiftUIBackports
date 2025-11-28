@@ -11,7 +11,7 @@ public extension Backport where Wrapped == Any {
         let config: Backport<Any>.ProgressViewStyleConfiguration
 
         public var body: some View {
-            Group {
+            SwiftUI.Group {
                 if let style = style {
                     style.makeBody(configuration: config)
                 } else {
