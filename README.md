@@ -20,10 +20,6 @@ There is also a [Demo project](https://github.com/shaps80/SwiftUIBackportsDemo) 
 
 > Lastly, I hope this repo also serves as a great resource for _how_ you can backport effectively with minimal hacks 👍
 
-## Documentation
-
-Full [documentation](https://shaps80.github.io/SwiftUIBackports/documentation/SwiftUIBackports) can be found [here](https://shaps80.github.io/SwiftUIBackports/documentation/SwiftUIBackports).
-
 ## Sponsor
 
 Building useful libraries like these, takes time away from my family. I build these tools in my spare time because I feel its important to give back to the community. Please consider [Sponsoring](https://github.com/sponsors/shaps80) me as it helps keep me working on useful libraries like these 😬
