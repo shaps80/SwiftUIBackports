@@ -18,7 +18,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/shaps80/SwiftBackports", from: "1.0.3"),
+        .package(url: "https://github.com/shaps80/SwiftBackports", from: "26.0.0"),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
     ],
     targets: [
