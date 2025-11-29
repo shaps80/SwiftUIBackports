@@ -22,6 +22,35 @@ extension Backport<Any> {
         }
 
         public var body: some View {
+            SwiftUI.Group {
+#if os(iOS)
+                iOS()
+#else
+                macOS()
+#endif
+            }
+        }
+
+        private func macOS() -> some View {
+            VStack(spacing: 10) {
+                VStack(spacing: 15) {
+                    label
+                        .backport.labelStyle(.contentUnavailable)
+
+                    description
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                HStack(spacing: 5) {
+                    actions
+                }
+            }
+            .padding()
+            .frame(minWidth: 400)
+        }
+
+        private func iOS() -> some View {
             VStack(spacing: 20) {
                 VStack {
                     label
@@ -33,33 +62,13 @@ extension Backport<Any> {
                         .multilineTextAlignment(.center)
                 }
 
-                if #available(iOS 16, tvOS 16, macOS 13, watchOS 9, *) {
-                    ViewThatFits {
-#if os(macOS)
-                        HStack { actions }
-#else
-                        VStack(spacing: 20) { actions }
-#endif
-                    }
-                    .font(.subheadline)
-                } else {
-                    VStack { actions }
+                VStack(spacing: 15) {
+                    actions
                 }
+                .font(.subheadline)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .extendBackground()
             .padding()
-        }
-    }
-}
-
-private extension View {
-    @ViewBuilder
-    func extendBackground() -> some View {
-        if #available(iOS 26, tvOS 26, macOS 26, watchOS 26, *) {
-            backgroundExtensionEffect()
-        } else {
-            self
         }
     }
 }
@@ -97,6 +106,7 @@ public extension Backport<Any>.ContentUnavailableView where Label == Backport<An
     }
 }
 
+#if os(iOS)
 private extension BackportLabelStyle where Self == ContentUnavailableLabelStyle {
     static var contentUnavailable: Self { .init() }
 }
@@ -109,16 +119,36 @@ private struct ContentUnavailableLabelStyle: BackportLabelStyle {
                 .font(.largeTitle.weight(.medium))
                 .largeImage()
 
-            if #available(iOS 14, tvOS 14, macOS 11, watchOS 7, *) {
+            if #available(iOS 14, *) {
                 configuration.title
                     .font(.title2.weight(.bold))
             } else {
                 configuration.title
-                    .font(.title.weight(.semibold))
+                    .font(.title.weight(.bold))
             }
         }
     }
 }
+#else
+private extension BackportLabelStyle where Self == ContentUnavailableLabelStyle {
+    static var contentUnavailable: Self { .init() }
+}
+
+private struct ContentUnavailableLabelStyle: BackportLabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        VStack(spacing: 20) {
+            configuration.icon
+                .foregroundColor(.secondary.opacity(0.5))
+                .font(.largeTitle.weight(.medium))
+                .largeImage()
+
+            configuration.title
+                .foregroundColor(.secondary)
+                .font(.largeTitle.weight(.bold))
+        }
+    }
+}
+#endif
 
 private extension View {
     @ViewBuilder
