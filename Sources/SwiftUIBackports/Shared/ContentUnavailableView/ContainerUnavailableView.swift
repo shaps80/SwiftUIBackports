@@ -35,8 +35,11 @@ extension Backport<Any> {
 
                 if #available(iOS 16, tvOS 16, macOS 13, watchOS 9, *) {
                     ViewThatFits {
+#if os(macOS)
                         HStack { actions }
-                        VStack { actions }
+#else
+                        VStack(spacing: 20) { actions }
+#endif
                     }
                     .font(.subheadline)
                 } else {
