@@ -39,26 +39,26 @@ extension Backport<Any> {
         public typealias Index = Int
         public typealias Element = Subview
 
-        public nonisolated var startIndex: Int { children.startIndex }
-        public nonisolated var endIndex: Int { children.endIndex }
+        public var startIndex: Int { children.startIndex }
+        public var endIndex: Int { children.endIndex }
 
-        public nonisolated func index(before i: Int) -> Int {
+        public func index(before i: Int) -> Int {
             children.index(before: i)
         }
 
-        public nonisolated func index(after i: Int) -> Int {
+        public func index(after i: Int) -> Int {
             children.index(after: i)
         }
 
-        public nonisolated subscript(position: Int) -> Subview {
+        public subscript(position: Int) -> Subview {
             .init(children[position])
         }
 
-        public nonisolated subscript(bounds: Range<Int>) -> SubviewsCollectionSlice {
+        public subscript(bounds: Range<Int>) -> SubviewsCollectionSlice {
             .init(children: children[bounds])
         }
 
-        nonisolated fileprivate let children: _VariadicView.Children
+        fileprivate let children: _VariadicView.Children
 
         public var body: some View {
             SwiftUI.ForEach(children, id: \.id) { $0.id($0.id) }
@@ -72,14 +72,14 @@ extension Backport<Any> {
         public typealias Indices = Range<Int>
         public typealias Index = Int
 
-        public nonisolated var startIndex: Int { children.startIndex }
-        public nonisolated var endIndex: Int { children.endIndex }
+        public var startIndex: Int { children.startIndex }
+        public var endIndex: Int { children.endIndex }
 
-        public nonisolated subscript(position: Int) -> Subview {
+        public subscript(position: Int) -> Subview {
             .init(children[position])
         }
 
-        public nonisolated subscript(bounds: Range<Int>) -> SubviewsCollectionSlice {
+        public subscript(bounds: Range<Int>) -> SubviewsCollectionSlice {
             .init(children: children[bounds])
         }
 

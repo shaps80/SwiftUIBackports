@@ -24,22 +24,22 @@ extension Backport<Any> {
         public typealias Index = Int
         public typealias Element = Subview
 
-        public nonisolated var startIndex: Int { children.startIndex }
-        public nonisolated var endIndex: Int { children.endIndex }
+        public var startIndex: Int { children.startIndex }
+        public var endIndex: Int { children.endIndex }
 
-        public nonisolated func index(before i: Int) -> Int {
+        public func index(before i: Int) -> Int {
             children.index(before: i)
         }
 
-        public nonisolated func index(after i: Int) -> Int {
+        public func index(after i: Int) -> Int {
             children.index(after: i)
         }
 
-        public nonisolated subscript(index: Int) -> Subview {
+        public subscript(index: Int) -> Subview {
             .init(children[index])
         }
 
-        nonisolated fileprivate let children: _VariadicView.Children
+        fileprivate let children: _VariadicView.Children
         let content: (Subview) -> Content
 
         public var body: some View {
