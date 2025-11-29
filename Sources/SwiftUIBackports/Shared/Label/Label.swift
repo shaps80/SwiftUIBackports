@@ -127,7 +127,6 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
 
 }
 
-@available(macOS, introduced: 11, message: "SFSymbols support was only introduced in macOS 11")
 extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
 
     /// Creates a label with a system icon image and a title generated from a
@@ -137,7 +136,15 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
     ///    - titleKey: A title generated from a localized string.
     ///    - systemImage: The name of the image resource to lookup.
     public init(_ titleKey: LocalizedStringKey, systemImage name: String) {
+#if os(macOS)
+        if #available(macOS 11, *) {
+            self.init(title: { Text(titleKey) }, icon: { Image(systemName: name) })
+        } else {
+            self.init(title: { Text(titleKey) }, icon: { Image("SFSymbold not supported on macOS 11") })
+        }
+#else
         self.init(title: { Text(titleKey) }, icon: { Image(systemName: name) })
+#endif
     }
 
     /// Creates a label with a system icon image and a title generated from a
@@ -147,7 +154,15 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
     ///    - title: A string used as the label's title.
     ///    - systemImage: The name of the image resource to lookup.
     public init<S>(_ title: S, systemImage name: String) where S: StringProtocol {
+#if os(macOS)
+        if #available(macOS 11, *) {
+            self.init(title: { Text(title) }, icon: { Image(systemName: name) })
+        } else {
+            self.init(title: { Text(title) }, icon: { Image("SFSymbold not supported on macOS 11") })
+        }
+#else
         self.init(title: { Text(title) }, icon: { Image(systemName: name) })
+#endif
     }
 
 }
