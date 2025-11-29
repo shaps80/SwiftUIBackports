@@ -32,24 +32,21 @@ public extension Backport where Wrapped: View {
             wrapped.modifier(ChangeModifier(value: value, action: action))
         }
     }
-
 }
 
 private struct ChangeModifier<Value: Equatable>: ViewModifier {
-    let value: Value
     let action: (Value) -> Void
 
-    @State var oldValue: Value?
+    @State var oldValue: Value
 
     init(value: Value, action: @escaping (Value) -> Void) {
-        self.value = value
         self.action = action
         _oldValue = .init(initialValue: value)
     }
 
     func body(content: Content) -> some View {
         content
-            .onReceive(Just(value)) { newValue in
+            .onReceive(Just(oldValue)) { newValue in
                 guard newValue != oldValue else { return }
                 action(newValue)
                 oldValue = newValue
