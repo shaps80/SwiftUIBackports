@@ -11,6 +11,8 @@ extension Backport<Any> {
         let description: Description
         let actions: Actions
 
+        @Environment(\.backportFallbackMode) private var fallbackMode
+
         public init(
             @ViewBuilder label: () -> Label,
             @ViewBuilder description: () -> Description = { EmptyView() },
@@ -23,11 +25,21 @@ extension Backport<Any> {
 
         public var body: some View {
             SwiftUI.Group {
+                if #available(macOS 14.0, *), fallbackMode.allowFallback {
+                    SwiftUI.ContentUnavailableView {
+                        label
+                    } description: {
+                        description
+                    } actions: {
+                        actions
+                    }
+                } else {
 #if os(iOS)
-                iOS()
+                    iOS()
 #else
-                macOS()
+                    macOS()
 #endif
+                }
             }
         }
 
@@ -46,8 +58,9 @@ extension Backport<Any> {
                     actions
                 }
             }
-            .padding()
-            .frame(minWidth: 400)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 40)
+            .frame(maxWidth: 400)
         }
 
         private func iOS() -> some View {
@@ -145,6 +158,7 @@ private struct ContentUnavailableLabelStyle: BackportLabelStyle {
             configuration.title
                 .foregroundColor(.secondary)
                 .font(.largeTitle.weight(.bold))
+				.multilineTextAlignment(.center)
         }
     }
 }
@@ -167,6 +181,21 @@ private extension View {
 
 #Preview {
     VStack {
+        Text("Disabled Fallback (enforced back-port)")
+        Backport.ContentUnavailableView {
+            Backport.Label("Backport", systemImage: "star")
+        } description: {
+            Text("A description for the placeholder")
+        } actions: {
+            Button("Primary") { }
+            Button("Secondary") { }
+        }
+        .backportFallbackMode(.disable)
+        .background(Color.gray.opacity(0.3))
+
+        Divider()
+
+        Text("Automatic Fallback to Native")
         Backport.ContentUnavailableView {
             Backport.Label("Backport", systemImage: "star")
         } description: {
@@ -176,13 +205,13 @@ private extension View {
             Button("Secondary") { }
         }
         .background(Color.gray.opacity(0.3))
-        .padding()
 
         Divider()
 
         if #available(iOS 17, tvOS 17, macOS 14, watchOS 10, *) {
+            Text("Native SwiftUI")
             ContentUnavailableView {
-                Label("Native", systemImage: "star")
+                Label("This is a lengthy string", systemImage: "star")
             } description: {
                 Text("A description for the placeholder")
             } actions: {
@@ -190,7 +219,7 @@ private extension View {
                 Button("Secondary") { }
             }
             .background(Color.gray.opacity(0.3))
-            .padding()
         }
     }
+    .frame(width: 200, height: 700)
 }

@@ -87,18 +87,36 @@ extension Backport where Wrapped == Any {
     ///     }
     ///
     public struct Label<Title, Icon>: View where Title: View, Icon: View {
+        let title: Title?
+        let icon: Icon?
 
         @Environment(\.self) private var environment
-        @Environment(\.backportLabelStyle) private var style
+        @Environment(\.backportLabelStyle) private var backportStyle
+		@Environment(\.backportFallbackMode) private var fallbackMode
         private var config: Backport<Any>.LabelStyleConfiguration
 
         /// Creates a label with a custom title and icon.
-        public init(@ViewBuilder title: () -> Title, @ViewBuilder icon: () -> Icon) {
+        public init(
+            @ViewBuilder title: () -> Title,
+            @ViewBuilder icon: () -> Icon
+        ) {
+            self.title = title()
+            self.icon = icon()
             config = .init(title: .init(title()), icon: .init(icon()))
         }
 
         @MainActor public var body: some View {
-            style.makeBody(configuration: config.environment(environment))
+            SwiftUI.Group {
+                if #available(macOS 14.0, *), fallbackMode.allowFallback {
+                    SwiftUI.Label {
+                        title
+                    } icon: {
+                        icon
+                    }
+                } else {
+                    backportStyle.makeBody(configuration: config.environment(environment))
+                }
+            }
         }
     }
 
@@ -140,7 +158,7 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
         if #available(macOS 11, *) {
             self.init(title: { Text(titleKey) }, icon: { Image(systemName: name) })
         } else {
-            self.init(title: { Text(titleKey) }, icon: { Image("SFSymbold not supported on macOS 11") })
+            self.init(title: { Text(titleKey) }, icon: { Image("SF Symbole not supported on macOS 11") })
         }
 #else
         self.init(title: { Text(titleKey) }, icon: { Image(systemName: name) })
@@ -158,7 +176,7 @@ extension Backport.Label where Wrapped == Any, Title == Text, Icon == Image {
         if #available(macOS 11, *) {
             self.init(title: { Text(title) }, icon: { Image(systemName: name) })
         } else {
-            self.init(title: { Text(title) }, icon: { Image("SFSymbold not supported on macOS 11") })
+            self.init(title: { Text(title) }, icon: { Image("SF Symbole not supported on macOS 11") })
         }
 #else
         self.init(title: { Text(title) }, icon: { Image(systemName: name) })
@@ -190,6 +208,52 @@ extension Backport.Label where Wrapped == Any {
     /// - Parameter configuration: The label style to use.
     public init(_ configuration: Backport.LabelStyleConfiguration) {
         self.config = configuration
+        self.title = configuration.title as? Title
+        self.icon = configuration.icon as? Icon
     }
 
+}
+
+#Preview {
+	VStack {
+		Text("Disabled Fallback (enforced back-port)")
+		Backport.Label {
+			Text("This is a lengthy string")
+		} icon: {
+			if #available(macOS 11.0, *) {
+				Image(systemName: "star")
+			} else {
+				// Fallback on earlier versions
+			}
+		}
+		.background(Color.gray.opacity(0.3))
+		.backportFallbackMode(.disable)
+
+		Divider()
+
+		Text("Automatic Fallback to Native")
+		Backport.Label {
+			Text("This is a lengthy string")
+		} icon: {
+			if #available(macOS 11.0, *) {
+				Image(systemName: "star")
+			} else {
+				// Fallback on earlier versions
+			}
+		}
+		.background(Color.gray.opacity(0.3))
+
+		Divider()
+
+		if #available(macOS 11.0, *) {
+			Text("Native SwiftUI")
+			Label {
+				Text("This is a lengthy string")
+			} icon: {
+				Image(systemName: "star")
+			}
+			.background(Color.gray.opacity(0.3))
+		}
+	}
+	.frame(width: 200, height: 200)
 }
