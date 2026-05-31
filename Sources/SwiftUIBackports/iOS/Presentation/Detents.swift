@@ -126,13 +126,20 @@ public extension Backport<Any> {
 
         /// A custom detent with the specified height.
         ///
-        /// On iOS 16+ this is resolved through
+        /// Resolved through
         /// ``UISheetPresentationController/Detent/custom(identifier:resolver:)``
-        /// with a constant resolver. On iOS 15 there is no native equivalent —
-        /// the sheet falls back to ``medium`` and emits a runtime warning the
-        /// first time the fallback is hit per process.
+        /// with a constant resolver.
+        ///
+        /// Marked `@available(iOS 16, *)` because the underlying
+        /// `Detent.custom(...)` API was only added in iOS 16; iOS 15's
+        /// `UISheetPresentationController` has no equivalent. Exposing this
+        /// factory through the `Backport` namespace gives callers that adopt
+        /// `.backport.*` API shapes consistent factory names once their
+        /// deployment target reaches iOS 16, without forcing them to switch
+        /// to a different module just for these two detents.
         ///
         /// - Parameter height: The height of the detent in points.
+        @available(iOS 16, *)
         public static func height(_ height: CGFloat) -> PresentationDetent {
             .init(id: .init(rawValue: "\(Identifier.heightPrefix)\(height)"))
         }
@@ -140,13 +147,17 @@ public extension Backport<Any> {
         /// A custom detent with a height that's a fraction of the available
         /// detent height.
         ///
-        /// On iOS 16+ this is resolved through
+        /// Resolved through
         /// ``UISheetPresentationController/Detent/custom(identifier:resolver:)``
-        /// using `fraction * context.maximumDetentValue`. On iOS 15 there is no
-        /// native equivalent — the sheet falls back to ``medium`` and emits a
-        /// runtime warning the first time the fallback is hit per process.
+        /// using `fraction * context.maximumDetentValue`.
+        ///
+        /// Marked `@available(iOS 16, *)` because the underlying
+        /// `Detent.custom(...)` API was only added in iOS 16; iOS 15's
+        /// `UISheetPresentationController` has no equivalent. See
+        /// ``height(_:)`` for the rationale around the `Backport` namespace.
         ///
         /// - Parameter fraction: The fraction of the available detent height.
+        @available(iOS 16, *)
         public static func fraction(_ fraction: CGFloat) -> PresentationDetent {
             .init(id: .init(rawValue: "\(Identifier.fractionPrefix)\(fraction)"))
         }
@@ -177,6 +188,12 @@ public extension Backport<Any> {
         /// Heights and fractions sort by numeric value; `.medium` and `.large`
         /// are placed at conservative defaults so a mixed array sorts in a
         /// reasonable order without resolving the runtime screen size.
+        ///
+        /// Note that even ignoring the custom-detent factories, the previous
+        /// implementation of `<` violated `Comparable`'s irreflexivity
+        /// requirement (`lhs < lhs` returned `true` for everything except
+        /// `.large < .medium`); replacing it with a numeric key restores the
+        /// expected `x < x == false` semantics.
         private var sortKey: Double {
             if let value = heightValue { return Double(value) }
             if let value = fractionValue { return Double(value) * 600 }
@@ -296,26 +313,19 @@ private extension Backport.Representable {
         ///
         /// On iOS 16+, `.height` and `.fraction` are bridged via
         /// `Detent.custom(identifier:resolver:)`, preserving the identifier so
-        /// that ``selection`` round-trips correctly. On iOS 15 the system has
-        /// no custom-detent API, so both fall back to ``.medium()`` and emit a
-        /// one-shot runtime warning to aid debugging.
+        /// that ``selection`` round-trips correctly. On iOS 15 the only
+        /// reachable cases are ``Backport/PresentationDetent/medium`` and
+        /// ``Backport/PresentationDetent/large``; the custom factories are
+        /// `@available(iOS 16, *)` so they cannot appear in `detents` there.
         static func systemDetent(for detent: Backport<Any>.PresentationDetent) -> UISheetPresentationController.Detent {
-            if let height = detent.heightValue {
-                if #available(iOS 16, *) {
+            if #available(iOS 16, *) {
+                if let height = detent.heightValue {
                     return .custom(identifier: .init(detent.id.rawValue)) { _ in height }
-                } else {
-                    warnUnsupportedDetentOnce("PresentationDetent.height(\(height)) requires iOS 16+; falling back to .medium")
-                    return .medium()
                 }
-            }
-            if let fraction = detent.fractionValue {
-                if #available(iOS 16, *) {
+                if let fraction = detent.fractionValue {
                     return .custom(identifier: .init(detent.id.rawValue)) { context in
                         fraction * context.maximumDetentValue
                     }
-                } else {
-                    warnUnsupportedDetentOnce("PresentationDetent.fraction(\(fraction)) requires iOS 16+; falling back to .medium")
-                    return .medium()
                 }
             }
             switch detent {
@@ -324,14 +334,6 @@ private extension Backport.Representable {
             default:
                 return .large()
             }
-        }
-
-        private static let unsupportedDetentWarnings: NSMutableSet = .init()
-
-        private static func warnUnsupportedDetentOnce(_ message: String) {
-            guard unsupportedDetentWarnings.contains(message) == false else { return }
-            unsupportedDetentWarnings.add(message)
-            print("[SwiftUIBackports] \(message)")
         }
     }
 }
