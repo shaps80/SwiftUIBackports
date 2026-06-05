@@ -258,6 +258,11 @@ private func loadSymbolEntries(from file: URL) -> [SymbolEntry] {
         fail("Unable to decode JSON in \(file.path)")
     }
 
+    let moduleName = ((raw["module"] as? [String: Any])?["name"] as? String) ?? ""
+    guard moduleName == "SwiftUIBackports" else {
+        return []
+    }
+
     let symbolObjects: [[String: Any]]
     if let symbols = raw["symbols"] as? [[String: Any]] {
         symbolObjects = symbols
@@ -280,6 +285,10 @@ private func loadSymbolEntries(from file: URL) -> [SymbolEntry] {
         guard let identifier = symbol["identifier"] as? [String: Any],
               let precise = identifier["precise"] as? String
         else {
+            continue
+        }
+
+        guard precise.contains("SwiftUIBackports") else {
             continue
         }
 
