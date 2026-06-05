@@ -210,11 +210,17 @@ private func availabilityByDomain(from availability: Any?) -> [String: String] {
     return output
 }
 
-private func isBackportFacing(pathComponents: [String], title: String) -> Bool {
+private func isBackportFacing(pathComponents: [String], title: String, signature: String, precise: String) -> Bool {
     if pathComponents.contains("Backport") {
         return true
     }
     if pathComponents.contains("EnvironmentValues") {
+        return true
+    }
+    if precise.contains("Backport") {
+        return true
+    }
+    if signature.contains("Backport<") {
         return true
     }
     if title == "backport" || title.hasPrefix("backport") {
@@ -320,10 +326,6 @@ private func loadSymbolEntries(from file: URL) -> [SymbolEntry] {
             .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let pathComponents = symbol["pathComponents"] as? [String] ?? []
 
-        guard isBackportFacing(pathComponents: pathComponents, title: title) else {
-            continue
-        }
-
         let kind = symbol["kind"] as? [String: Any]
         let kindIdentifier = kind?["identifier"] as? String ?? ""
 
@@ -333,6 +335,15 @@ private func loadSymbolEntries(from file: URL) -> [SymbolEntry] {
 
         let signature = normalizedSignature(declaration)
         guard !signature.isEmpty else { continue }
+
+        guard isBackportFacing(
+            pathComponents: pathComponents,
+            title: title,
+            signature: signature,
+            precise: precise
+        ) else {
+            continue
+        }
 
         let availability = availabilityByDomain(from: symbol["availability"])
 

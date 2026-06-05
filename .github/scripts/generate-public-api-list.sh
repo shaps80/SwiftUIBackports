@@ -6,7 +6,13 @@ if [[ "${1:-}" == "--check" ]]; then
   mode="--check"
 fi
 
-repo_root="$(git rev-parse --show-toplevel)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+repo_root="$(cd "${script_dir}/../.." && pwd -P)"
+
+if [[ ! -f "${repo_root}/Package.swift" ]]; then
+  echo "error: Could not resolve repository root from script location." >&2
+  exit 1
+fi
 symbol_graph_dir="${repo_root}/.build/public-api-symbol-graphs"
 apis_path="${repo_root}/APIs.md"
 cd "${repo_root}"
