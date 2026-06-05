@@ -31,7 +31,34 @@ if grep -q -- "--output-path" <<< "${help_text}"; then
   dump_command+=(--output-path "${symbol_graph_dir}")
   "${dump_command[@]}"
 else
-  "${dump_command[@]}" > "${symbol_graph_dir}/SwiftUIBackports.symbols.json"
+  before_list="$(mktemp)"
+  after_list="$(mktemp)"
+  new_list="$(mktemp)"
+  cleanup() {
+    rm -f "${before_list}" "${after_list}" "${new_list}"
+  }
+  trap cleanup EXIT
+
+  find "${repo_root}/.build" -type f -name "*.symbols.json" 2>/dev/null | sort > "${before_list}" || true
+
+  "${dump_command[@]}"
+
+  find "${repo_root}/.build" -type f -name "*.symbols.json" 2>/dev/null | sort > "${after_list}" || true
+
+  comm -13 "${before_list}" "${after_list}" > "${new_list}" || true
+
+  if [[ -s "${new_list}" ]]; then
+    while IFS= read -r symbol_file; do
+      cp "${symbol_file}" "${symbol_graph_dir}/"
+    done < "${new_list}"
+  elif [[ -s "${after_list}" ]]; then
+    while IFS= read -r symbol_file; do
+      cp "${symbol_file}" "${symbol_graph_dir}/"
+    done < "${after_list}"
+  else
+    echo "error: dump-symbol-graph did not produce any .symbols.json files" >&2
+    exit 1
+  fi
 fi
 
 swift "${repo_root}/.github/scripts/generate_public_api_list.swift" \

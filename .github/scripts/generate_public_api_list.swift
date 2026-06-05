@@ -258,14 +258,18 @@ private func loadSymbolEntries(from file: URL) -> [SymbolEntry] {
         fail("Unable to decode JSON in \(file.path)")
     }
 
-    guard let symbols = raw["symbols"] as? [String: Any] else {
+    let symbolObjects: [[String: Any]]
+    if let symbols = raw["symbols"] as? [[String: Any]] {
+        symbolObjects = symbols
+    } else if let symbolsByIdentifier = raw["symbols"] as? [String: Any] {
+        symbolObjects = symbolsByIdentifier.compactMap { $0.value as? [String: Any] }
+    } else {
         return []
     }
 
     var output: [SymbolEntry] = []
 
-    for (_, symbolValue) in symbols {
-        guard let symbol = symbolValue as? [String: Any] else { continue }
+    for symbol in symbolObjects {
 
         guard let accessLevel = symbol["accessLevel"] as? String,
               accessLevel == "public" || accessLevel == "open"
