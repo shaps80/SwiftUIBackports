@@ -61,40 +61,11 @@ Environment:
 @Environment(\.backportRefresh) private var refreshAction
 ```
 
-## Backports
+## Public API
 
-**SwiftUI**
+For the complete generated API inventory, see **[Available APIs](./APIs.md)**.
 
-- `AsyncImage`
-- `AppStorage`
-- `background` – ViewBuilder API
-- `DismissAction`
-- `DynamicTypeSize`
-– `Label`
-– `LabeledContent`
-- `NavigationDestination` – uses a standard NavigationView
-- `navigationTitle` – newer API
-- `overlay` – ViewBuilder API
-- `onChange`
-- `openURL`
-- `ProgressView`
-- `presentationDetents`
-- `presentationDragIndicator`
-- `quicklookPreview`
-- `requestReview`
-- `Refreshable` – includes pull-to-refresh 
-- `ScaledMetric`
-- `ShareLink`
-- `StateObject`
-- `scrollDisabled`
-- `scrollDismissesKeyboard`
-- `scrollIndicators`
-- `Section(_ header:)`
-- `task` – async/await modifier
-
-**UIKit**
-
-- `UIHostingConfiguration` – simplifies embedding SwiftUI in `UICollectionViewCell` and `UITableViewCell`
+Run `bash .github/scripts/generate-public-api-list.sh --write` whenever you add or modify public backport-facing API.
 
 ## Extras
 

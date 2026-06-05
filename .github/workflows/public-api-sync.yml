@@ -1,0 +1,53 @@
+name: Public API Sync
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - "Sources/**"
+      - ".github/scripts/**"
+      - ".github/workflows/public-api-sync.yml"
+      - "APIs.md"
+      - "README.md"
+
+permissions:
+  contents: write
+
+jobs:
+  sync-public-api:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Regenerate public API list
+        shell: bash
+        run: bash .github/scripts/generate-public-api-list.sh --write
+
+      - name: Detect API doc changes
+        id: apis_diff
+        shell: bash
+        run: |
+          if git diff --quiet -- APIs.md; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Auto-commit APIs update
+        if: steps.apis_diff.outputs.changed == 'true' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update generated public API list in APIs.md"
+          file_pattern: APIs.md
+
+      - name: Fail when APIs.md cannot be auto-updated
+        if: steps.apis_diff.outputs.changed == 'true' && github.event.pull_request.head.repo.full_name != github.repository
+        shell: bash
+        run: |
+          echo "::error::APIs.md public API list is out of date, but this PR branch is not writable by CI."
+          echo "::error::Run bash .github/scripts/generate-public-api-list.sh --write and push the result."
+          exit 1
