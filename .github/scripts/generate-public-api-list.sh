@@ -9,6 +9,7 @@ fi
 repo_root="$(git rev-parse --show-toplevel)"
 symbol_graph_dir="${repo_root}/.build/public-api-symbol-graphs"
 apis_path="${repo_root}/APIs.md"
+cd "${repo_root}"
 
 rm -rf "${symbol_graph_dir}"
 mkdir -p "${symbol_graph_dir}"
@@ -18,10 +19,20 @@ if ! command -v swift >/dev/null 2>&1; then
   exit 1
 fi
 
-swift package dump-symbol-graph \
-  --target SwiftUIBackports \
-  --minimum-access-level public \
-  --output-path "${symbol_graph_dir}"
+help_text="$(swift package dump-symbol-graph -help 2>&1 || true)"
+
+dump_command=(swift package dump-symbol-graph --minimum-access-level public)
+
+if grep -q -- "--target" <<< "${help_text}"; then
+  dump_command+=(--target SwiftUIBackports)
+fi
+
+if grep -q -- "--output-path" <<< "${help_text}"; then
+  dump_command+=(--output-path "${symbol_graph_dir}")
+  "${dump_command[@]}"
+else
+  "${dump_command[@]}" > "${symbol_graph_dir}/SwiftUIBackports.symbols.json"
+fi
 
 swift "${repo_root}/.github/scripts/generate_public_api_list.swift" \
   --symbol-graphs-dir "${symbol_graph_dir}" \
