@@ -249,6 +249,29 @@ private func groupName(pathComponents: [String], title: String, signature: Strin
     return "Other Backport API"
 }
 
+private func isDeclaredInSwiftUIBackportsSources(_ symbol: [String: Any]) -> Bool {
+    func isBackportsSourceURI(_ uri: String) -> Bool {
+        uri.contains("/Sources/SwiftUIBackports/") || uri.contains("\\Sources\\SwiftUIBackports\\")
+    }
+
+    if let location = symbol["location"] as? [String: Any],
+       let uri = location["uri"] as? String,
+       isBackportsSourceURI(uri)
+    {
+        return true
+    }
+
+    if let locations = symbol["locations"] as? [[String: Any]] {
+        for location in locations {
+            if let uri = location["uri"] as? String, isBackportsSourceURI(uri) {
+                return true
+            }
+        }
+    }
+
+    return false
+}
+
 private func loadSymbolEntries(from file: URL) -> [SymbolEntry] {
     guard let data = try? Data(contentsOf: file) else {
         fail("Unable to read symbol graph file at \(file.path)")
@@ -288,7 +311,7 @@ private func loadSymbolEntries(from file: URL) -> [SymbolEntry] {
             continue
         }
 
-        guard precise.contains("SwiftUIBackports") else {
+        guard isDeclaredInSwiftUIBackportsSources(symbol) else {
             continue
         }
 
