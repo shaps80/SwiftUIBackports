@@ -228,41 +228,6 @@ public extension Backport where Wrapped: View {
 
 private final class DropSessionIdentity {}
 
-#if os(macOS)
-@available(macOS, introduced: 13, deprecated: 26, message: "Use View.onDropSessionUpdated instead")
-public extension Backport where Wrapped: View {
-    /// Performs an action when the drop session changes.
-    ///
-    /// - Parameter onUpdate: The action to perform with the current drop session.
-    /// - Returns: A view that observes drop session updates.
-    nonisolated func onDropSessionUpdated(
-        _ onUpdate: @escaping (Backport<Any>.DropSession) -> Void
-    ) -> some View {
-        wrapped
-    }
-
-    /// Sets the drop configuration for this view.
-    ///
-    /// - Parameter configuration: A closure that returns the drop configuration for a drop session.
-    /// - Returns: A view with a drop configuration.
-    nonisolated func dropConfiguration(
-        _ configuration: @escaping (Backport<Any>.DropSession) -> Backport<Any>.DropConfiguration
-    ) -> some View {
-        wrapped
-    }
-
-    /// Sets the drag configuration for this view.
-    ///
-    /// - Parameter configuration: The drag configuration.
-    /// - Returns: A view with a drag configuration.
-    nonisolated func dragConfiguration(
-        _ configuration: Backport<Any>.DragConfiguration
-    ) -> some View {
-        wrapped
-    }
-}
-#endif
-
 @available(iOS, introduced: 16, deprecated: 26, message: "Use SwiftUI draggable APIs instead")
 @available(macOS, introduced: 13, deprecated: 26, message: "Use SwiftUI draggable APIs instead")
 @available(visionOS, deprecated: 26, message: "Use SwiftUI draggable APIs instead")
