@@ -1,6 +1,5 @@
 import SwiftUI
 import SwiftBackports
-import CoreHaptics
 
 internal nonisolated struct SensoryFeedbackModifier<T: Equatable>: ViewModifier {
     var trigger: T
